@@ -91,6 +91,7 @@
 </section>
 
 {{-- CATEGORIES SECTION --}}
+{{-- CATEGORIES SECTION --}}
 <section id="categories" class="py-12 md:py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
         <div class="text-center mb-8 md:mb-12">
@@ -98,68 +99,40 @@
             <p class="text-gray-600 text-sm md:text-lg">Discover our premium skincare & beauty devices</p>
         </div>
 
-        {{-- Category Cards --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {{-- LED Light Therapy --}}
-            <div class="relative rounded-2xl overflow-hidden group cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-                <div class="relative h-60 sm:h-72 md:h-80 bg-gradient-to-br from-pink-200 to-red-300">
-                    <img src="{{ ImageHelper::getProductImage('led-light.jpg') }}" alt="LED Light Therapy" class="w-full h-full object-cover">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4 sm:p-6">
-                    <h3 class="text-xl sm:text-2xl font-bold text-white mb-3">LED LIGHT THERAPY</h3>
-                    <a href="{{ route('products.all') }}" class="inline-flex items-center justify-center gap-2 bg-white text-gray-900 px-6 py-2.5 rounded-full font-semibold w-fit hover:bg-gray-100 transition text-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                        SHOP NOW
-                    </a>
-                </div>
-            </div>
+        @php
+            $categories = [
+                ['title' => 'LED LIGHT THERAPY', 'image' => 'led-light.jpg'],
+                ['title' => 'ANTI-AGING', 'image' => 'anti-aging.jpg'],
+                ['title' => 'ANTI-ACNE', 'image' => 'anti-acne.jpg'],
+                ['title' => 'SHOP ALL DEVICES', 'image' => 'all-devices.jpg'],
+            ];
+        @endphp
 
-            {{-- Anti-Aging --}}
-            <div class="relative rounded-2xl overflow-hidden group cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-                <div class="relative h-60 sm:h-72 md:h-80 bg-gradient-to-br from-amber-200 to-orange-300">
-                    <img src="{{ ImageHelper::getProductImage('anti-aging.jpg') }}" alt="Anti-Aging" class="w-full h-full object-cover">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4 sm:p-6">
-                    <h3 class="text-xl sm:text-2xl font-bold text-white mb-3">ANTI-AGING</h3>
-                    <a href="{{ route('products.all') }}" class="inline-flex items-center justify-center gap-2 bg-white text-gray-900 px-6 py-2.5 rounded-full font-semibold w-fit hover:bg-gray-100 transition text-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            @foreach($categories as $category)
+            {{-- Category Card --}}
+            <div class="relative rounded-[2rem] overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 group h-[400px]">
+                {{-- Background Image --}}
+                <img src="{{ ImageHelper::getProductImage($category['image']) }}" 
+                     alt="{{ $category['title'] }}" 
+                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                
+                {{-- Centered Content Overlay --}}
+                <div class="absolute inset-0 bg-black/20 flex flex-col items-center justify-center p-6 text-center">
+                    <h3 class="text-2xl font-semibold text-white mb-6 tracking-wide drop-shadow-md">
+                        {{ $category['title'] }}
+                    </h3>
+                    
+                    <a href="{{ route('products.all') }}" 
+                       class="bg-[#FDF9F5] text-[#4A4A4A] px-8 py-3 rounded-full font-medium text-sm tracking-widest hover:bg-white transition-colors duration-300 shadow-lg">
                         SHOP NOW
                     </a>
                 </div>
             </div>
-
-            {{-- Anti-Acne --}}
-            <div class="relative rounded-2xl overflow-hidden group cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-                <div class="relative h-60 sm:h-72 md:h-80 bg-gradient-to-br from-green-200 to-teal-300">
-                    <img src="{{ ImageHelper::getProductImage('anti-acne.jpg') }}" alt="Anti-Acne" class="w-full h-full object-cover">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4 sm:p-6">
-                    <h3 class="text-xl sm:text-2xl font-bold text-white mb-3">ANTI-ACNE</h3>
-                    <a href="{{ route('products.all') }}" class="inline-flex items-center justify-center gap-2 bg-white text-gray-900 px-6 py-2.5 rounded-full font-semibold w-fit hover:bg-gray-100 transition text-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                        SHOP NOW
-                    </a>
-                </div>
-            </div>
-
-            {{-- Shop All Devices --}}
-            <div class="relative rounded-2xl overflow-hidden group cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-                <div class="relative h-60 sm:h-72 md:h-80 bg-gradient-to-br from-blue-200 to-indigo-300">
-                    <img src="{{ ImageHelper::getProductImage('all-devices.jpg') }}" alt="Shop All Devices" class="w-full h-full object-cover">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4 sm:p-6">
-                    <h3 class="text-xl sm:text-2xl font-bold text-white mb-3">SHOP ALL DEVICES</h3>
-                    <a href="{{ route('products.all') }}" class="inline-flex items-center justify-center gap-2 bg-white text-gray-900 px-6 py-2.5 rounded-full font-semibold w-fit hover:bg-gray-100 transition text-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                        SHOP NOW
-                    </a>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
-</section>
-
-{{-- PRODUCTS SECTION --}}
+</section>{{-- PRODUCTS SECTION --}}
 <section class="py-16 md:py-24 relative overflow-hidden">
     {{-- Animated Background Gradient --}}
     <div class="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-slate-50 -z-10"></div>
@@ -305,7 +278,31 @@
             </a>
         </div>
     </div>
+    <div class="fade-up d-3 relative rounded-[2rem] bg-white border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)] overflow-hidden mb-24 group">
+            <div class="flex flex-col lg:flex-row items-center">
+                
+                {{-- Left Text Side --}}
+                <div class="w-full lg:w-1/2 p-10 md:p-16 relative z-10">
+                    <span class="text-amber-600 text-xs font-bold tracking-widest uppercase mb-4 block">Master Collection</span>
+                    <h2 class="text-4xl md:text-5xl font-light mb-6 text-slate-900">
+                        The Clinical <br><span class="italic font-serif text-slate-700">Renewal Bundle</span>
+                    </h2>
+                    <p class="text-slate-500 leading-relaxed mb-10 max-w-md font-light">
+                        Our highest-tier LED mask paired with the potent 24K gold serum. A complete clinical protocol for unprecedented cellular rejuvenation.
+                    </p>
+                    
+                    <div class="flex items-end gap-6 mb-10">
+                        <div>
+                            <span class="text-slate-400 line-through text-sm block mb-1">Standard Price $850</span>
+                            <span class="text-5xl font-bold text-slate-900">$499</span>
+                        </div>
+                        <div class="bg-red-50 border border-red-100 px-4 py-2 rounded-lg">
+                            <span class="text-red-600 font-bold tracking-wider uppercase text-xs">You Save $351</span>
+                        </div>
+                    </div>
+
 </section>
+
 
 {{-- PROFESSIONAL REELS SECTION (NEW ADDITION) --}}
 <section class="py-16 bg-white overflow-hidden">
