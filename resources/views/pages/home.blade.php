@@ -153,7 +153,7 @@
                 $homeProducts = [
                     [
                         'name' => 'CurrentBody Skin LED Red Light Therapy Face Mask: Series 2',
-                        'description' => 'FDA cleared LED face mask for advanced anti-aging',
+                        'description' => '',
                         'price' => 469.99,
                         'original_price' => 549.99,
                         'rating' => 4.8,
@@ -163,8 +163,8 @@
                     ],
                     [
                         'name' => 'CurrentBody Skin LED Blue Light Therapy Face Mask: Series 2',
-                        'description' => 'FDA cleared advanced red and blue LED therapy mask for clearer, brighter skin',
-                        'price' => 469.99,
+  'description' => '',
+                          'price' => 469.99,
                         'original_price' => 549.99,
                         'rating' => 4.9,
                         'reviews' => 35,
@@ -173,7 +173,7 @@
                     ],
                     [
                         'name' => 'CurrentBody Skin LED Neck & Décolletage Mask: Series 2',
-                        'description' => 'FDA-cleared red and near-infrared light for advanced anti-aging',
+  'description' => '',
                         'price' => 419.99,
                         'original_price' => 499.99,
                         'rating' => 4.7,
@@ -183,8 +183,8 @@
                     ],
                     [
                         'name' => 'CurrentBody Skin LED Red Light Hair Growth Helmet',
-                        'description' => 'FDA cleared red light therapy for fuller, stronger, thicker hair growth',
-                        'price' => 859.99,
+
+  'description' => '',                        'price' => 859.99,
                         'original_price' => 999.99,
                         'rating' => 4.6,
                         'reviews' => 174,
@@ -199,7 +199,7 @@
                 {{-- Card Container --}}
                 <div class="relative h-full rounded-3xl overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
                     {{-- Product Image Container --}}
-                    <div class="relative bg-gradient-to-br {{ $product['gradient'] }} h-72 sm:h-80 md:h-96 overflow-hidden">
+                    <a href="{{ route('product.detail', 11) }}" class="block relative bg-gradient-to-br {{ $product['gradient'] }} h-72 sm:h-80 md:h-96 overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/0 group-hover:from-black/30 transition duration-500"></div>
                         <img src="{{ ImageHelper::getProductImage($product['image']) }}" 
                              alt="{{ $product['name'] }}" 
@@ -216,14 +216,16 @@
                                 </svg>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     {{-- Product Info --}}
                     <div class="p-5 sm:p-6">
                         <span class="inline-block text-xs font-semibold text-amber-600 mb-2 uppercase tracking-wider">LED Therapy</span>
-                        <h3 class="font-bold text-gray-900 text-sm sm:text-base line-clamp-2 mb-2.5 leading-tight group-hover:text-amber-600 transition-colors">
-                            {{ $product['name'] }}
-                        </h3>
+                        <a href="{{ route('product.detail', 11) }}">
+                            <h3 class="font-bold text-gray-900 text-sm sm:text-base line-clamp-2 mb-2.5 leading-tight group-hover:text-amber-600 transition-colors">
+                                {{ $product['name'] }}
+                            </h3>
+                        </a>
 
                         <p class="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 line-clamp-2">
                             {{ $product['description'] }}
@@ -354,51 +356,6 @@
         <div class="swiper-button-next !right-4 lg:!right-10"></div>
     </div>
 </section>
-
-{{-- ABOUT & SERVICES SECTION --}}
-<section class="py-12 md:py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-        <div class="text-center mb-12 md:mb-16">
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 md:mb-4">Why Choose Us</h2>
-            <p class="text-gray-600 text-sm md:text-lg max-w-2xl mx-auto px-2">
-                We are a modern beauty studio focused on skincare, makeup, and wellness treatments that bring out your best natural glow.
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            <div class="bg-gradient-to-br from-pink-50 to-pink-100 p-6 md:p-8 rounded-xl">
-                <div class="w-12 h-12 bg-pink-500 rounded-lg flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">Advanced Technology</h3>
-                <p class="text-gray-600 text-sm md:text-base">FDA-cleared devices and premium formulations for effective results.</p>
-            </div>
-
-            <div class="bg-gradient-to-br from-amber-50 to-amber-100 p-6 md:p-8 rounded-xl">
-                <div class="w-12 h-12 bg-amber-500 rounded-lg flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h-2m0 0H8m4 0v4m0-4v-2m0 2h2m0 0v2m0-2h-2m0 2v4m6-6a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">Expert Care</h3>
-                <p class="text-gray-600 text-sm md:text-base">Professional guidance and customized skincare routines for your needs.</p>
-            </div>
-
-            <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 md:p-8 rounded-xl">
-                <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">Guaranteed Results</h3>
-                <p class="text-gray-600 text-sm md:text-base">Visible transformations with our proven beauty solutions.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
 {{-- 2. BRAND LOGOS MARQUEE --}}
 <section class="bg-[#EAE2DB] py-6 overflow-hidden marquee-container flex cursor-default">
     {{-- First Block --}}
@@ -488,7 +445,47 @@
 
     </div>
 </section>
+{{-- PREMIUM WHY CHOOSE US SECTION --}}
+<section class="py-24 bg-white overflow-hidden">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="text-center mb-20">
+            <span class="text-[10px] font-bold uppercase tracking-[0.4em] text-blue-800 mb-4 block">Our Philosophy</span>
+            <h2 class="text-4xl md:text-6xl font-serif text-gray-900 mb-6">Why Choose Us</h2>
+            <div class="h-[1px] w-12 bg-blue-800 mx-auto"></div>
+        </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {{-- Updated: Added 'border' and distinct background to make boxes clearly visible --}}
+            
+            {{-- Card 1 --}}
+            <div class="group relative p-10 bg-white border border-gray-200 shadow-sm rounded-[2rem] transition-all duration-700 hover:shadow-2xl hover:-translate-y-2">
+                <div class="mb-8 w-16 h-16 flex items-center justify-center rounded-2xl bg-pink-50 shadow-inner group-hover:scale-110 transition-transform duration-500">
+                    <svg class="w-8 h-8 text-pink-500 transition-transform group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-light text-gray-900 mb-4">Advanced Tech</h3>
+                <p class="text-gray-500 leading-relaxed">FDA-cleared devices and premium formulations engineered for visible results.</p>
+            </div>
+
+            {{-- Card 2 --}}
+            <div class="group relative p-10 bg-white border border-gray-200 shadow-sm rounded-[2rem] transition-all duration-700 hover:shadow-2xl hover:-translate-y-2">
+                <div class="mb-8 w-16 h-16 flex items-center justify-center rounded-2xl bg-amber-50 shadow-inner group-hover:scale-110 transition-transform duration-500">
+                    <svg class="w-8 h-8 text-amber-500 transition-transform group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10h-2m0 0H8m4 0v4m0-4v-2m0 2h2m0 0v2m0-2h-2m0 2v4m6-6a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-light text-gray-900 mb-4">Expert Care</h3>
+                <p class="text-gray-500 leading-relaxed">Professional guidance and fully customized skincare routines for your unique needs.</p>
+            </div>
+
+            {{-- Card 3 --}}
+            <div class="group relative p-10 bg-white border border-gray-200 shadow-sm rounded-[2rem] transition-all duration-700 hover:shadow-2xl hover:-translate-y-2">
+                <div class="mb-8 w-16 h-16 flex items-center justify-center rounded-2xl bg-green-50 shadow-inner group-hover:scale-110 transition-transform duration-500">
+                    <svg class="w-8 h-8 text-green-500 transition-transform group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-light text-gray-900 mb-4">Guaranteed Results</h3>
+                <p class="text-gray-500 leading-relaxed">Experience visible transformations driven by our proven, high-end beauty solutions.</p>
+            </div>
+        </div>
+    </div>
+</section>
 {{-- TESTIMONIALS SECTION --}}
 <section class="py-16 md:py-24 bg-[#faf9f8] overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
@@ -601,6 +598,7 @@
 
             </div>
             
+            
             {{-- Pagination Dots --}}
             <div class="swiper-pagination !-bottom-2"></div>
         </div>
@@ -668,6 +666,9 @@
             }
         });
     });
+    theme: {
+ 
+}
     // Initialize Testimonial Swiper
     const testimonialSwiper = new Swiper('.testimonial-swiper', {
         slidesPerView: 1,

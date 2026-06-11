@@ -42,3 +42,15 @@ Route::get('/register', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
+
+Route::get('/product/{id}', function ($id) {
+    return view('pages.product-detail', compact('id'));
+})->name('product.detail');
+
+Route::get('/category/{slug}', function ($slug) {
+    return view('pages.category-detail', compact('slug'));
+})->name('category.detail');
+
+Route::get('/cart', function () {
+    return view('pages.cart');
+})->name('cart');

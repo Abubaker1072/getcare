@@ -86,47 +86,48 @@
             </p>
         </div>
 
-        {{-- The Master Deal (Featured) --}}
-        <div class="fade-up d-3 relative rounded-[2rem] bg-white border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)] overflow-hidden mb-24 group">
-            <div class="flex flex-col lg:flex-row items-center">
-                
-                {{-- Left Text Side --}}
-                <div class="w-full lg:w-1/2 p-10 md:p-16 relative z-10">
-                    <span class="text-amber-600 text-xs font-bold tracking-widest uppercase mb-4 block">Master Collection</span>
-                    <h2 class="text-4xl md:text-5xl font-light mb-6 text-slate-900">
-                        The Clinical <br><span class="italic font-serif text-slate-700">Renewal Bundle</span>
-                    </h2>
-                    <p class="text-slate-500 leading-relaxed mb-10 max-w-md font-light">
-                        Our highest-tier LED mask paired with the potent 24K gold serum. A complete clinical protocol for unprecedented cellular rejuvenation.
-                    </p>
-                    
-                    <div class="flex items-end gap-6 mb-10">
-                        <div>
-                            <span class="text-slate-400 line-through text-sm block mb-1">Standard Price $850</span>
-                            <span class="text-5xl font-bold text-slate-900">$499</span>
-                        </div>
-                        <div class="bg-red-50 border border-red-100 px-4 py-2 rounded-lg">
-                            <span class="text-red-600 font-bold tracking-wider uppercase text-xs">You Save $351</span>
-                        </div>
-                    </div>
-
-                    {{-- Animated Button --}}
-                    <button class="btn-shine bg-slate-900 text-white px-10 py-4 rounded-xl text-sm font-bold tracking-[0.2em] uppercase hover:scale-105 hover:shadow-xl transition-all duration-300">
-                        Claim Offer
-                    </button>
+       {{-- The Master Deal (Featured) --}}
+<div class="fade-up d-3 relative rounded-[2rem] bg-white border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)] overflow-hidden mb-24 group">
+    <div class="flex flex-col lg:flex-row items-center">
+        
+        {{-- Left Text Side --}}
+        <div class="w-full lg:w-1/2 p-10 md:p-16 relative z-10">
+            <span class="text-amber-600 text-xs font-bold tracking-widest uppercase mb-4 block">Master Collection</span>
+            <h2 class="text-4xl md:text-5xl font-light mb-6 text-slate-900">
+                The Clinical <br><span class="italic font-serif text-slate-700">Renewal Bundle</span>
+            </h2>
+            <p class="text-slate-500 leading-relaxed mb-10 max-w-md font-light">
+                Our highest-tier LED mask paired with the potent 24K gold serum. A complete clinical protocol for unprecedented cellular rejuvenation.
+            </p>
+            
+            <div class="flex items-end gap-6 mb-10">
+                <div>
+                    <span class="text-slate-400 line-through text-sm block mb-1">Standard Price $850</span>
+                    <span class="text-5xl font-bold text-slate-900">$499</span>
                 </div>
-
-                {{-- Right Image Side (Floating) --}}
-                <div class="w-full lg:w-1/2 relative h-[400px] lg:h-[600px] flex items-center justify-center p-10 bg-slate-50/50">
-                    {{-- Decorative circle behind image --}}
-                    <div class="absolute w-[300px] h-[300px] bg-gradient-to-tr from-amber-200/40 to-red-100/40 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700"></div>
-                    
-                    <img src="{{ asset('images/categories/hero-deal.jpg') }}" alt="Bundle" class="relative z-10 w-[80%] h-[80%] object-contain float-smooth drop-shadow-2xl mix-blend-multiply">
+                <div class="bg-red-50 border border-red-100 px-4 py-2 rounded-lg">
+                    <span class="text-red-600 font-bold tracking-wider uppercase text-xs">You Save $351</span>
                 </div>
             </div>
+
+            {{-- Button --}}
+            <button class="btn-shine bg-slate-900 text-white px-10 py-4 rounded-xl text-sm font-bold tracking-[0.2em] uppercase hover:scale-105 hover:shadow-xl transition-all duration-300">
+                Claim Offer
+            </button>
         </div>
 
-        {{-- The Vault Grid --}}
+        {{-- Right Image Side --}}
+        <div class="w-full lg:w-1/2 relative h-[400px] lg:h-[600px] flex items-center justify-center p-10 bg-slate-50/50">
+            {{-- Decorative glow --}}
+            <div class="absolute w-[300px] h-[300px] bg-gradient-to-tr from-amber-200/40 to-red-100/40 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700"></div>
+            
+            {{-- Image with floating animation --}}
+            <img src="{{ asset('images/categories/hero-deal.jpg') }}" 
+                 alt="Renewal Bundle" 
+                 class="relative z-10 w-full max-w-[400px] object-contain float-smooth drop-shadow-2xl">
+        </div>
+    </div>
+</div> {{-- The Vault Grid --}}
         @php
             $hotDeals = [
                 ['name' => 'Pro Micro-Infusion Needling', 'desc' => 'Clinical stamp system for plumping.', 'price' => 129, 'old' => 199, 'image' => 'deal-1.jpg'],
@@ -143,7 +144,7 @@
             <div class="fade-up relative bg-white border border-slate-100 rounded-2xl overflow-hidden group hover:border-amber-200 hover:shadow-[0_10px_40px_rgba(0,0,0,0.06)] transition-all duration-500 flex flex-col" style="animation-delay: {{ ($index * 150) + 600 }}ms;">
                 
                 {{-- Image Container --}}
-                <div class="relative h-64 overflow-hidden bg-[#F8F9FA]">
+                <a href="{{ route('product.detail', 11) }}" class="block relative h-64 overflow-hidden bg-[#F8F9FA]">
                     <img src="{{ asset('images/categories/' . $deal['image']) }}" alt="{{ $deal['name'] }}" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-all duration-700 ease-in-out">
                     
                     {{-- Luxury Discount Badge --}}
@@ -153,17 +154,19 @@
 
                     {{-- Hover Glass Button --}}
                     <div class="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-20">
-                        <button class="w-full bg-white/95 backdrop-blur-sm border border-slate-200 text-slate-900 font-bold tracking-widest uppercase text-xs py-3.5 rounded-xl hover:bg-slate-900 hover:text-white transition-colors duration-300 shadow-lg">
+                        <button class="w-full bg-white/95 backdrop-blur-sm border border-slate-200 text-slate-900 font-bold tracking-widest uppercase text-xs py-3.5 rounded-xl hover:bg-slate-900 hover:text-white transition-colors duration-300 shadow-lg" onclick="event.preventDefault(); window.openCart(event)">
                             Quick Add
                         </button>
                     </div>
-                </div>
+                </a>
 
                 {{-- Text Content --}}
                 <div class="p-6 relative z-20 flex-grow flex flex-col bg-white">
-                    <h4 class="font-bold text-slate-900 mb-2 group-hover:text-amber-600 transition-colors line-clamp-1">
-                        {{ $deal['name'] }}
-                    </h4>
+                    <a href="{{ route('product.detail', 11) }}">
+                        <h4 class="font-bold text-slate-900 mb-2 group-hover:text-amber-600 transition-colors line-clamp-1">
+                            {{ $deal['name'] }}
+                        </h4>
+                    </a>
                     <p class="text-slate-500 text-xs font-light mb-6 flex-grow line-clamp-2">
                         {{ $deal['desc'] }}
                     </p>

@@ -221,7 +221,7 @@
                     @foreach($allProducts as $product)
                     <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-100 transition-all duration-300 flex flex-col group">
                         {{-- Product Image Area --}}
-                        <div class="relative bg-[#F8F9FA] aspect-[4/5] overflow-hidden">
+                        <a href="{{ route('product.detail', 11) }}" class="block relative bg-[#F8F9FA] aspect-[4/5] overflow-hidden">
                             <img src="{{ ImageHelper::getProductImage($product['image']) }}" 
                                  alt="{{ $product['name'] }}" 
                                  class="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-in-out">
@@ -233,11 +233,11 @@
 
                             {{-- Quick Add Overlay Button --}}
                             <div class="absolute bottom-4 left-4 right-4 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                                <button class="w-full bg-white/90 backdrop-blur-sm text-slate-900 font-semibold py-3 rounded-lg shadow-lg hover:bg-slate-900 hover:text-white transition-colors text-sm">
+                                <button class="w-full bg-white/90 backdrop-blur-sm text-slate-900 font-semibold py-3 rounded-lg shadow-lg hover:bg-slate-900 hover:text-white transition-colors text-sm" onclick="event.preventDefault(); window.openCart(event)">
                                     Quick Add
                                 </button>
                             </div>
-                        </div>
+                        </a>
 
                         {{-- Product Details --}}
                         <div class="p-5 flex flex-col flex-grow">
@@ -255,9 +255,11 @@
                                 <span class="text-xs text-slate-400 font-medium">({{ $product['reviews'] }})</span>
                             </div>
 
-                            <h3 class="font-bold text-slate-900 text-sm md:text-base leading-snug mb-2 group-hover:text-amber-700 transition-colors">
-                                {{ $product['name'] }}
-                            </h3>
+                            <a href="{{ route('product.detail', 11) }}">
+                                <h3 class="font-bold text-slate-900 text-sm md:text-base leading-snug mb-2 group-hover:text-amber-700 transition-colors">
+                                    {{ $product['name'] }}
+                                </h3>
+                            </a>
 
                             <p class="text-slate-500 text-sm leading-relaxed mb-4 line-clamp-2 flex-grow">
                                 {{ $product['description'] }}

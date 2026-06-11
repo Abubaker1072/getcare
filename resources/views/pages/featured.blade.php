@@ -231,18 +231,18 @@
                 @foreach($products as $product)
                 <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                     {{-- Product Image --}}
-                    <div class="relative h-72 bg-gradient-to-br from-gray-200 to-gray-300 overflow-hidden group">
+                    <a href="{{ route('product.detail', 11) }}" class="block relative h-72 bg-gradient-to-br from-gray-200 to-gray-300 overflow-hidden group">
                         <img src="{{ \App\Helpers\ImageHelper::getProductImage($product['image']) }}" alt="{{ $product['name'] }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
                         <div class="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">SALE</div>
-                        <button class="absolute bottom-4 left-4 right-4 bg-white text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-100 transition opacity-0 group-hover:opacity-100">
+                        <button class="absolute bottom-4 left-4 right-4 bg-white text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-100 transition opacity-0 group-hover:opacity-100" onclick="event.preventDefault(); window.openCart(event)">
                             ADD TO CART
                         </button>
-                    </div>
+                    </a>
 
                     {{-- Product Info --}}
                     <div class="p-5">
                         <p class="text-xs text-gray-500 font-semibold mb-1 uppercase">{{ $product['category'] }}</p>
-                        <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2">{{ $product['name'] }}</h3>
+                        <a href="{{ route('product.detail', 11) }}" class="text-lg font-bold text-gray-900 mb-2 line-clamp-2 hover:text-amber-600 transition">{{ $product['name'] }}</a>
                         
                         {{-- Rating --}}
                         <div class="flex items-center gap-2 mb-3">
