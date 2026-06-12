@@ -24,7 +24,8 @@ Route::get('/', function (
     $bestsellingProducts = $productRepo->getBestsellingProducts();
     $featuredCategories = $categoryRepo->getFeaturedCategories();
     $hotDealProducts = $hotDealRepo->getHotDealProducts();
-    return view('pages.home', compact('bestsellingProducts', 'featuredCategories', 'hotDealProducts'));
+    $reels = \App\Models\Reel::with('product')->where('is_active', true)->latest()->get();
+    return view('pages.home', compact('bestsellingProducts', 'featuredCategories', 'hotDealProducts', 'reels'));
 })->name('home');
 
 Route::get('/shop/all', [FrontendProductController::class, 'index'])->name('products.all');
@@ -116,4 +117,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/customers', fn () => view('admin.customers'))->name('customers');
     Route::get('/reports', fn () => view('admin.reports'))->name('reports');
     Route::get('/settings', fn () => view('admin.settings'))->name('settings');
+
+    // Reels CRUD
+    Route::resource('reels', \App\Http\Controllers\Admin\ReelController::class)->except(['show']);
 });

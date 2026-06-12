@@ -36,6 +36,11 @@ class Product extends Model
 
     public function homepageHotDeal()
     {
-        return $this->hasOne(HomepageHotDealProduct::class);
+        return $this->hasOne(HotDeal::class);
+    }
+
+    public function reels()
+    {
+        return $this->hasMany(Reel::class);
     }
 }

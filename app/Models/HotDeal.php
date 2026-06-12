@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class HomepageHotDealProduct extends Model
+class HotDeal extends Model
 {
+    protected $table = 'hot_deals';
+
     protected $fillable = ['product_id'];
 
     public function product()

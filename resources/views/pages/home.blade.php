@@ -286,39 +286,80 @@
     <div class="swiper reel-swiper w-full max-w-7xl mx-auto relative">
         <div class="swiper-wrapper">
             
-            {{-- We duplicate this slide 5 times so the carousel centers correctly on load --}}
-            @for ($i = 0; $i < 5; $i++)
-            <div class="swiper-slide w-72 md:w-80 flex flex-col items-center">
-                <div class="relative w-full h-[450px] rounded-2xl overflow-hidden bg-gray-900 shadow-lg">
-                    <img src="https://via.placeholder.com/400x600" alt="Reel thumbnail" class="object-cover w-full h-full opacity-80">
+            @forelse ($reels as $reel)
+            <div class="swiper-slide w-72 md:w-80 flex flex-col items-center group/slide">
+                <div class="relative w-full h-[450px] rounded-2xl overflow-hidden bg-gray-900 shadow-lg cursor-pointer">
+                    <video src="{{ asset('storage/' . $reel->video_path) }}" 
+                           @if($reel->thumbnail_path) poster="{{ asset('storage/' . $reel->thumbnail_path) }}" @endif 
+                           class="reel-video object-cover w-full h-full opacity-80" 
+                           loop 
+                           muted 
+                           playsinline>
+                    </video>
                     
-                    <div class="absolute top-4 right-4 flex flex-col gap-2 text-white">
-                        <button class="bg-black/40 p-2 rounded-full backdrop-blur-sm hover:bg-black/60 transition">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd"></path></svg>
+                    {{-- Play/Pause overlay icon on click/hover --}}
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div class="play-btn bg-black/50 p-4 rounded-full text-white opacity-0 group-hover/slide:opacity-100 transition duration-300">
+                            {{-- Play Icon --}}
+                            <svg class="w-8 h-8 play-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            {{-- Pause Icon (hidden by default) --}}
+                            <svg class="w-8 h-8 pause-icon hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </div>
+                    </div>
+
+                    <div class="absolute top-4 right-4 flex flex-col gap-2 text-white z-20">
+                        <button class="mute-btn bg-black/40 p-2 rounded-full backdrop-blur-sm hover:bg-black/60 transition pointer-events-auto">
+                            {{-- Muted Icon --}}
+                            <svg class="w-4 h-4 mute-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            {{-- Sound Icon (hidden by default) --}}
+                            <svg class="w-4 h-4 sound-icon hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd"></path></svg>
                         </button>
                     </div>
 
-                    <div class="absolute bottom-6 left-0 right-0 px-4 text-center">
-                        <span class="bg-black/60 text-white text-xs px-3 py-1.5 rounded-lg backdrop-blur-md">and its short treatment time</span>
+                    @if($reel->caption)
+                    <div class="absolute bottom-6 left-0 right-0 px-4 text-center z-10">
+                        <span class="bg-black/60 text-white text-xs px-3 py-1.5 rounded-lg backdrop-blur-md inline-block max-w-[90%] truncate">
+                            {{ $reel->caption }}
+                        </span>
                     </div>
+                    @endif
                 </div>
 
+                @if($reel->product)
                 <div class="w-[95%] -mt-6 relative z-10 bg-[#f4f4f4] rounded-xl p-3 flex items-center justify-between shadow-md">
                     <div class="flex items-center gap-3">
-                        <img src="https://via.placeholder.com/50" alt="Product" class="w-12 h-12 rounded bg-white object-cover">
+                        @if($reel->product->cover_image || $reel->product->image)
+                            <img src="{{ asset('storage/' . ($reel->product->cover_image ?? $reel->product->image)) }}" alt="{{ $reel->product->name }}" class="w-12 h-12 rounded bg-white object-cover">
+                        @else
+                            <div class="w-12 h-12 rounded bg-white flex items-center justify-center text-xs text-gray-400">No image</div>
+                        @endif
                         <div>
                             <div class="flex items-center gap-1">
-                                <h4 class="text-xs font-semibold text-gray-800 leading-tight">LumaLux Face+ | Pro LED Red<br>Light Therapy Face & Neck...</h4>
+                                <h4 class="text-xs font-semibold text-gray-800 leading-tight line-clamp-2" title="{{ $reel->product->name }}">
+                                    {{ $reel->product->name }}
+                                </h4>
                             </div>
-                            <p class="text-xs text-gray-600 mt-1">PKR 181,900</p>
+                            <p class="text-xs text-gray-600 mt-1">${{ number_format($reel->product->price, 2) }}</p>
                         </div>
                     </div>
-                    <button class="bg-[#d5c3ba] hover:bg-[#c4b0a6] transition text-white rounded-full w-8 h-8 flex items-center justify-center shrink-0">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    </button>
+                    <a href="{{ route('product.detail', $reel->product->id) }}" class="bg-[#d5c3ba] hover:bg-[#c4b0a6] transition text-white rounded-full w-8 h-8 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </a>
                 </div>
+                @endif
             </div>
-            @endfor
+            @empty
+                @for ($i = 0; $i < 5; $i++)
+                <div class="swiper-slide w-72 md:w-80 flex flex-col items-center">
+                    <div class="relative w-full h-[450px] rounded-2xl overflow-hidden bg-gray-900 shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=600&fit=crop" alt="Reel thumbnail" class="object-cover w-full h-full opacity-80">
+                        <div class="absolute bottom-6 left-0 right-0 px-4 text-center">
+                            <span class="bg-black/60 text-white text-xs px-3 py-1.5 rounded-lg backdrop-blur-md">Used by the professionals</span>
+                        </div>
+                    </div>
+                </div>
+                @endfor
+            @endforelse
 
         </div>
         
@@ -635,10 +676,92 @@
                 1024: { slidesPerView: 4, spaceBetween: 30 }
             }
         });
+
+        // Reels Video play/pause/mute logic
+        function handleSlideVideo(activeSlide) {
+            if (!activeSlide) return;
+            
+            // Pause all videos first
+            document.querySelectorAll('.reel-video').forEach(video => {
+                video.pause();
+                const slide = video.closest('.swiper-slide');
+                if (slide) updatePlayBtnUI(slide, false);
+            });
+            
+            // Play active slide video
+            const activeVideo = activeSlide.querySelector('.reel-video');
+            if (activeVideo) {
+                activeVideo.play().catch(e => console.log('Autoplay blocked:', e));
+                updatePlayBtnUI(activeSlide, true);
+            }
+        }
+
+        function updatePlayBtnUI(slide, isPlaying) {
+            const playIcon = slide.querySelector('.play-icon');
+            const pauseIcon = slide.querySelector('.pause-icon');
+            if (isPlaying) {
+                playIcon?.classList.add('hidden');
+                pauseIcon?.classList.remove('hidden');
+            } else {
+                playIcon?.classList.remove('hidden');
+                pauseIcon?.classList.add('hidden');
+            }
+        }
+
+        swiper.on('slideChangeTransitionEnd', function () {
+            const activeSlide = swiper.slides[swiper.activeIndex];
+            handleSlideVideo(activeSlide);
+        });
+
+        // Initial play for active slide after a small delay to ensure loading
+        setTimeout(() => {
+            const activeSlide = swiper.slides[swiper.activeIndex];
+            handleSlideVideo(activeSlide);
+        }, 800);
+
+        // Click to toggle Play/Pause
+        document.addEventListener('click', function (e) {
+            const video = e.target.closest('.reel-video');
+            if (video) {
+                const slide = video.closest('.swiper-slide');
+                if (video.paused) {
+                    video.play();
+                    updatePlayBtnUI(slide, true);
+                } else {
+                    video.pause();
+                    updatePlayBtnUI(slide, false);
+                }
+            }
+        });
+
+        // Click to toggle Mute
+        document.addEventListener('click', function (e) {
+            const muteBtn = e.target.closest('.mute-btn');
+            if (muteBtn) {
+                e.stopPropagation();
+                const slide = muteBtn.closest('.swiper-slide');
+                const video = slide.querySelector('.reel-video');
+                if (video) {
+                    const shouldMute = !video.muted;
+                    document.querySelectorAll('.reel-video').forEach(v => {
+                        v.muted = shouldMute;
+                        const s = v.closest('.swiper-slide');
+                        if (s) {
+                            const muteIcon = s.querySelector('.mute-icon');
+                            const soundIcon = s.querySelector('.sound-icon');
+                            if (shouldMute) {
+                                muteIcon?.classList.remove('hidden');
+                                soundIcon?.classList.add('hidden');
+                            } else {
+                                muteIcon?.classList.add('hidden');
+                                soundIcon?.classList.remove('hidden');
+                            }
+                        }
+                    });
+                }
+            }
+        });
     });
-    theme: {
- 
-}
     // Initialize Testimonial Swiper
     const testimonialSwiper = new Swiper('.testimonial-swiper', {
         slidesPerView: 1,

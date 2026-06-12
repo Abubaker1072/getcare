@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Eloquent;
 
-use App\Models\HomepageHotDealProduct;
+use App\Models\HotDeal;
 use App\Models\Product;
 use App\Repositories\Contracts\HomepageHotDealProductRepositoryInterface;
 
@@ -10,14 +10,14 @@ class HomepageHotDealProductRepository implements HomepageHotDealProductReposito
 {
     public function getHotDealProductIds(): array
     {
-        return HomepageHotDealProduct::pluck('product_id')->toArray();
+        return HotDeal::pluck('product_id')->toArray();
     }
 
     public function syncHotDealProducts(array $productIds): void
     {
         $productIds = array_slice($productIds, 0, 8);
 
-        HomepageHotDealProduct::truncate();
+        HotDeal::truncate();
 
         $data = [];
         foreach ($productIds as $id) {
@@ -29,7 +29,7 @@ class HomepageHotDealProductRepository implements HomepageHotDealProductReposito
         }
 
         if (!empty($data)) {
-            HomepageHotDealProduct::insert($data);
+            HotDeal::insert($data);
         }
     }
 
