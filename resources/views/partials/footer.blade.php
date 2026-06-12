@@ -17,8 +17,8 @@
                 <div>
                     <h3 class="text-white font-bold text-sm md:text-base mb-4">EXPLORE</h3>
                     <ul class="space-y-2 md:space-y-3">
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">About Us</a></li>
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Sitemap</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">About Us</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Sitemap</a></li>
                         <li><a href="{{ route('blog') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Events</a></li>
                     </ul>
                 </div>
@@ -27,10 +27,10 @@
                 <div>
                     <h3 class="text-white font-bold text-sm md:text-base mb-4">RESOURCES</h3>
                     <ul class="space-y-2 md:space-y-3">
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">FSA/HSA</a></li>
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Skin Quiz</a></li>
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Collab with Us</a></li>
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Business Inquiries</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">FSA/HSA</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Skin Quiz</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Collab with Us</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Business Inquiries</a></li>
                     </ul>
                 </div>
 
@@ -38,13 +38,13 @@
                 <div>
                     <h3 class="text-white font-bold text-sm md:text-base mb-4">SUPPORT</h3>
                     <ul class="space-y-2 md:space-y-3">
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Payment</a></li>
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Shipping Information</a></li>
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Track Your Order</a></li>
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Warranty Registration</a></li>
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Returns & Warranty</a></li>
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">FAQ</a></li>
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Contact Us</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Payment</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Shipping Information</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Track Your Order</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Warranty Registration</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Returns & Warranty</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">FAQ</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Contact Us</a></li>
                     </ul>
                 </div>
 
@@ -52,9 +52,9 @@
                 <div>
                     <h3 class="text-white font-bold text-sm md:text-base mb-4">TERMS & POLICY</h3>
                     <ul class="space-y-2 md:space-y-3">
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Privacy Policy</a></li>
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Terms of Service</a></li>
-                        <li><a href="{{ route('products.index') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Refund policy</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Terms of Service</a></li>
+                        <li><a href="{{ route('home') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition">Refund policy</a></li>
                     </ul>
                 </div>
 
@@ -96,7 +96,7 @@
                     
                     {{-- Privacy Notice --}}
                     <p class="text-xs text-gray-500 leading-relaxed">
-                        By signing up, you agree to receive marketing emails and text messages. View our <a href="{{ route('products.index') }}" class="text-gray-400 hover:text-white transition">privacy policy</a> and <a href="{{ route('products.index') }}" class="text-gray-400 hover:text-white transition">terms of service</a> for more info
+                        By signing up, you agree to receive marketing emails and text messages. View our <a href="{{ route('home') }}" class="text-gray-400 hover:text-white transition">privacy policy</a> and <a href="{{ route('home') }}" class="text-gray-400 hover:text-white transition">terms of service</a> for more info
                     </p>
                 </div>
             </div>

@@ -99,31 +99,24 @@
             <p class="text-gray-600 text-sm md:text-lg">Discover our premium skincare & beauty devices</p>
         </div>
 
-        @php
-            $categories = [
-                ['title' => 'LED LIGHT THERAPY', 'image' => 'led-light.jpg'],
-                ['title' => 'ANTI-AGING', 'image' => 'anti-aging.jpg'],
-                ['title' => 'ANTI-ACNE', 'image' => 'anti-acne.jpg'],
-                ['title' => 'SHOP ALL DEVICES', 'image' => 'all-devices.jpg'],
-            ];
-        @endphp
-
+        @if($featuredCategories->isEmpty())
+            <div class="text-center py-10 text-gray-500">
+                <p>Featured categories coming soon.</p>
+            </div>
+        @else
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            @foreach($categories as $category)
-            {{-- Category Card --}}
+            @foreach($featuredCategories as $category)
             <div class="relative rounded-[2rem] overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 group h-[400px]">
-                {{-- Background Image --}}
-                <img src="{{ ImageHelper::getProductImage($category['image']) }}" 
-                     alt="{{ $category['title'] }}" 
+                <img src="{{ ImageHelper::getCategoryImage($category->image) }}" 
+                     alt="{{ $category->name }}" 
                      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 
-                {{-- Centered Content Overlay --}}
                 <div class="absolute inset-0 bg-black/20 flex flex-col items-center justify-center p-6 text-center">
-                    <h3 class="text-2xl font-semibold text-white mb-6 tracking-wide drop-shadow-md">
-                        {{ $category['title'] }}
+                    <h3 class="text-2xl font-semibold text-white mb-6 tracking-wide drop-shadow-md uppercase">
+                        {{ $category->name }}
                     </h3>
                     
-                    <a href="{{ route('products.all') }}" 
+                    <a href="{{ route('products.all', ['categories' => [$category->id]]) }}" 
                        class="bg-[#FDF9F5] text-[#4A4A4A] px-8 py-3 rounded-full font-medium text-sm tracking-widest hover:bg-white transition-colors duration-300 shadow-lg">
                         SHOP NOW
                     </a>
@@ -131,6 +124,7 @@
             </div>
             @endforeach
         </div>
+        @endif
     </div>
 </section>{{-- PRODUCTS SECTION --}}
 <section class="py-16 md:py-24 relative overflow-hidden">
@@ -149,65 +143,22 @@
 
         {{-- Products Grid --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12">
-            @php
-                $homeProducts = [
-                    [
-                        'name' => 'CurrentBody Skin LED Red Light Therapy Face Mask: Series 2',
-                        'description' => '',
-                        'price' => 469.99,
-                        'original_price' => 549.99,
-                        'rating' => 4.8,
-                        'reviews' => 1175,
-                        'image' => 'product-1.jpg',
-                        'gradient' => 'from-pink-100 to-red-200',
-                    ],
-                    [
-                        'name' => 'CurrentBody Skin LED Blue Light Therapy Face Mask: Series 2',
-  'description' => '',
-                          'price' => 469.99,
-                        'original_price' => 549.99,
-                        'rating' => 4.9,
-                        'reviews' => 35,
-                        'image' => 'product-2.jpg',
-                        'gradient' => 'from-blue-100 to-cyan-200',
-                    ],
-                    [
-                        'name' => 'CurrentBody Skin LED Neck & Décolletage Mask: Series 2',
-  'description' => '',
-                        'price' => 419.99,
-                        'original_price' => 499.99,
-                        'rating' => 4.7,
-                        'reviews' => 19,
-                        'image' => 'product-3.jpg',
-                        'gradient' => 'from-amber-100 to-orange-200',
-                    ],
-                    [
-                        'name' => 'CurrentBody Skin LED Red Light Hair Growth Helmet',
-
-  'description' => '',                        'price' => 859.99,
-                        'original_price' => 999.99,
-                        'rating' => 4.6,
-                        'reviews' => 174,
-                        'image' => 'product-4.jpg',
-                        'gradient' => 'from-purple-100 to-pink-200',
-                    ],
-                ];
-            @endphp
-
-            @foreach($homeProducts as $index => $product)
+            @foreach($bestsellingProducts as $index => $product)
             <div class="product-card group cursor-pointer animation-delay-{{ $index * 100 }}">
                 {{-- Card Container --}}
                 <div class="relative h-full rounded-3xl overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
                     {{-- Product Image Container --}}
-                    <a href="{{ route('product.detail', 11) }}" class="block relative bg-gradient-to-br {{ $product['gradient'] }} h-72 sm:h-80 md:h-96 overflow-hidden">
+                    <a href="{{ route('product.detail', $product->id) }}" class="block relative bg-gradient-to-br from-slate-100 to-slate-200 h-72 sm:h-80 md:h-96 overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/0 group-hover:from-black/30 transition duration-500"></div>
-                        <img src="{{ ImageHelper::getProductImage($product['image']) }}" 
-                             alt="{{ $product['name'] }}" 
+                        <img src="{{ asset('storage/' . ($product->cover_image ?? $product->image)) }}" 
+                             alt="{{ $product->name }}" 
                              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out">
 
+                        @if($product->compare_price && $product->compare_price > $product->price)
                         <div class="absolute top-4 right-4 bg-red-600 text-white px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg transform transition-transform duration-300 hover:scale-110">
                             Sale
                         </div>
+                        @endif
 
                         <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <div class="text-white text-center">
@@ -220,51 +171,39 @@
 
                     {{-- Product Info --}}
                     <div class="p-5 sm:p-6">
-                        <span class="inline-block text-xs font-semibold text-amber-600 mb-2 uppercase tracking-wider">LED Therapy</span>
-                        <a href="{{ route('product.detail', 11) }}">
+                        <span class="inline-block text-xs font-semibold text-amber-600 mb-2 uppercase tracking-wider">Product</span>
+                        <a href="{{ route('product.detail', $product->id) }}">
                             <h3 class="font-bold text-gray-900 text-sm sm:text-base line-clamp-2 mb-2.5 leading-tight group-hover:text-amber-600 transition-colors">
-                                {{ $product['name'] }}
+                                {{ $product->name }}
                             </h3>
                         </a>
 
                         <p class="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 line-clamp-2">
-                            {{ $product['description'] }}
+                            {{ $product->description ?? 'Premium quality product.' }}
                         </p>
 
                         <div class="mb-4 pb-4 border-b border-gray-100">
                             <div class="flex items-baseline gap-2 mb-1">
-                                <span class="text-xl sm:text-2xl font-bold text-gray-900">${{ number_format($product['price'], 2) }}</span>
-                                <span class="text-xs text-gray-400 line-through">${{ number_format($product['original_price'], 2) }}</span>
-                                <span class="text-xs font-bold text-green-600">{{ round((1 - $product['price']/$product['original_price']) * 100) }}% OFF</span>
+                                @if($product->discount_price && $product->discount_price < $product->price)
+                                    <span class="text-xl sm:text-2xl font-bold text-gray-900">${{ number_format($product->discount_price, 2) }}</span>
+                                    <span class="text-xs text-gray-400 line-through">${{ number_format($product->price, 2) }}</span>
+                                    <span class="text-xs font-bold text-green-600">{{ round((1 - $product->discount_price/$product->price) * 100) }}% OFF</span>
+                                @else
+                                    <span class="text-xl sm:text-2xl font-bold text-gray-900">${{ number_format($product->price, 2) }}</span>
+                                @endif
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="flex gap-1">
-                                @for($i = 0; $i < 5; $i++)
-                                    @if($i < floor($product['rating']))
-                                        <svg class="w-4 h-4 text-amber-400 fill-current" viewBox="0 0 20 20">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                        </svg>
-                                    @else
-                                        <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 20 20">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                        </svg>
-                                    @endif
-                                @endfor
-                            </div>
-                            <span class="text-xs text-gray-600 font-medium">({{ $product['reviews'] }} reviews)</span>
-                        </div>
-
-                        <button class="w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white py-3 px-4 rounded-xl font-bold text-sm sm:text-base uppercase tracking-wider hover:from-amber-700 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg group/btn relative overflow-hidden">
+                        <a href="{{ route('product.detail', $product->id) }}" class="block w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white text-center py-3 px-4 rounded-xl font-bold text-sm sm:text-base uppercase tracking-wider hover:from-amber-700 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg group/btn relative overflow-hidden">
                             <span class="relative z-10 flex items-center justify-center gap-2">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                 </svg>
-                                Add to Cart
+                                View Product
                             </span>
                             <div class="absolute inset-0 bg-white/20 transform -translate-x-full group-hover/btn:translate-x-full transition-transform duration-500"></div>
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -280,29 +219,60 @@
             </a>
         </div>
     </div>
-    <div class="fade-up d-3 relative rounded-[2rem] bg-white border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)] overflow-hidden mb-24 group">
-            <div class="flex flex-col lg:flex-row items-center">
-                
-                {{-- Left Text Side --}}
-                <div class="w-full lg:w-1/2 p-10 md:p-16 relative z-10">
-                    <span class="text-amber-600 text-xs font-bold tracking-widest uppercase mb-4 block">Master Collection</span>
-                    <h2 class="text-4xl md:text-5xl font-light mb-6 text-slate-900">
-                        The Clinical <br><span class="italic font-serif text-slate-700">Renewal Bundle</span>
-                    </h2>
-                    <p class="text-slate-500 leading-relaxed mb-10 max-w-md font-light">
-                        Our highest-tier LED mask paired with the potent 24K gold serum. A complete clinical protocol for unprecedented cellular rejuvenation.
-                    </p>
-                    
-                    <div class="flex items-end gap-6 mb-10">
-                        <div>
-                            <span class="text-slate-400 line-through text-sm block mb-1">Standard Price $850</span>
-                            <span class="text-5xl font-bold text-slate-900">$499</span>
-                        </div>
-                        <div class="bg-red-50 border border-red-100 px-4 py-2 rounded-lg">
-                            <span class="text-red-600 font-bold tracking-wider uppercase text-xs">You Save $351</span>
-                        </div>
-                    </div>
 
+    @if(isset($hotDealProducts) && $hotDealProducts->isNotEmpty())
+        @php
+            $featuredHotDeal = $hotDealProducts->first();
+            $featuredSale = ($featuredHotDeal->discount_price && $featuredHotDeal->discount_price < $featuredHotDeal->price)
+                ? $featuredHotDeal->discount_price : $featuredHotDeal->price;
+            $featuredCompare = $featuredHotDeal->compare_price ?? ($featuredHotDeal->discount_price ? $featuredHotDeal->price : null);
+            $featuredSavings = ($featuredCompare && $featuredCompare > $featuredSale) ? $featuredCompare - $featuredSale : 0;
+        @endphp
+        <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 mt-16">
+            <div class="fade-up relative rounded-[2rem] bg-white border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)] overflow-hidden group">
+                <div class="flex flex-col lg:flex-row items-center">
+                    <div class="w-full lg:w-1/2 p-10 md:p-16 relative z-10">
+                        <span class="text-amber-600 text-xs font-bold tracking-widest uppercase mb-4 block">Master Collection</span>
+                        <h2 class="text-4xl md:text-5xl font-light mb-6 text-slate-900">
+                            The Clinical <br><span class="italic font-serif text-slate-700">Renewal Bundle</span>
+                        </h2>
+                        <p class="text-slate-500 leading-relaxed mb-10 max-w-md font-light">
+                            {{ $featuredHotDeal->description ?? 'Our highest-tier LED mask paired with the potent 24K gold serum. A complete clinical protocol for unprecedented cellular rejuvenation.' }}
+                        </p>
+                        <div class="flex items-end gap-6 mb-10">
+                            <div>
+                                @if($featuredCompare && $featuredCompare > $featuredSale)
+                                    <span class="text-slate-400 line-through text-sm block mb-1">Standard Price ${{ number_format($featuredCompare, 0) }}</span>
+                                @endif
+                                <span class="text-5xl font-bold text-slate-900">${{ number_format($featuredSale, 0) }}</span>
+                            </div>
+                            @if($featuredSavings > 0)
+                            <div class="bg-red-50 border border-red-100 px-4 py-2 rounded-lg">
+                                <span class="text-red-600 font-bold tracking-wider uppercase text-xs">You Save ${{ number_format($featuredSavings, 0) }}</span>
+                            </div>
+                            @endif
+                        </div>
+                        <a href="{{ route('product.detail', $featuredHotDeal->slug) }}"
+                           class="inline-block bg-slate-900 text-white px-10 py-4 rounded-xl text-sm font-bold tracking-[0.2em] uppercase hover:scale-105 hover:shadow-xl transition-all duration-300">
+                            Claim Offer
+                        </a>
+                    </div>
+                    <div class="w-full lg:w-1/2 relative h-[400px] lg:h-[500px] flex items-center justify-center p-10 bg-slate-50/50">
+                        <div class="absolute w-[300px] h-[300px] bg-gradient-to-tr from-amber-200/40 to-red-100/40 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700"></div>
+                        @if($featuredHotDeal->cover_image || $featuredHotDeal->image)
+                            <img src="{{ asset('storage/' . ($featuredHotDeal->cover_image ?? $featuredHotDeal->image)) }}"
+                                 alt="{{ $featuredHotDeal->name }}"
+                                 class="relative z-10 w-full max-w-[400px] h-full object-contain drop-shadow-2xl">
+                        @else
+                            <img src="{{ asset('images/categories/hero-deal.jpg') }}"
+                                 alt="{{ $featuredHotDeal->name }}"
+                                 class="relative z-10 w-full max-w-[400px] object-contain drop-shadow-2xl">
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 </section>
 
 

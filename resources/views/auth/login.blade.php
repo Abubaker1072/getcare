@@ -22,8 +22,17 @@
                     <p class="text-gray-500 mt-1">Login to your account.</p>
                 </div>
 
-                <form action="#" method="POST">
+                <form action="{{ route('login.post') }}" method="POST">
                     @csrf
+                    @if ($errors->any())
+                        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                            <ul class="list-disc list-inside text-sm">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <div class="mb-5">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
                         <input type="email" name="email" class="w-full px-4 py-3 bg-blue-50 border border-blue-100 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="digitalupk@gmail.com" required>
@@ -55,7 +64,7 @@
                 </div>
 
                 <div class="mt-10 text-right">
-                    <a href="{{ route('products.index') }}" class="text-sm text-blue-800 font-semibold flex items-center justify-end hover:underline">
+                    <a href="{{ route('home') }}" class="text-sm text-blue-800 font-semibold flex items-center justify-end hover:underline">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                         Back to Previous Page
                     </a>

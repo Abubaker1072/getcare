@@ -15,10 +15,19 @@
                 <p class="text-gray-600 mt-1">Join us and start shopping today.</p>
             </div>
 
-            <form action="#" method="POST">
+            <form action="{{ route('register.post') }}" method="POST">
                 @csrf
+                @if ($errors->any())
+                    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <ul class="list-disc list-inside text-sm">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 
-                <div class="mb-6">
+            {{--    <div class="mb-6">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Register as <span class="text-red-500">*</span></label>
                     <div class="flex space-x-4">
                         <label class="flex-1 cursor-pointer">
@@ -26,7 +35,7 @@
                             <div class="text-center py-3 border rounded border-gray-200 text-gray-600 peer-checked:border-blue-800 peer-checked:text-blue-800 peer-checked:bg-blue-50 transition flex justify-center items-center gap-2">
                                 <span class="w-3 h-3 rounded-full bg-gray-300 peer-checked:bg-orange-400 inline-block"></span>
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                                Customer
+                                
                             </div>
                         </label>
                         <label class="flex-1 cursor-pointer">
@@ -38,7 +47,7 @@
                             </div>
                         </label>
                     </div>
-                </div>
+                </div>  --}}
 
                 <div class="mb-4">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name <span class="text-red-500">*</span></label>

@@ -84,63 +84,21 @@
 <section class="py-16 md:py-24 bg-[#FDFBF6]">
     <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
         
-        @php
-            $premiumCategories = [
-                [
-                    'name' => 'LED Light Therapy',
-                    'subtitle' => 'Advanced Cellular Renewal',
-                    'description' => 'Clinical-strength wavelengths to stimulate collagen, reduce fine lines, and clear complexions.',
-                    'image' => 'category-led.jpg',
-                    'item_count' => 12,
-                ],
-                [
-                    'name' => 'Microcurrent Devices',
-                    'subtitle' => 'Facial Sculpting & Toning',
-                    'description' => 'Non-invasive facial workouts to lift, contour, and tighten facial muscles instantly.',
-                    'image' => 'category-micro.jpg',
-                    'item_count' => 8,
-                ],
-                [
-                    'name' => 'Clinical Serums',
-                    'subtitle' => 'Potent Active Ingredients',
-                    'description' => 'Concentrated formulations designed to penetrate deeply and target specific skin concerns.',
-                    'image' => 'category-serum.jpg',
-                    'item_count' => 24,
-                ],
-                [
-                    'name' => 'Sonic Cleansing',
-                    'subtitle' => 'Deep Pore Purification',
-                    'description' => 'Ultra-hygienic silicone bristles paired with sonic pulsations for a radiant, bare-faced glow.',
-                    'image' => 'category-cleanse.jpg',
-                    'item_count' => 6,
-                ],
-                [
-                    'name' => '24K Gold Treatments',
-                    'subtitle' => 'Luxury Brightening',
-                    'description' => 'Infused with real gold extracts to boost microcirculation and restore youthful luminosity.',
-                    'image' => 'category-gold.jpg',
-                    'item_count' => 15,
-                ],
-                [
-                    'name' => 'Targeted Eye Care',
-                    'subtitle' => 'Awaken & Rejuvenate',
-                    'description' => 'Specialized tools and creams to diminish dark circles, puffiness, and crow\'s feet.',
-                    'image' => 'category-eye.jpg',
-                    'item_count' => 9,
-                ]
-            ];
-        @endphp
-
+        @if($categories->isEmpty())
+            <div class="text-center py-20">
+                <p class="text-slate-500 text-lg font-light">No categories available yet. Check back soon!</p>
+            </div>
+        @else
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            @foreach($premiumCategories as $index => $category)
+            @foreach($categories as $index => $category)
             
             {{-- Category Card --}}
-            <a href="#" class="group relative block h-[400px] md:h-[450px] w-full rounded-2xl overflow-hidden fade-in-up" style="animation-delay: {{ ($index * 100) + 400 }}ms;">
+            <a href="{{ route('category.detail', $category->slug) }}" class="group relative block h-[400px] md:h-[450px] w-full rounded-2xl overflow-hidden fade-in-up" style="animation-delay: {{ ($index * 100) + 400 }}ms;">
                 
                 {{-- Background Image with slow zoom on hover --}}
                 <div class="absolute inset-0 bg-slate-200">
-                    <img src="{{ asset('images/categories/' . $category['image']) }}" 
-                         alt="{{ $category['name'] }}" 
+                    <img src="{{ \App\Helpers\ImageHelper::getCategoryImage($category->image) }}" 
+                         alt="{{ $category->name }}" 
                          class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110">
                 </div>
 
@@ -153,24 +111,25 @@
                     {{-- Top right item count badge --}}
                     <div class="absolute top-6 right-6 translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 ease-out">
                         <span class="bg-white/10 backdrop-blur-md text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/20 shadow-sm">
-                            {{ $category['item_count'] }} Products
+                            {{ $category->products_count ?? 0 }} Products
                         </span>
                     </div>
 
                     {{-- Text Content --}}
                     <div class="relative z-10 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-500 ease-out">
                         <span class="text-amber-400 text-[10px] font-bold tracking-[0.2em] uppercase mb-2 block drop-shadow-md">
-                            {{ $category['subtitle'] }}
+                            {{ $category->slug }}
                         </span>
                         
                         <h2 class="text-2xl md:text-3xl font-light text-white mb-3 tracking-wide drop-shadow-md">
-                            {{ $category['name'] }}
+                            {{ $category->name }}
                         </h2>
                         
                         {{-- Description fades in and slides up on hover --}}
+                        @if($category->description)
                         <div class="h-0 opacity-0 overflow-hidden group-hover:h-auto group-hover:opacity-100 group-hover:mt-4 transition-all duration-500 ease-out">
                             <p class="text-slate-300 text-sm font-light leading-relaxed max-w-[90%]">
-                                {{ $category['description'] }}
+                                {{ $category->description }}
                             </p>
                             
                             {{-- Explore Link --}}
@@ -181,11 +140,13 @@
                                 </svg>
                             </div>
                         </div>
+                        @endif
                     </div>
                 </div>
             </a>
             @endforeach
         </div>
+        @endif
     </div>
 </section>
 

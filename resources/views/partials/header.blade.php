@@ -20,14 +20,14 @@
 
             {{-- Logo --}}
             <div class="flex-shrink-0">
-                <a href="{{ route('products.index') ?? '#' }}" class="text-lg md:text-2xl font-bold tracking-widest text-gray-900">
+                <a href="{{ route('home') ?? '#' }}" class="text-lg md:text-2xl font-bold tracking-widest text-gray-900">
                     GetCare<br><span class="text-xs font-light">BEAUTY</span>
                 </a>
             </div>
 
             {{-- Main Navigation Menu --}}
             <nav class="hidden lg:flex items-center gap-4 xl:gap-8 text-xs xl:text-sm font-medium">
-                <a href="{{ route('products.index') ?? '#' }}" class="text-gray-700 hover:text-amber-600 transition">
+                <a href="{{ route('home') ?? '#' }}" class="text-gray-700 hover:text-amber-600 transition">
                     Home
                 </a>
                 <a href="{{ route('products.all') ?? '#' }}" class="text-gray-700 hover:text-amber-600 transition">
@@ -124,7 +124,7 @@
     {{-- Mobile Menu Navigation (Hidden by default, toggled with hamburger) --}}
     <div id="mobile-menu" class="lg:hidden hidden w-full bg-white border-t max-h-96 overflow-y-auto">
         <ul class="main-nav nav navbar-nav flex flex-col">
-            <li class="border-b"><a href="{{ route('products.index') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition touch-none active:bg-amber-100">Home</a></li>
+            <li class="border-b"><a href="{{ route('home') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition touch-none active:bg-amber-100">Home</a></li>
             <li class="border-b"><a href="{{ route('hot-deals') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition touch-none active:bg-amber-100">Hot Deals</a></li>
             <li class="border-b"><a href="{{ route('categories') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition touch-none active:bg-amber-100">Categories</a></li>
             <li class="border-b"><a href="{{ route('brands') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition touch-none active:bg-amber-100">All Brands</a></li>

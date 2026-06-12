@@ -12,7 +12,7 @@ class ImageHelper
         $path = public_path("products/{$filename}");
         
         if (file_exists($path)) {
-            return asset("products/{$filename}");
+            return asset('storage/products/'.$filename);
         }
 
         // Return placeholder images based on filename
@@ -42,5 +42,14 @@ class ImageHelper
         ];
 
         return $placeholders[$filename] ?? 'https://via.placeholder.com/400';
+    }
+
+    public static function getCategoryImage(?string $path)
+    {
+        if ($path && file_exists(storage_path('app/public/' . $path))) {
+            return asset('storage/' . $path);
+        }
+
+        return 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=600&h=800&fit=crop';
     }
 }
