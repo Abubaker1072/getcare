@@ -30,7 +30,9 @@ Route::get('/', function (
     $bestsellingProducts = $productRepo->getBestsellingProducts();
     $featuredCategories = $categoryRepo->getFeaturedCategories();
     $hotDealProducts = $hotDealRepo->getHotDealProducts();
-    $reels = \App\Models\Reel::with('product')->where('is_active', true)->latest()->get();
+    $regularReels = \App\Models\Reel::with('product')->where('is_active', true)->latest()->get();
+    $productReels = \App\Models\ProductReviewVideo::with('product')->where('is_active', true)->where('show_on_homepage', true)->latest()->get();
+    $reels = $regularReels->concat($productReels)->sortByDesc('created_at')->values();
     return view('pages.home', compact('bestsellingProducts', 'featuredCategories', 'hotDealProducts', 'reels'));
 })->name('home');
 
@@ -202,6 +204,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Products
     Route::resource('products', AdminProductController::class)->except(['show']);
+    
+    // Product Testimonials
+    Route::post('/products/{product}/testimonials', [AdminProductController::class, 'storeTestimonial'])->name('products.testimonials.store');
+    Route::delete('/products/{product}/testimonials/{testimonial}', [AdminProductController::class, 'destroyTestimonial'])->name('products.testimonials.destroy');
+    
+    // Product Review Videos
+    Route::post('/products/{product}/review-videos', [AdminProductController::class, 'storeReviewVideo'])->name('products.review_videos.store');
+    Route::delete('/products/{product}/review-videos/{video}', [AdminProductController::class, 'destroyReviewVideo'])->name('products.review_videos.destroy');
+    
+    // Product Reviews
+    Route::post('/products/{product}/reviews/{review}/approve', [AdminProductController::class, 'approveReview'])->name('products.reviews.approve');
+    Route::delete('/products/{product}/reviews/{review}', [AdminProductController::class, 'destroyReview'])->name('products.reviews.destroy');
 
     // Bestselling toggle
     Route::get('/product-management', [HomepageBestsellingController::class, 'index'])

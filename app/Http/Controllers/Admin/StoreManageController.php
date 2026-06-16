@@ -36,11 +36,14 @@ class StoreManageController extends Controller
             'hero_media_type' => 'sometimes|required|in:image,video',
             'hero_media' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,mp4,webm,ogg|max:20480', // Max 20MB for video
             
-            // Scheduled hero section
-            'hero_scheduled_media_type' => 'sometimes|required|in:image,video',
-            'hero_scheduled_media' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,mp4,webm,ogg|max:20480',
-            'hero_scheduled_start' => 'nullable|date',
-            'hero_scheduled_end' => 'nullable|date|after_or_equal:hero_scheduled_start',
+            // Scheduled hero section slider
+            'hero_active_mode' => 'nullable|in:default,slider',
+            'hero_slider_interval' => 'nullable|integer|min:5',
+            'hero_sch_image_1' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'hero_sch_image_2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'hero_sch_image_3' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'hero_sch_video_1' => 'nullable|mimetypes:video/mp4,video/webm,video/ogg|max:20480',
+            'hero_sch_video_2' => 'nullable|mimetypes:video/mp4,video/webm,video/ogg|max:20480',
             
             // Countdown Timer
             'countdown_is_active' => 'nullable|in:0,1',
@@ -59,8 +62,9 @@ class StoreManageController extends Controller
         // Simple text fields saving
         $keys = [
             'company_name', 'support_phone', 'support_email', 'street_address', 'city', 'state', 'zip_code',
-            'hero_title', 'hero_subtitle', 'hero_media_type', 'hero_scheduled_media_type',
-            'hero_scheduled_start', 'hero_scheduled_end', 'countdown_is_active', 'countdown_end_time', 'countdown_text',
+            'hero_title', 'hero_subtitle', 'hero_media_type', 'hero_active_mode',
+            'hero_slider_interval',
+            'countdown_is_active', 'countdown_end_time', 'countdown_text',
             'shipping_fee', 'shipping_is_active', 'cod_is_active', 'cod_description', 'bank_is_active', 'bank_details'
         ];
 
@@ -78,12 +82,26 @@ class StoreManageController extends Controller
             StoreSetting::setValue('hero_media_path', $path);
         }
 
-        // Scheduled Hero Background media upload
-        if ($request->hasFile('hero_scheduled_media')) {
-            $file = $request->file('hero_scheduled_media');
-            $fileName = 'hero_scheduled_' . time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('hero', $fileName, 'public');
-            StoreSetting::setValue('hero_scheduled_media_path', $path);
+        // Scheduled Hero Background Slider media upload (to DB)
+        $uploadSlots = [
+            'hero_sch_image_1' => ['order' => 1, 'type' => 'image'],
+            'hero_sch_image_2' => ['order' => 2, 'type' => 'image'],
+            'hero_sch_image_3' => ['order' => 3, 'type' => 'image'],
+            'hero_sch_video_1' => ['order' => 4, 'type' => 'video'],
+            'hero_sch_video_2' => ['order' => 5, 'type' => 'video'],
+        ];
+
+        foreach ($uploadSlots as $inputName => $slot) {
+            if ($request->hasFile($inputName)) {
+                $file = $request->file($inputName);
+                $fileName = 'hero_slider_' . $slot['order'] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('hero', $fileName, 'public');
+                
+                \App\Models\HeroSlider::updateOrCreate(
+                    ['sort_order' => $slot['order']],
+                    ['type' => $slot['type'], 'media_path' => $path]
+                );
+            }
         }
 
         return redirect()->back()->with('success', 'Store settings updated successfully.');
@@ -93,9 +111,8 @@ class StoreManageController extends Controller
     {
         $keys = [
             'hero_title', 'hero_subtitle', 'hero_media_type', 'hero_media_path',
-            'hero_scheduled_media_type', 'hero_scheduled_media_path',
-            'hero_scheduled_start', 'hero_scheduled_end', 'countdown_is_active',
-            'countdown_end_time', 'countdown_text'
+            'hero_active_mode', 'hero_slider_interval',
+            'countdown_is_active', 'countdown_end_time', 'countdown_text'
         ];
 
         foreach ($keys as $key) {

@@ -1,207 +1,193 @@
 @php
     $cartItemsCount = \App\Models\CartItem::where(auth()->check() ? ['user_id' => auth()->id()] : ['session_id' => session()->getId()])->sum('quantity');
 @endphp
-<header class="w-full bg-white fixed top-0 left-0 z-50">
-    {{-- Promotional Banner --}}
-    <div class="w-full bg-amber-100 border-b py-2 md:py-3 text-center text-xs md:text-sm text-gray-700">
-        <div class="flex items-center justify-center gap-2 md:gap-4 px-2">
-            <button class="text-gray-500 hover:text-gray-700 flex-shrink-0">‹</button>
-            <span class="font-semibold truncate">Semi-Annual Sale | Up to 20% OFF NOW</span>
-            <button class="text-gray-500 hover:text-gray-700 flex-shrink-0">›</button>
+
+<style>
+    /* Smooth page scrolling */
+    html { scroll-behavior: smooth; }
+
+    /* Header Scroll Transitions */
+    #main-header {
+        transition: background-color 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
+    }
+    
+    /* Classes applied via JS when scrolled past 50px */
+    #main-header.is-scrolled {
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Change text/icon colors to dark when scrolled */
+    #main-header.is-scrolled .dynamic-color {
+        color: #111827 !important; /* Tailwind gray-900 */
+    }
+
+    /* Elegant Nav Link Hover/Click Animation */
+    .nav-link {
+        position: relative;
+        display: inline-block;
+    }
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 1.5px;
+        bottom: -4px;
+        left: 0;
+        background-color: currentColor;
+        transform-origin: bottom right;
+        transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    .nav-link:hover::after, 
+    .nav-link:active::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
+</style>
+
+<header id="main-header" class="w-full fixed top-0 left-0 z-50 flex flex-col bg-transparent">
+    
+    {{-- Promotional Banner (Continuous Text) --}}
+    <div class="w-full bg-[#dce0da] py-2 overflow-hidden flex whitespace-nowrap text-[13px] text-gray-800 font-medium">
+        <div class="flex items-center justify-start gap-12 px-4 animate-marquee w-full">
+            <span class="flex items-center gap-2">Free Shipping Over $50! Returns are always on us. <span class="text-gray-500 text-lg leading-none">›</span></span>
+            <span class="flex items-center gap-2 hidden md:flex">Free Shipping Over $50! Returns are always on us. <span class="text-gray-500 text-lg leading-none">›</span></span>
+            <span class="flex items-center gap-2 hidden lg:flex">Free Shipping Over $50! Returns are always on us. <span class="text-gray-500 text-lg leading-none">›</span></span>
         </div>
     </div>
 
-    {{-- Top Header: Logo + Currency + Icons --}}
-    <div class="w-full bg-white border-b py-3 md:py-4">
-        <div class="max-w-7xl mx-auto flex items-center justify-between px-3 md:px-4">
-            {{-- Hamburger Menu Button (Mobile Only) --}}
-            <button id="mobile-menu-toggle" class="lg:hidden text-gray-700 hover:text-amber-600 transition flex-shrink-0">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-            </button>
+    {{-- Top Header: Navigation + Icons --}}
+    <div class="w-full py-4 md:py-5">
+        <div class="max-w-[1400px] mx-auto flex items-center justify-between px-6 md:px-8 relative">
+            
+            {{-- Left Side: Hamburger & Navigation --}}
+            <div class="flex-1 flex items-center gap-8">
+                {{-- Hamburger Menu Button (Mobile) --}}
+                <button id="mobile-menu-toggle" class="dynamic-color text-white hover:opacity-70 transition-opacity flex-shrink-0 lg:hidden">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+                    </svg>
+                </button>
 
-            {{-- Logo --}}
-            <div class="flex-shrink-0">
-                <a href="{{ route('home') ?? '#' }}" class="text-lg md:text-2xl font-bold tracking-widest text-gray-900">
-                    GetCare<br><span class="text-xs font-light">BEAUTY</span>
+                {{-- Main Navigation Menu (Desktop) --}}
+                <nav class="hidden lg:flex items-center gap-6 xl:gap-8 text-xs xl:text-sm font-semibold tracking-wide uppercase">
+                    <a href="{{ route('home') ?? '#' }}" class="dynamic-color text-white nav-link">Home</a>
+                    <a href="{{ route('products.all') ?? '#' }}" class="dynamic-color text-white nav-link">Products</a>
+                    <a href="{{ route('hot-deals') ?? '#' }}" class="dynamic-color text-white nav-link">Hot Deals</a>
+                    <a href="{{ route('categories') ?? '#' }}" class="dynamic-color text-white nav-link">Categories</a>
+                    <a href="{{ route('brands') ?? '#' }}" class="dynamic-color text-white nav-link">Shop</a>
+                    <a href="{{ route('blog') ?? '#' }}" class="dynamic-color text-white nav-link">Contact Us</a>
+                </nav>
+            </div>
+
+            {{-- Center Logo: Absolute positioned to stay perfectly centered --}}
+            <div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex-shrink-0 text-center">
+                <a href="{{ route('home') ?? '#' }}" class="dynamic-color text-2xl font-bold tracking-widest text-white hover:opacity-80 transition-opacity duration-300">
+                    GetCare<br><span class="text-[10px] font-light tracking-[0.3em] block mt-[-4px]">BEAUTY</span>
                 </a>
             </div>
 
-            {{-- Main Navigation Menu --}}
-            <nav class="hidden lg:flex items-center gap-4 xl:gap-8 text-xs xl:text-sm font-medium">
-                <a href="{{ route('home') ?? '#' }}" class="text-gray-700 hover:text-amber-600 transition">
-                    Home
-                </a>
-                <a href="{{ route('products.all') ?? '#' }}" class="text-gray-700 hover:text-amber-600 transition">
-                    PRODUCTS
-                </a>
-                <a href="{{ route('hot-deals') ?? '#' }}" class="text-gray-700 hover:text-amber-600 transition">
-                    HOT DEALS
-                </a>
-                <a href="{{ route('categories') ?? '#' }}" class="text-gray-700 hover:text-amber-600 transition">
-                    CATEGORIES
-                </a>
-                <a href="{{ route('brands') ?? '#' }}" class="text-gray-700 hover:text-amber-600 transition">
-                    shop
-                </a>
+            {{-- Right Side: Currency + Account + Search + Cart --}}
+            <div class="flex-1 flex items-center justify-end gap-5 md:gap-7">
                 
-                <a href="{{ route('blog') ?? '#' }}" class="text-gray-700 hover:text-amber-600 transition">
-                    contact us 
-                </a>
-            </nav>
-
-            {{-- Right Icons: Currency + Account + Search + Cart --}}
-            <div class="flex items-center gap-3 md:gap-6">
                 {{-- Currency Selector --}}
                 @php
                     $activeCurrencies = \App\Models\Currency::where('is_active', true)->get();
                     $currentCurrency = \App\Helpers\CurrencyHelper::getCurrent();
                 @endphp
-                <div class="hidden md:flex items-center gap-2 bg-slate-50 border border-slate-200/50 px-2.5 py-1 rounded-xl shadow-inner">
-                    <select onchange="window.location.href='/currency/switch/' + this.value" class="bg-transparent border-none outline-none text-xs font-bold text-slate-700 cursor-pointer hover:text-amber-600 focus:ring-0 py-0.5 pl-1 pr-6">
-                        @foreach($activeCurrencies as $curr)
-                            <option value="{{ $curr->code }}" {{ $currentCurrency->code === $curr->code ? 'selected' : '' }}>
-                                {{ $curr->code }} ({{ $curr->symbol }})
-                            </option>
-                        @endforeach
-                    </select>
+                <div class="hidden md:flex items-center gap-2 dynamic-color text-white">
+                    <span class="text-lg leading-none">🇺🇸</span>
+                    <div class="relative flex items-center">
+                        <select onchange="window.location.href='/currency/switch/' + this.value" class="bg-transparent border-none outline-none text-sm font-semibold cursor-pointer focus:ring-0 py-1 pl-1 pr-5 appearance-none z-10 dynamic-color text-white">
+                            @foreach($activeCurrencies as $curr)
+                                <option value="{{ $curr->code }}" {{ $currentCurrency->code === $curr->code ? 'selected' : '' }} class="text-black">
+                                    {{ $curr->code }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <svg class="w-3.5 h-3.5 absolute right-0 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path>
+                        </svg>
+                    </div>
                 </div>
-
-                {{-- Account Icon --}}
-                {{-- Account Link --}}
-                @auth
-                    <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-amber-600 transition flex items-center gap-1">
-                        <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                        <span class="hidden md:inline">Dashboard</span>
-                    </a>
-                @else
-                    <a href="{{ route('login') }}" class="text-gray-700 hover:text-amber-600 transition flex items-center gap-1">
-                        <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                        <span class="hidden md:inline">Login</span>
-                    </a>
-                @endauth
 
                 {{-- Search Icon --}}
-                <a href="#" id="search-icon" class="text-gray-700 hover:text-amber-600 transition">
-                    <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                <a href="#" id="search-icon" class="dynamic-color text-white hover:opacity-70 transition-opacity transform hover:scale-105 duration-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path>
                     </svg>
                 </a>
 
-                {{-- Shopping Cart Icon --}}
-                <a href="#" id="cart-icon" class="relative text-gray-700 hover:text-amber-600 transition">
-                    <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                {{-- Account/User Dropdown Logic --}}
+                <div class="relative">
+                    @auth
+                        {{-- Logged In User Menu Toggle --}}
+                        <button id="user-menu-btn" class="dynamic-color text-white hover:opacity-70 transition-opacity transform hover:scale-105 duration-200 flex items-center focus:outline-none">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
+                            </svg>
+                        </button>
+                        
+                        {{-- Dropdown Content --}}
+                        <div id="user-dropdown-menu" class="hidden absolute right-0 mt-3 w-48 bg-white border border-gray-100 rounded-md shadow-lg py-1 z-50">
+                            <a href="{{ route('dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition">Dashboard</a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition">
+                                    Log Out
+                                </button>
+                            </form>
+                        </div>
+                    @else
+                        {{-- Logged Out Login Link --}}
+                        <a href="{{ route('login') }}" class="dynamic-color text-white hover:opacity-70 transition-opacity transform hover:scale-105 duration-200 flex items-center">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
+                            </svg>
+                        </a>
+                    @endauth
+                </div>
+
+                {{-- Shopping Bag Cart Icon --}}
+                <a href="#" id="cart-icon" class="relative dynamic-color text-white hover:opacity-70 transition-opacity transform hover:scale-105 duration-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5h.008v.008h-.008v-.008zm5.625 0h.008v.008h-.008v-.008z"></path>
                     </svg>
-                    <span id="cart-badge-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center">{{ $cartItemsCount }}</span>
+                    <span id="cart-badge-count" class="{{ $cartItemsCount > 0 ? '' : 'hidden' }} absolute -top-1.5 -right-2 bg-amber-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center border border-white">{{ $cartItemsCount }}</span>
                 </a>
             </div>
         </div>
     </div>
 
-    {{-- Promo Code + Countdown Banner --}}
-    @php
-        $countdownActive = \App\Models\StoreSetting::getValue('countdown_is_active', '1') === '1';
-        $countdownEndTime = \App\Models\StoreSetting::getValue('countdown_end_time');
-        $countdownText = \App\Models\StoreSetting::getValue('countdown_text', 'Up to 20% Off | Code REFRESH20');
-    @endphp
-    @if($countdownActive && $countdownEndTime)
-    <div class="w-full bg-red-900 text-white py-2 md:py-3" id="promo-countdown-banner" data-end="{{ $countdownEndTime }}">
-        <div class="max-w-7xl mx-auto px-3 md:px-4 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-8 text-xs md:text-sm">
-            <span class="font-semibold underline text-xs md:text-sm">{{ $countdownText }}</span>
-            <div class="flex items-center gap-4 md:gap-8 font-mono text-base md:text-lg font-bold">
-                <div class="text-center">
-                    <div class="text-lg md:text-2xl" id="countdown-hours">00</div>
-                    <div class="text-xs uppercase">Hrs</div>
-                </div>
-                <span>:</span>
-                <div class="text-center">
-                    <div class="text-lg md:text-2xl" id="countdown-minutes">00</div>
-                    <div class="text-xs uppercase">Min</div>
-                </div>
-                <span>:</span>
-                <div class="text-center">
-                    <div class="text-lg md:text-2xl" id="countdown-seconds">00</div>
-                    <div class="text-xs uppercase">Sec</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
-
-    {{-- Mobile Menu Navigation (Hidden by default, toggled with hamburger) --}}
-    <div id="mobile-menu" class="lg:hidden hidden w-full bg-white border-t max-h-96 overflow-y-auto">
-        <ul class="main-nav nav navbar-nav flex flex-col">
-            <li class="border-b"><a href="{{ route('home') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition touch-none active:bg-amber-100">Home</a></li>
-            <li class="border-b"><a href="{{ route('hot-deals') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition touch-none active:bg-amber-100">Hot Deals</a></li>
-            <li class="border-b"><a href="{{ route('categories') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition touch-none active:bg-amber-100">Categories</a></li>
-            <li class="border-b"><a href="{{ route('brands') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition touch-none active:bg-amber-100">All Brands</a></li>
-            <li class="border-b"><a href="{{ route('featured') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition touch-none active:bg-amber-100">Featured Products</a></li>
-            <li class="border-b px-4 py-3 flex items-center justify-between text-sm text-gray-700 bg-slate-50/50">
-                <span class="font-bold flex items-center gap-1.5 text-xs uppercase tracking-wider text-slate-500">
-                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Currency
-                </span>
-                <select onchange="window.location.href='/currency/switch/' + this.value" class="bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 cursor-pointer focus:ring-0 py-1 pl-2 pr-8">
-                    @foreach($activeCurrencies as $curr)
-                        <option value="{{ $curr->code }}" {{ $currentCurrency->code === $curr->code ? 'selected' : '' }}>
-                            {{ $curr->code }} ({{ $curr->symbol }})
-                        </option>
-                    @endforeach
-                </select>
-            </li>
-            <li><a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition touch-none active:bg-amber-100">Contact us</a></li>
+    {{-- Mobile Menu Navigation --}}
+    <div id="mobile-menu" class="lg:hidden hidden w-full bg-white border-t max-h-96 overflow-y-auto absolute top-full left-0 shadow-lg text-gray-900 uppercase">
+        <ul class="main-nav nav flex flex-col">
+            <li class="border-b"><a href="{{ route('home') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold hover:bg-gray-50 transition">Home</a></li>
+            <li class="border-b"><a href="{{ route('products.all') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold hover:bg-gray-50 transition">Products</a></li>
+            <li class="border-b"><a href="{{ route('hot-deals') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold hover:bg-gray-50 transition">Hot Deals</a></li>
+            <li class="border-b"><a href="{{ route('categories') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold hover:bg-gray-50 transition">Categories</a></li>
+            <li class="border-b"><a href="{{ route('brands') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold hover:bg-gray-50 transition">Shop</a></li>
+            <li class="border-b"><a href="{{ route('blog') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold hover:bg-gray-50 transition">Contact Us</a></li>
         </ul>
     </div>
 </header>
 
-{{-- Spacing for fixed header --}}
-<div class="h-24 md:h-32 lg:h-40"></div>
-
-{{-- Mobile Menu Toggle Script --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        if (mobileMenuToggle) {
-            mobileMenuToggle.addEventListener('click', function() {
-                mobileMenu.classList.toggle('hidden');
-            });
-            
-            // Close menu when a link is clicked
-            const menuLinks = mobileMenu.querySelectorAll('a');
-            menuLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    mobileMenu.classList.add('hidden');
-                });
-            });
-        }
-    });
-</script>
-
-{{-- Cart Drawer Overlay --}}
+{{-- Cart Drawer HTML --}}
 <div id="cart-drawer-backdrop" class="fixed inset-0 bg-black/50 z-[60] hidden opacity-0 transition-opacity duration-300"></div>
 <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white z-[70] transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
-    {{-- Drawer Header --}}
     <div class="px-6 py-4 border-b flex items-center justify-between">
         <h2 class="text-xl font-bold text-gray-800">Your Cart</h2>
-        <button id="close-cart" class="text-gray-500 hover:text-red-500 transition">
+        <button id="close-cart" class="text-gray-500 hover:text-red-500 transition transform hover:rotate-90 duration-300">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
     </div>
     
-    {{-- Drawer Body --}}
     <div id="cart-drawer-items" class="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
-        {{-- Items will be loaded dynamically --}}
+        {{-- Items loaded dynamically --}}
     </div>
     
-    {{-- Drawer Footer --}}
     <div class="border-t p-6 bg-gray-50">
         <div class="flex items-center justify-between mb-4">
             <span class="text-gray-600 font-medium">Subtotal</span>
@@ -209,33 +195,30 @@
         </div>
         <p class="text-xs text-gray-500 mb-4 text-center">Shipping and taxes calculated at checkout.</p>
         <div class="space-y-3">
-            <a href="{{ route('cart') }}" class="block w-full py-3 px-4 bg-gray-900 text-white text-center rounded-md font-semibold hover:bg-gray-800 transition">View Cart</a>
-            <a href="/checkout" class="block w-full py-3 px-4 bg-amber-500 text-white text-center rounded-md font-semibold hover:bg-amber-600 transition shadow-md shadow-amber-200">Checkout</a>
+            <a href="{{ route('cart') }}" class="block w-full py-3 px-4 bg-gray-900 text-white text-center rounded-md font-semibold hover:bg-gray-800 transition transform active:scale-95 duration-150">View Cart</a>
+            <a href="/checkout" class="block w-full py-3 px-4 bg-amber-500 text-white text-center rounded-md font-semibold hover:bg-amber-600 transition shadow-md shadow-amber-200 transform active:scale-95 duration-150">Checkout</a>
         </div>
     </div>
 </div>
 
-{{-- Search Modal Overlay --}}
+{{-- Search Modal HTML --}}
 <div id="search-modal" class="fixed inset-0 bg-white/95 backdrop-blur-sm z-[80] hidden opacity-0 transition-opacity duration-300 flex-col">
     <div class="max-w-4xl mx-auto w-full px-4 pt-16 sm:pt-24 relative flex-1">
-        <button id="close-search" class="absolute top-4 right-4 sm:top-8 sm:right-8 text-gray-500 hover:text-red-500 transition">
+        <button id="close-search" class="absolute top-4 right-4 sm:top-8 sm:right-8 text-gray-500 hover:text-red-500 transition transform hover:rotate-90 duration-300">
             <svg class="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         
         <div class="text-center mb-8 transform -translate-y-4 opacity-0 transition-all duration-500" id="search-content">
             <h2 class="text-3xl sm:text-5xl font-bold text-gray-800 mb-6 font-serif">What are you looking for?</h2>
-            
             <form action="#" method="GET" class="relative max-w-2xl mx-auto">
                 <input type="text" name="q" placeholder="Search products, brands, categories..." class="w-full text-lg sm:text-2xl px-0 py-4 border-b-2 border-gray-300 focus:border-amber-500 bg-transparent outline-none placeholder:text-gray-400 transition-colors" autofocus>
-                <button type="submit" class="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-amber-500 transition">
+                <button type="submit" class="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-amber-500 transition transform hover:scale-110">
                     <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </button>
             </form>
             
             <div class="mt-10 flex flex-wrap justify-center gap-2 sm:gap-4 text-sm">
                 <span class="text-gray-500">Popular:</span>
-                <a href="#" class="text-amber-600 hover:underline">Massage Mat</a>
-                <a href="#" class="text-amber-600 hover:underline">Back Brace</a>
                 <a href="#" class="text-amber-600 hover:underline">Skincare</a>
                 <a href="#" class="text-amber-600 hover:underline">Gifts</a>
             </div>
@@ -245,7 +228,52 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Cart Drawer Logic
+        
+        // --- 0. Scroll Animation Logic ---
+        const mainHeader = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                mainHeader.classList.add('is-scrolled');
+            } else {
+                mainHeader.classList.remove('is-scrolled');
+            }
+        });
+
+        // --- 1. Mobile Menu Logic ---
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuToggle && mobileMenu) {
+            mobileMenuToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                mobileMenu.classList.toggle('hidden');
+            });
+            const menuLinks = mobileMenu.querySelectorAll('a');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+        }
+
+        // --- 2. User Dropdown Menu Logic ---
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userDropdownMenu = document.getElementById('user-dropdown-menu');
+        
+        if (userMenuBtn && userDropdownMenu) {
+            userMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdownMenu.classList.toggle('hidden');
+            });
+
+            // Close dropdown when clicking anywhere else on the page
+            document.addEventListener('click', function(e) {
+                if (!userMenuBtn.contains(e.target) && !userDropdownMenu.contains(e.target)) {
+                    userDropdownMenu.classList.add('hidden');
+                }
+            });
+        }
+
+        // --- 3. Cart Drawer Logic ---
         const cartIcon = document.getElementById('cart-icon');
         const cartDrawer = document.getElementById('cart-drawer');
         const cartBackdrop = document.getElementById('cart-drawer-backdrop');
@@ -253,6 +281,7 @@
 
         window.openCart = function(e) {
             if(e) e.preventDefault();
+            if(!cartBackdrop || !cartDrawer) return;
             cartBackdrop.classList.remove('hidden');
             setTimeout(() => {
                 cartBackdrop.classList.remove('opacity-0');
@@ -263,6 +292,7 @@
         };
 
         window.closeCart = function() {
+            if(!cartBackdrop || !cartDrawer) return;
             cartBackdrop.classList.add('opacity-0');
             cartDrawer.classList.add('translate-x-full');
             setTimeout(() => {
@@ -275,65 +305,59 @@
         if (closeCartBtn) closeCartBtn.addEventListener('click', window.closeCart);
         if (cartBackdrop) cartBackdrop.addEventListener('click', window.closeCart);
 
-        // Fetch Cart Summary dynamically
         window.updateCartDrawer = function() {
             fetch('/api/cart/summary', {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
             })
-                .then(res => res.json())
-                .then(data => {
-                    // Update badge count
-                    const badges = document.querySelectorAll('#cart-badge-count');
-                    badges.forEach(badge => {
-                        badge.innerText = data.cart_count;
-                        if (data.cart_count > 0) {
-                            badge.classList.remove('hidden');
-                        } else {
-                            badge.classList.add('hidden');
-                        }
-                    });
-                    
-                    // Update Drawer items
-                    const itemsContainer = document.getElementById('cart-drawer-items');
-                    if (!itemsContainer) return;
-                    
-                    if (data.items.length === 0) {
-                        itemsContainer.innerHTML = `
-                            <div class="flex flex-col items-center justify-center h-full text-gray-400 py-12">
-                                <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                                <p class="text-sm font-medium">Your cart is empty</p>
-                            </div>
-                        `;
-                        document.getElementById('cart-drawer-subtotal').innerText = data.formatted_subtotal || '₨ 0';
-                        return;
+            .then(res => res.json())
+            .then(data => {
+                const badges = document.querySelectorAll('#cart-badge-count');
+                badges.forEach(badge => {
+                    badge.innerText = data.cart_count;
+                    if (data.cart_count > 0) {
+                        badge.classList.remove('hidden');
+                    } else {
+                        badge.classList.add('hidden');
                     }
-                    
-                    let html = '';
-                    data.items.forEach(item => {
-                        html += `
-                        <div class="flex items-center gap-4 pb-4 border-b">
-                            <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
-                                <img src="${item.image_url}" alt="${item.name}" class="w-full h-full object-cover">
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="text-sm font-semibold text-gray-800 line-clamp-2">${item.name}</h3>
-                                <p class="text-xs text-gray-500 mt-1">Quantity: ${item.quantity}</p>
-                                <div class="flex items-center justify-between mt-2">
-                                    <span class="text-sm font-bold text-amber-600">${item.formatted_price}</span>
-                                    <button onclick="window.removeCartItem(${item.id})" class="text-xs text-red-500 hover:underline">Remove</button>
-                                </div>
+                });
+                
+                const itemsContainer = document.getElementById('cart-drawer-items');
+                if (!itemsContainer) return;
+                
+                if (data.items.length === 0) {
+                    itemsContainer.innerHTML = `
+                        <div class="flex flex-col items-center justify-center h-full text-gray-400 py-12">
+                            <p class="text-sm font-medium">Your cart is empty</p>
+                        </div>
+                    `;
+                    document.getElementById('cart-drawer-subtotal').innerText = data.formatted_subtotal || '₨ 0';
+                    return;
+                }
+                
+                let html = '';
+                data.items.forEach(item => {
+                    html += `
+                    <div class="flex items-center gap-4 pb-4 border-b">
+                        <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
+                            <img src="${item.image_url}" alt="${item.name}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-sm font-semibold text-gray-800 line-clamp-2">${item.name}</h3>
+                            <p class="text-xs text-gray-500 mt-1">Quantity: ${item.quantity}</p>
+                            <div class="flex items-center justify-between mt-2">
+                                <span class="text-sm font-bold text-amber-600">${item.formatted_price}</span>
+                                <button onclick="window.removeCartItem(${item.id})" class="text-xs text-red-500 hover:underline">Remove</button>
                             </div>
                         </div>
-                        `;
-                    });
-                    itemsContainer.innerHTML = html;
-                    document.getElementById('cart-drawer-subtotal').innerText = data.formatted_subtotal;
+                    </div>
+                    `;
                 });
+                itemsContainer.innerHTML = html;
+                document.getElementById('cart-drawer-subtotal').innerText = data.formatted_subtotal;
+            })
+            .catch(err => console.log('Cart fetch error:', err));
         };
 
-        // Remove item AJAX
         window.removeCartItem = function(id) {
             fetch(`/cart/remove/${id}`, {
                 method: 'DELETE',
@@ -346,47 +370,13 @@
             .then(res => res.json())
             .then(data => {
                 window.updateCartDrawer();
-                // If we are on the cart details page, reload to update the main page
                 if (window.location.pathname === '/cart') {
                     window.location.reload();
                 }
             });
         };
 
-        // Add item AJAX
-        window.addToCart = function(productId, quantity = 1) {
-            fetch('/cart/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({
-                    product_id: productId,
-                    quantity: quantity
-                })
-            })
-            .then(res => {
-                if (!res.ok) {
-                    return res.json().then(err => { throw new Error(err.error || 'Failed to add item to cart'); });
-                }
-                return res.json();
-            })
-            .then(data => {
-                window.updateCartDrawer();
-                window.openCart();
-            })
-            .catch(err => {
-                alert(err.message);
-            });
-        };
-
-        // Initial fetch on page load
-        window.updateCartDrawer();
-
-        // Search Modal Logic
+        // --- 4. Search Modal Logic ---
         const searchIcon = document.getElementById('search-icon');
         const searchModal = document.getElementById('search-modal');
         const closeSearchBtn = document.getElementById('close-search');
@@ -395,6 +385,7 @@
 
         window.openSearch = function(e) {
             if(e) e.preventDefault();
+            if(!searchModal || !searchContent) return;
             searchModal.classList.remove('hidden');
             searchModal.classList.add('flex');
             setTimeout(() => {
@@ -406,6 +397,7 @@
         };
 
         window.closeSearch = function() {
+            if(!searchModal || !searchContent) return;
             searchModal.classList.add('opacity-0');
             searchContent.classList.add('-translate-y-4', 'opacity-0');
             setTimeout(() => {
@@ -417,40 +409,5 @@
 
         if (searchIcon) searchIcon.addEventListener('click', window.openSearch);
         if (closeSearchBtn) closeSearchBtn.addEventListener('click', window.closeSearch);
-
-        // Countdown Timer Logic
-        const banner = document.getElementById('promo-countdown-banner');
-        if (banner) {
-            const endTimeStr = banner.getAttribute('data-end');
-            if (endTimeStr) {
-                const endTime = new Date(endTimeStr).getTime();
-                
-                function updateTimer() {
-                    const now = new Date().getTime();
-                    const distance = endTime - now;
-                    
-                    if (distance < 0) {
-                        banner.classList.add('hidden');
-                        clearInterval(timerInterval);
-                        return;
-                    }
-                    
-                    const hours = Math.floor(distance / (1000 * 60 * 60));
-                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                    
-                    const hrsEl = document.getElementById('countdown-hours');
-                    const minsEl = document.getElementById('countdown-minutes');
-                    const secsEl = document.getElementById('countdown-seconds');
-                    
-                    if(hrsEl) hrsEl.innerText = hours.toString().padStart(2, '0');
-                    if(minsEl) minsEl.innerText = minutes.toString().padStart(2, '0');
-                    if(secsEl) secsEl.innerText = seconds.toString().padStart(2, '0');
-                }
-                
-                updateTimer();
-                const timerInterval = setInterval(updateTimer, 1000);
-            }
-        }
     });
 </script>

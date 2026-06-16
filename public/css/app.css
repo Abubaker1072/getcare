@@ -1,1 +1,23 @@
-body { font-family: 'Poppins', sans-serif; }
+body { 
+    font-family: 'Outfit', sans-serif; 
+}
+.font-serif {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+}
+.font-sans {
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Infinite text ticker marquee animation */
+@keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+.animate-ticker {
+    display: flex;
+    width: max-content;
+    animation: ticker 30s linear infinite;
+}
+.animate-ticker:hover {
+    animation-play-state: paused;
+}

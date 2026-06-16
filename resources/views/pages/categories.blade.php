@@ -23,33 +23,6 @@
     }
 </style>
 
-{{-- Top Promotional Banner --}}
-<div class="bg-[#831b1b] text-white py-2 px-4 relative z-20">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-8 text-xs sm:text-sm font-medium tracking-wide">
-        <a href="#" class="hover:underline underline-offset-4 decoration-white/70 transition-all uppercase tracking-wider">
-            Up to 20% Off | Code REFRESH20
-        </a>
-        
-        {{-- Sleek Countdown Timer --}}
-        <div class="flex items-center gap-3 font-bold font-mono">
-            <div class="flex flex-col items-center">
-                <span class="text-base leading-none">19</span>
-                <span class="text-[9px] uppercase text-white/70 mt-0.5 tracking-widest">HRS</span>
-            </div>
-            <span class="text-base leading-none pb-2 opacity-50">:</span>
-            <div class="flex flex-col items-center">
-                <span class="text-base leading-none">30</span>
-                <span class="text-[9px] uppercase text-white/70 mt-0.5 tracking-widest">MIN</span>
-            </div>
-            <span class="text-base leading-none pb-2 opacity-50">:</span>
-            <div class="flex flex-col items-center">
-                <span class="text-base leading-none">16</span>
-                <span class="text-[9px] uppercase text-white/70 mt-0.5 tracking-widest">SEC</span>
-            </div>
-        </div>
-    </div>
-</div>
-
 {{-- Premium Shortened Hero Section with Image --}}
 <section class="bg-[#0a0a0a] relative overflow-hidden">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-stretch min-h-[350px] md:min-h-[400px]">

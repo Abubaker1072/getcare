@@ -133,12 +133,19 @@
                 <div id="tab-hero" class="tab-content hidden space-y-6">
                     <!-- Default Hero Info -->
                     <div class="bg-white rounded-3xl border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] p-8">
-                        <h3 class="text-lg font-extrabold text-slate-900 mb-6 flex items-center">
-                            <span class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                            </span>
-                            Default Hero Banner
-                        </h3>
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-extrabold text-slate-900 flex items-center">
+                                <span class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center mr-3">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                </span>
+                                Default Hero Banner
+                            </h3>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="toggle-hero-default" class="sr-only peer" onchange="switchHeroMode('default')" {{ \App\Models\StoreSetting::getValue('hero_active_mode', 'default') === 'default' ? 'checked' : '' }}>
+                                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                <span class="ml-3 text-sm font-bold text-slate-700">Turn ON</span>
+                            </label>
+                        </div>
                         
                         <div class="space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -182,54 +189,113 @@
                         </div>
                     </div>
 
-                    <!-- Scheduled Hero Info -->
+                    <!-- Slider Hero Info -->
                     <div class="bg-white rounded-3xl border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] p-8">
-                        <h3 class="text-lg font-extrabold text-slate-900 mb-6 flex items-center">
-                            <span class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            </span>
-                            Scheduled Hero Background
-                        </h3>
-                        <p class="text-xs text-slate-500 font-medium mb-6 -mt-3">Optionally set an image or video to display automatically during a specific time window (e.g. night sale or holiday event).</p>
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-extrabold text-slate-900 flex items-center">
+                                <span class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center mr-3">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                </span>
+                                Slider Hero Background
+                            </h3>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="toggle-hero-slider" class="sr-only peer" onchange="switchHeroMode('slider')" {{ \App\Models\StoreSetting::getValue('hero_active_mode') === 'slider' ? 'checked' : '' }}>
+                                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                <span class="ml-3 text-sm font-bold text-slate-700">Turn ON</span>
+                            </label>
+                        </div>
+                        <p class="text-xs text-slate-500 font-medium mb-6 -mt-3">Auto-looping slider. When turned ON, the Default Hero Banner will be automatically turned OFF.</p>
                         
                         <div class="space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Schedule Start Time</label>
-                                    <input type="datetime-local" name="hero_scheduled_start" value="{{ \App\Models\StoreSetting::getValue('hero_scheduled_start') }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-4 py-3 font-semibold focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none">
-                                </div>
-
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Schedule End Time</label>
-                                    <input type="datetime-local" name="hero_scheduled_end" value="{{ \App\Models\StoreSetting::getValue('hero_scheduled_end') }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-4 py-3 font-semibold focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none">
-                                </div>
-
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Scheduled Media Type</label>
-                                    <select name="hero_scheduled_media_type" class="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-4 py-3 font-semibold cursor-pointer focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none">
-                                        <option value="image" {{ \App\Models\StoreSetting::getValue('hero_scheduled_media_type', 'image') === 'image' ? 'selected' : '' }}>Image Background</option>
-                                        <option value="video" {{ \App\Models\StoreSetting::getValue('hero_scheduled_media_type') === 'video' ? 'selected' : '' }}>Video Background (MP4)</option>
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Upload Scheduled Media</label>
-                                    <input type="file" name="hero_scheduled_media" class="w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100 cursor-pointer">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Slider Transition (Secs)</label>
+                                    <input type="number" name="hero_slider_interval" value="{{ \App\Models\StoreSetting::getValue('hero_slider_interval', 20) }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-4 py-3 font-semibold focus:bg-white focus:ring-2 focus:ring-indigo-500/20 outline-none" min="5">
                                 </div>
                             </div>
 
-                            @if(\App\Models\StoreSetting::getValue('hero_scheduled_media_path'))
-                            <div class="border border-slate-100 rounded-2xl p-4 bg-slate-50/50">
-                                <p class="text-xs font-bold text-slate-500 uppercase mb-2">Current Scheduled Background Preview:</p>
-                                <div class="w-full max-w-sm rounded-xl overflow-hidden shadow-inner h-40 bg-slate-200 flex items-center justify-center">
-                                    @if(\App\Models\StoreSetting::getValue('hero_scheduled_media_type', 'image') === 'video')
-                                        <video src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('hero_scheduled_media_path')) }}" muted controls class="w-full h-full object-cover"></video>
-                                    @else
-                                        <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('hero_scheduled_media_path')) }}" class="w-full h-full object-cover">
-                                    @endif
+                            <input type="hidden" name="hero_active_mode" id="hero_active_mode" value="{{ \App\Models\StoreSetting::getValue('hero_active_mode', 'default') }}">
+                            
+                            <script>
+                                function switchHeroMode(mode) {
+                                    document.getElementById('hero_active_mode').value = mode;
+                                    if (mode === 'default') {
+                                        document.getElementById('toggle-hero-slider').checked = false;
+                                        document.getElementById('toggle-hero-default').checked = true;
+                                    } else {
+                                        document.getElementById('toggle-hero-default').checked = false;
+                                        document.getElementById('toggle-hero-slider').checked = true;
+                                    }
+                                }
+                            </script>
+
+                            @php
+                                $heroSliders = \App\Models\HeroSlider::all()->keyBy('sort_order');
+                            @endphp
+
+                            <div class="border border-slate-200 rounded-2xl p-6 bg-slate-50">
+                                <h4 class="text-sm font-bold text-slate-800 mb-4">Auto-Looping Slider Media (Max 3 Images, 2 Videos)</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                                    
+                                    <!-- Image 1 -->
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Image 1</label>
+                                        @if(isset($heroSliders[1]))
+                                            <div class="w-full h-24 mb-2 rounded-lg overflow-hidden bg-white border border-slate-200">
+                                                <img src="{{ asset('storage/' . $heroSliders[1]->media_path) }}" class="w-full h-full object-cover">
+                                            </div>
+                                        @endif
+                                        <input type="file" name="hero_sch_image_1" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-indigo-50 file:text-indigo-600 cursor-pointer">
+                                    </div>
+                                    
+                                    <!-- Image 2 -->
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Image 2</label>
+                                        @if(isset($heroSliders[2]))
+                                            <div class="w-full h-24 mb-2 rounded-lg overflow-hidden bg-white border border-slate-200">
+                                                <img src="{{ asset('storage/' . $heroSliders[2]->media_path) }}" class="w-full h-full object-cover">
+                                            </div>
+                                        @endif
+                                        <input type="file" name="hero_sch_image_2" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-indigo-50 file:text-indigo-600 cursor-pointer">
+                                    </div>
+
+                                    <!-- Image 3 -->
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Image 3</label>
+                                        @if(isset($heroSliders[3]))
+                                            <div class="w-full h-24 mb-2 rounded-lg overflow-hidden bg-white border border-slate-200">
+                                                <img src="{{ asset('storage/' . $heroSliders[3]->media_path) }}" class="w-full h-full object-cover">
+                                            </div>
+                                        @endif
+                                        <input type="file" name="hero_sch_image_3" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-indigo-50 file:text-indigo-600 cursor-pointer">
+                                    </div>
+
+                                    <!-- Video 1 -->
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Video 1 (MP4)</label>
+                                        @if(isset($heroSliders[4]))
+                                            <div class="w-full h-24 mb-2 rounded-lg overflow-hidden bg-white border border-slate-200 relative">
+                                                <video src="{{ asset('storage/' . $heroSliders[4]->media_path) }}" muted class="w-full h-full object-cover"></video>
+                                                <span class="absolute bottom-1 right-1 bg-black/50 text-white text-[10px] px-1 rounded">VID</span>
+                                            </div>
+                                        @endif
+                                        <input type="file" name="hero_sch_video_1" accept="video/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-rose-50 file:text-rose-600 cursor-pointer">
+                                    </div>
+
+                                    <!-- Video 2 -->
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Video 2 (MP4)</label>
+                                        @if(isset($heroSliders[5]))
+                                            <div class="w-full h-24 mb-2 rounded-lg overflow-hidden bg-white border border-slate-200 relative">
+                                                <video src="{{ asset('storage/' . $heroSliders[5]->media_path) }}" muted class="w-full h-full object-cover"></video>
+                                                <span class="absolute bottom-1 right-1 bg-black/50 text-white text-[10px] px-1 rounded">VID</span>
+                                            </div>
+                                        @endif
+                                        <input type="file" name="hero_sch_video_2" accept="video/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-rose-50 file:text-rose-600 cursor-pointer">
+                                    </div>
+
                                 </div>
                             </div>
-                            @endif
                         </div>
                     </div>
                 </div>

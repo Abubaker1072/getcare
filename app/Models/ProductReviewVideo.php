@@ -4,20 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Review extends Model
+class ProductReviewVideo extends Model
 {
     protected $fillable = [
-        'name',
-        'rating',
-        'title',
-        'text',
-        'product_name',
         'product_id',
-        'is_approved',
+        'video_path',
+        'caption',
+        'is_active',
+        'show_on_homepage',
     ];
 
     protected $casts = [
-        'is_approved' => 'boolean',
+        'is_active' => 'boolean',
+        'show_on_homepage' => 'boolean',
     ];
 
     public function product()

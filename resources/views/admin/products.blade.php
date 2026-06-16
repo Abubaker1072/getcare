@@ -42,17 +42,19 @@
                 </thead>
                 <tbody class="text-sm divide-y divide-slate-50">
                     @forelse($products as $product)
-                    <tr class="hover:bg-slate-50/50 transition-colors group">
-                        <td class="p-5 flex items-center">
-                            @if($product->cover_image || $product->image)
-                                <img src="{{ asset('storage/' . ($product->cover_image ?? $product->image)) }}" class="w-10 h-10 bg-slate-100 rounded-xl mr-4 flex-shrink-0 object-cover">
-                            @else
-                                <div class="w-10 h-10 bg-slate-100 rounded-xl mr-4 flex-shrink-0"></div>
-                            @endif
-                            <div>
-                                <p class="font-bold text-slate-900">{{ $product->name }}</p>
-                                <p class="text-xs text-slate-500">Slug: {{ $product->slug }}</p>
-                            </div>
+                    <tr class="hover:bg-slate-50/50 transition-colors group cursor-pointer" onclick="if(!event.target.closest('a') && !event.target.closest('button') && !event.target.closest('select')) window.location='{{ route('admin.products.edit', $product->id) }}'">
+                        <td class="p-5">
+                            <a href="{{ route('admin.products.edit', $product->id) }}" class="flex items-center group-hover:opacity-80 transition-opacity block">
+                                @if($product->cover_image || $product->image)
+                                    <img src="{{ asset('storage/' . ($product->cover_image ?? $product->image)) }}" class="w-10 h-10 bg-slate-100 rounded-xl mr-4 flex-shrink-0 object-cover">
+                                @else
+                                    <div class="w-10 h-10 bg-slate-100 rounded-xl mr-4 flex-shrink-0"></div>
+                                @endif
+                                <div>
+                                    <p class="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{{ $product->name }}</p>
+                                    <p class="text-xs text-slate-500">Slug: {{ $product->slug }}</p>
+                                </div>
+                            </a>
                         </td>
                         <td class="p-5">
                             <form action="{{ route('admin.products.update-category', $product->id) }}" method="POST">

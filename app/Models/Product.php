@@ -21,7 +21,21 @@ class Product extends Model
         'image_3',
         'image_4',
         'cover_image',
+        'banner_image',
         'is_active',
+        'tags',
+        'promo_text',
+        'bullet_points',
+        'features',
+        'how_to_use',
+        'ingredients',
+        'faqs',
+    ];
+
+    protected $casts = [
+        'bullet_points' => 'array',
+        'features' => 'array',
+        'faqs' => 'array',
     ];
 
     public function category()
@@ -39,8 +53,18 @@ class Product extends Model
         return $this->hasOne(HotDeal::class);
     }
 
-    public function reels()
+    public function reviewVideos()
     {
-        return $this->hasMany(Reel::class);
+        return $this->hasMany(ProductReviewVideo::class);
+    }
+
+    public function testimonials()
+    {
+        return $this->hasMany(ProductTestimonial::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }

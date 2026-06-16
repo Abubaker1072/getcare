@@ -70,6 +70,76 @@
             </div>
 
             <div class="mb-6 border border-slate-200 rounded-xl p-6 bg-slate-50">
+                <h3 class="text-lg font-bold text-slate-800 mb-4">Product Details (Dynamic Frontend)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Tags (Comma separated)</label>
+                        <input type="text" name="tags" value="{{ old('tags') }}" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none" placeholder="e.g. Green tea, Argan Oil">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Promo Text</label>
+                        <input type="text" name="promo_text" value="{{ old('promo_text') }}" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none" placeholder="e.g. 🎟️ Use code Beauty for 10% OFF!">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">How to Use (Simple Text)</label>
+                        <textarea name="how_to_use" rows="3" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none">{{ old('how_to_use') }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Ingredients (Simple Text)</label>
+                        <textarea name="ingredients" rows="3" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none">{{ old('ingredients') }}</textarea>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Features Icons</label>
+                    <div class="flex flex-wrap gap-4">
+                        @php $selectedFeatures = old('features', []); @endphp
+                        @foreach(['Cruelty-free', 'Gluten-free', 'Recyclable', 'Vegan'] as $feature)
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" name="features[]" value="{{ $feature }}" class="rounded text-indigo-600 focus:ring-indigo-500" {{ in_array($feature, $selectedFeatures) ? 'checked' : '' }}>
+                                <span class="text-sm font-medium">{{ $feature }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Bullet Points</label>
+                    <div id="bullet-points-container" class="space-y-2">
+                        @php $bullets = old('bullet_points', ['']); @endphp
+                        @foreach($bullets as $index => $bullet)
+                            <input type="text" name="bullet_points[]" value="{{ $bullet }}" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none" placeholder="e.g. 100% Vegan and Organic">
+                        @endforeach
+                    </div>
+                    <button type="button" onclick="addBulletPoint()" class="mt-2 text-xs font-bold text-indigo-600 hover:text-indigo-800">+ Add Bullet Point</button>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">FAQs</label>
+                    <div id="faqs-container" class="space-y-4">
+                        @php 
+                            $defaultFaqs = [
+                                ['question' => 'How to use?', 'answer' => 'Apply a small amount to your hands and gently massage into the desired area.'],
+                                ['question' => 'How to place an order?', 'answer' => 'Simply add the item to your cart and proceed to checkout. We accept all major credit cards.'],
+                                ['question' => 'How we deal with customers?', 'answer' => 'We prioritize customer satisfaction. If you are not happy, contact our 24/7 support team.'],
+                            ];
+                            $faqs = old('faqs', $defaultFaqs); 
+                        @endphp
+                        @foreach($faqs as $index => $faq)
+                            <div class="flex gap-2 faq-row">
+                                <input type="text" name="faqs[{{$index}}][question]" value="{{ $faq['question'] ?? '' }}" class="w-1/2 bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm outline-none" placeholder="Question">
+                                <input type="text" name="faqs[{{$index}}][answer]" value="{{ $faq['answer'] ?? '' }}" class="w-1/2 bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm outline-none" placeholder="Answer">
+                            </div>
+                        @endforeach
+                    </div>
+                    <button type="button" onclick="addFaq()" class="mt-2 text-xs font-bold text-indigo-600 hover:text-indigo-800">+ Add FAQ</button>
+                </div>
+            </div>
+
+            <div class="mb-6 border border-slate-200 rounded-xl p-6 bg-slate-50">
                 <h3 class="text-lg font-bold text-slate-800 mb-4">Product Images</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -87,6 +157,10 @@
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-2">Image 4 (Optional)</label>
                         <input type="file" name="image_3" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Banner Image ("Created In Harmony with Nature")</label>
+                        <input type="file" name="banner_image" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none">
                     </div>
                 </div>
                 
@@ -128,4 +202,28 @@
         </form>
     </div>
 </div>
+
+<script>
+function addBulletPoint() {
+    const container = document.getElementById('bullet-points-container');
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'bullet_points[]';
+    input.className = 'w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none mt-2';
+    input.placeholder = 'e.g. New feature point';
+    container.appendChild(input);
+}
+function addFaq() {
+    const container = document.getElementById('faqs-container');
+    const index = container.querySelectorAll('.faq-row').length;
+    const div = document.createElement('div');
+    div.className = 'flex gap-2 faq-row mt-2';
+    div.innerHTML = `
+        <input type="text" name="faqs[${index}][question]" class="w-1/2 bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm outline-none" placeholder="Question">
+        <input type="text" name="faqs[${index}][answer]" class="w-1/2 bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm outline-none" placeholder="Answer">
+    `;
+    container.appendChild(div);
+}
+</script>
+
 @endsection

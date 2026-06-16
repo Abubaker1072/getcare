@@ -54,19 +54,15 @@
     $heroSubtitle = \App\Models\StoreSetting::getValue('hero_subtitle', 'Science Your Skin Deserves');
     $heroMediaType = \App\Models\StoreSetting::getValue('hero_media_type', 'image');
     $heroMediaPath = \App\Models\StoreSetting::getValue('hero_media_path');
+    
+    $activeMode = \App\Models\StoreSetting::getValue('hero_active_mode', 'default');
+    $isSliderActive = ($activeMode === 'slider');
+    $sliderMedia = [];
+    $sliderInterval = 20000; // default 20s
 
-    // Schedule check
-    $schStart = \App\Models\StoreSetting::getValue('hero_scheduled_start');
-    $schEnd = \App\Models\StoreSetting::getValue('hero_scheduled_end');
-    $now = now();
-
-    if ($schStart && $schEnd) {
-        $schStartDt = \Carbon\Carbon::parse($schStart);
-        $schEndDt = \Carbon\Carbon::parse($schEnd);
-        if ($now->between($schStartDt, $schEndDt)) {
-            $heroMediaType = \App\Models\StoreSetting::getValue('hero_scheduled_media_type', $heroMediaType);
-            $heroMediaPath = \App\Models\StoreSetting::getValue('hero_scheduled_media_path', $heroMediaPath);
-        }
+    if ($isSliderActive) {
+        $sliderMedia = \App\Models\HeroSlider::orderBy('sort_order')->get();
+        $sliderInterval = (int)\App\Models\StoreSetting::getValue('hero_slider_interval', 20) * 1000;
     }
 
     $heroUrl = $heroMediaPath 
@@ -76,14 +72,52 @@
 <section class="relative min-h-screen md:h-[600px] lg:h-[700px] overflow-hidden">
     {{-- Background Media --}}
     <div class="absolute inset-0 z-0">
-        @if($heroMediaType === 'video')
-            <video autoplay loop muted playsinline class="w-full h-full object-cover object-center">
-                <source src="{{ $heroUrl }}" type="video/mp4">
-            </video>
-            <div class="absolute inset-0 bg-black/30"></div>
+        @if($isSliderActive && $sliderMedia->isNotEmpty())
+            <!-- Swiper Slider for Scheduled Media -->
+            <div class="swiper hero-bg-swiper w-full h-full">
+                <div class="swiper-wrapper">
+                    @foreach($sliderMedia as $media)
+                        <div class="swiper-slide relative">
+                            @if($media->type === 'video')
+                                <video autoplay loop muted playsinline class="w-full h-full object-cover object-center">
+                                    <source src="{{ asset('storage/' . $media->media_path) }}" type="video/mp4">
+                                </video>
+                            @else
+                                <img src="{{ asset('storage/' . $media->media_path) }}" class="w-full h-full object-cover object-center">
+                            @endif
+                            <div class="absolute inset-0 bg-black/30"></div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    new Swiper('.hero-bg-swiper', {
+                        loop: true,
+                        effect: 'fade',
+                        fadeEffect: {
+                            crossFade: true
+                        },
+                        autoplay: {
+                            delay: {{ $sliderInterval }},
+                            disableOnInteraction: false,
+                        },
+                        allowTouchMove: false
+                    });
+                });
+            </script>
         @else
-            <img src="{{ $heroUrl }}" alt="LED Light Therapy Hero" class="w-full h-full object-cover object-center">
-            <div class="absolute inset-0 bg-black/20"></div>
+            <!-- Default Single Hero Media -->
+            @if($heroMediaType === 'video')
+                <video autoplay loop muted playsinline class="w-full h-full object-cover object-center">
+                    <source src="{{ $heroUrl }}" type="video/mp4">
+                </video>
+                <div class="absolute inset-0 bg-black/30"></div>
+            @else
+                <img src="{{ $heroUrl }}" alt="LED Light Therapy Hero" class="w-full h-full object-cover object-center">
+                <div class="absolute inset-0 bg-black/20"></div>
+            @endif
         @endif
     </div>
 

@@ -53,6 +53,12 @@ class ProductController extends Controller
             abort(404);
         }
 
+        $product->load([
+            'testimonials' => function($q) { $q->latest()->take(4); },
+            'reviewVideos' => function($q) { $q->where('is_active', true)->latest()->take(4); },
+            'reviews' => function($q) { $q->where('is_approved', true)->latest(); }
+        ]);
+
         return view('pages.product-detail', compact('product'));
     }
 }

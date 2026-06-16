@@ -56,11 +56,23 @@ class ProductController extends Controller
             'image_2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'image_3' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'image_4' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
             'cover_image_selection' => 'nullable|string|in:image,image_1,image_2,image_3,image_4',
             'is_active' => 'boolean',
+            'tags' => 'nullable|string|max:255',
+            'promo_text' => 'nullable|string|max:255',
+            'bullet_points' => 'nullable|array',
+            'bullet_points.*' => 'nullable|string',
+            'features' => 'nullable|array',
+            'features.*' => 'nullable|string',
+            'how_to_use' => 'nullable|string',
+            'ingredients' => 'nullable|string',
+            'faqs' => 'nullable|array',
+            'faqs.*.question' => 'nullable|string',
+            'faqs.*.answer' => 'nullable|string',
         ]);
 
-        foreach (['image', 'image_1', 'image_2', 'image_3', 'image_4'] as $imgField) {
+        foreach (['image', 'image_1', 'image_2', 'image_3', 'image_4', 'banner_image'] as $imgField) {
             if ($request->hasFile($imgField)) {
                 $validatedData[$imgField] = $request->file($imgField)->store('products', 'public');
             }
@@ -78,13 +90,22 @@ class ProductController extends Controller
         $validatedData['is_active'] = $request->has('is_active');
         $validatedData['category_id'] = $request->input('category_id') ?: null;
 
+        $validatedData['bullet_points'] = array_values(array_filter($request->input('bullet_points', [])));
+        $validatedData['features'] = array_values(array_filter($request->input('features', [])));
+        
+        $faqs = $request->input('faqs', []);
+        $validatedData['faqs'] = array_values(array_filter($faqs, function($faq) {
+            return !empty($faq['question']) && !empty($faq['answer']);
+        }));
+
         $this->productService->createProduct($validatedData);
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
 
-    public function edit(Product $product)
+    public function edit($id)
     {
+        $product = Product::with(['testimonials', 'reviewVideos', 'reviews'])->findOrFail($id);
         $categories = $this->categoryRepository->all();
         return view('admin.product-edit', compact('product', 'categories'));
     }
@@ -105,11 +126,23 @@ class ProductController extends Controller
             'image_2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'image_3' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'image_4' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
             'cover_image_selection' => 'nullable|string|in:image,image_1,image_2,image_3,image_4',
             'is_active' => 'boolean',
+            'tags' => 'nullable|string|max:255',
+            'promo_text' => 'nullable|string|max:255',
+            'bullet_points' => 'nullable|array',
+            'bullet_points.*' => 'nullable|string',
+            'features' => 'nullable|array',
+            'features.*' => 'nullable|string',
+            'how_to_use' => 'nullable|string',
+            'ingredients' => 'nullable|string',
+            'faqs' => 'nullable|array',
+            'faqs.*.question' => 'nullable|string',
+            'faqs.*.answer' => 'nullable|string',
         ]);
 
-        foreach (['image', 'image_1', 'image_2', 'image_3', 'image_4'] as $imgField) {
+        foreach (['image', 'image_1', 'image_2', 'image_3', 'image_4', 'banner_image'] as $imgField) {
             if ($request->hasFile($imgField)) {
                 $validatedData[$imgField] = $request->file($imgField)->store('products', 'public');
             }
@@ -126,6 +159,14 @@ class ProductController extends Controller
 
         $validatedData['is_active'] = $request->has('is_active');
         $validatedData['category_id'] = $request->input('category_id') ?: null;
+
+        $validatedData['bullet_points'] = array_values(array_filter($request->input('bullet_points', [])));
+        $validatedData['features'] = array_values(array_filter($request->input('features', [])));
+        
+        $faqs = $request->input('faqs', []);
+        $validatedData['faqs'] = array_values(array_filter($faqs, function($faq) {
+            return !empty($faq['question']) && !empty($faq['answer']);
+        }));
 
         $this->productService->updateProduct($product, $validatedData);
 
@@ -149,5 +190,69 @@ class ProductController extends Controller
     {
         $this->productService->deleteProduct($product);
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
+    }
+
+    // Product Testimonials
+    public function storeTestimonial(Request $request, Product $product)
+    {
+        $request->validate([
+            'image' => 'required|image|max:2048',
+            'caption' => 'nullable|string|max:255',
+            'short_description' => 'nullable|string|max:255',
+        ]);
+        $path = $request->file('image')->store('testimonials', 'public');
+        $product->testimonials()->create([
+            'image_path' => $path,
+            'caption' => $request->input('caption'),
+            'short_description' => $request->input('short_description'),
+        ]);
+        return back()->with('success', 'Testimonial added successfully.');
+    }
+
+    public function destroyTestimonial(Product $product, $testimonialId)
+    {
+        $testimonial = $product->testimonials()->findOrFail($testimonialId);
+        $testimonial->delete();
+        return back()->with('success', 'Testimonial deleted successfully.');
+    }
+
+    // Product Review Videos
+    public function storeReviewVideo(Request $request, Product $product)
+    {
+        $request->validate([
+            'video' => 'required|mimetypes:video/mp4,video/x-m4v,video/*|max:20480',
+            'caption' => 'nullable|string|max:255',
+            'show_on_homepage' => 'nullable|boolean'
+        ]);
+        $path = $request->file('video')->store('review_videos', 'public');
+        $product->reviewVideos()->create([
+            'video_path' => $path,
+            'caption' => $request->input('caption'),
+            'show_on_homepage' => $request->has('show_on_homepage'),
+            'is_active' => true
+        ]);
+        return back()->with('success', 'Review video added successfully.');
+    }
+
+    public function destroyReviewVideo(Product $product, $videoId)
+    {
+        $video = $product->reviewVideos()->findOrFail($videoId);
+        $video->delete();
+        return back()->with('success', 'Review video deleted successfully.');
+    }
+
+    // Product Reviews
+    public function approveReview(Product $product, $reviewId)
+    {
+        $review = $product->reviews()->findOrFail($reviewId);
+        $review->update(['is_approved' => !$review->is_approved]);
+        return back()->with('success', 'Review status updated.');
+    }
+
+    public function destroyReview(Product $product, $reviewId)
+    {
+        $review = $product->reviews()->findOrFail($reviewId);
+        $review->delete();
+        return back()->with('success', 'Review deleted successfully.');
     }
 }

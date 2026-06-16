@@ -4,20 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Review extends Model
+class ProductTestimonial extends Model
 {
     protected $fillable = [
-        'name',
-        'rating',
-        'title',
-        'text',
-        'product_name',
         'product_id',
-        'is_approved',
-    ];
-
-    protected $casts = [
-        'is_approved' => 'boolean',
+        'image_path',
+        'caption',
+        'short_description',
     ];
 
     public function product()

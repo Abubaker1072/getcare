@@ -6,32 +6,7 @@
 
 @section('content')
 
-{{-- Top Promotional Banner --}}
-<div class="bg-[#831b1b] text-white py-2.5 px-4">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-sm font-medium tracking-wide">
-        <a href="#" class="hover:underline underline-offset-4 decoration-white/70 transition-all">
-            Up to 20% Off | Code REFRESH20
-        </a>
-        
-        {{-- Simulated Countdown Timer --}}
-        <div class="flex items-center gap-4 text-xs font-bold font-mono">
-            <div class="flex flex-col items-center">
-                <span class="text-lg leading-none">23</span>
-                <span class="text-[10px] uppercase text-white/80 mt-0.5">HRS</span>
-            </div>
-            <span class="text-lg leading-none pb-3">:</span>
-            <div class="flex flex-col items-center">
-                <span class="text-lg leading-none">59</span>
-                <span class="text-[10px] uppercase text-white/80 mt-0.5">MIN</span>
-            </div>
-            <span class="text-lg leading-none pb-3">:</span>
-            <div class="flex flex-col items-center">
-                <span class="text-lg leading-none">42</span>
-                <span class="text-[10px] uppercase text-white/80 mt-0.5">SEC</span>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 {{-- Premium Products Header --}}
 <section class="bg-[#FDFBF6] py-10 md:py-16 border-b border-gray-100">
