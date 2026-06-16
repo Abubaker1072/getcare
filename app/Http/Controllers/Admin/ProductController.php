@@ -19,11 +19,19 @@ class ProductController extends Controller
         $this->categoryRepository = $categoryRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = $this->productService->getAllProducts();
+        $categoryId = $request->input('category_id');
         $categories = $this->categoryRepository->all();
-        return view('admin.products', compact('products', 'categories'));
+        
+        $query = Product::with('category');
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+        
+        $products = $query->latest()->paginate(15)->withQueryString();
+        
+        return view('admin.products', compact('products', 'categories', 'categoryId'));
     }
 
     public function create()

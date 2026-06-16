@@ -1,3 +1,6 @@
+@php
+    $cartItemsCount = \App\Models\CartItem::where(auth()->check() ? ['user_id' => auth()->id()] : ['session_id' => session()->getId()])->sum('quantity');
+@endphp
 <header class="w-full bg-white fixed top-0 left-0 z-50">
     {{-- Promotional Banner --}}
     <div class="w-full bg-amber-100 border-b py-2 md:py-3 text-center text-xs md:text-sm text-gray-700">
@@ -51,14 +54,17 @@
             {{-- Right Icons: Currency + Account + Search + Cart --}}
             <div class="flex items-center gap-3 md:gap-6">
                 {{-- Currency Selector --}}
-                <div class="hidden md:flex items-center gap-2">
-                    <img src="https://cdn-icons-png.flaticon.com/512/197/197593.png" alt="PK" class="w-4 md:w-5 h-4 md:h-5 rounded-full">
-                    <select class="bg-transparent border-none outline-none text-xs font-semibold cursor-pointer hover:text-amber-600 focus:ring-0">
-                        <option value="PK">PKR ₨</option>
-                        <option value="US">USD $</option>
-                        <option value="AU">AUD $</option>
-                        <option value="GB">GBP £</option>
-                        <option value="EU">EUR €</option>
+                @php
+                    $activeCurrencies = \App\Models\Currency::where('is_active', true)->get();
+                    $currentCurrency = \App\Helpers\CurrencyHelper::getCurrent();
+                @endphp
+                <div class="hidden md:flex items-center gap-2 bg-slate-50 border border-slate-200/50 px-2.5 py-1 rounded-xl shadow-inner">
+                    <select onchange="window.location.href='/currency/switch/' + this.value" class="bg-transparent border-none outline-none text-xs font-bold text-slate-700 cursor-pointer hover:text-amber-600 focus:ring-0 py-0.5 pl-1 pr-6">
+                        @foreach($activeCurrencies as $curr)
+                            <option value="{{ $curr->code }}" {{ $currentCurrency->code === $curr->code ? 'selected' : '' }}>
+                                {{ $curr->code }} ({{ $curr->symbol }})
+                            </option>
+                        @endforeach
                     </select>
                 </div>
 
@@ -92,34 +98,41 @@
                     <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                     </svg>
-                    <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center">0</span>
+                    <span id="cart-badge-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center">{{ $cartItemsCount }}</span>
                 </a>
             </div>
         </div>
     </div>
 
     {{-- Promo Code + Countdown Banner --}}
-    <div class="w-full bg-red-900 text-white py-2 md:py-3">
+    @php
+        $countdownActive = \App\Models\StoreSetting::getValue('countdown_is_active', '1') === '1';
+        $countdownEndTime = \App\Models\StoreSetting::getValue('countdown_end_time');
+        $countdownText = \App\Models\StoreSetting::getValue('countdown_text', 'Up to 20% Off | Code REFRESH20');
+    @endphp
+    @if($countdownActive && $countdownEndTime)
+    <div class="w-full bg-red-900 text-white py-2 md:py-3" id="promo-countdown-banner" data-end="{{ $countdownEndTime }}">
         <div class="max-w-7xl mx-auto px-3 md:px-4 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-8 text-xs md:text-sm">
-            <span class="font-semibold underline text-xs md:text-sm">Up to 20% Off | Code REFRESH20</span>
+            <span class="font-semibold underline text-xs md:text-sm">{{ $countdownText }}</span>
             <div class="flex items-center gap-4 md:gap-8 font-mono text-base md:text-lg font-bold">
                 <div class="text-center">
-                    <div class="text-lg md:text-2xl">19</div>
+                    <div class="text-lg md:text-2xl" id="countdown-hours">00</div>
                     <div class="text-xs uppercase">Hrs</div>
                 </div>
                 <span>:</span>
                 <div class="text-center">
-                    <div class="text-lg md:text-2xl">30</div>
+                    <div class="text-lg md:text-2xl" id="countdown-minutes">00</div>
                     <div class="text-xs uppercase">Min</div>
                 </div>
                 <span>:</span>
                 <div class="text-center">
-                    <div class="text-lg md:text-2xl">16</div>
+                    <div class="text-lg md:text-2xl" id="countdown-seconds">00</div>
                     <div class="text-xs uppercase">Sec</div>
                 </div>
             </div>
         </div>
     </div>
+    @endif
 
     {{-- Mobile Menu Navigation (Hidden by default, toggled with hamburger) --}}
     <div id="mobile-menu" class="lg:hidden hidden w-full bg-white border-t max-h-96 overflow-y-auto">
@@ -129,6 +142,19 @@
             <li class="border-b"><a href="{{ route('categories') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition touch-none active:bg-amber-100">Categories</a></li>
             <li class="border-b"><a href="{{ route('brands') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition touch-none active:bg-amber-100">All Brands</a></li>
             <li class="border-b"><a href="{{ route('featured') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition touch-none active:bg-amber-100">Featured Products</a></li>
+            <li class="border-b px-4 py-3 flex items-center justify-between text-sm text-gray-700 bg-slate-50/50">
+                <span class="font-bold flex items-center gap-1.5 text-xs uppercase tracking-wider text-slate-500">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Currency
+                </span>
+                <select onchange="window.location.href='/currency/switch/' + this.value" class="bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 cursor-pointer focus:ring-0 py-1 pl-2 pr-8">
+                    @foreach($activeCurrencies as $curr)
+                        <option value="{{ $curr->code }}" {{ $currentCurrency->code === $curr->code ? 'selected' : '' }}>
+                            {{ $curr->code }} ({{ $curr->symbol }})
+                        </option>
+                    @endforeach
+                </select>
+            </li>
             <li><a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition touch-none active:bg-amber-100">Contact us</a></li>
         </ul>
     </div>
@@ -171,47 +197,20 @@
     </div>
     
     {{-- Drawer Body --}}
-    <div class="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
-        {{-- Example Item --}}
-        <div class="flex items-center gap-4 pb-4 border-b">
-            <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
-                <img src="{{ asset('Products/Product Item 11/EMS Foot Massager (1).webp') }}" alt="EMS Foot Massager" class="w-full h-full object-cover">
-            </div>
-            <div class="flex-1">
-                <h3 class="text-sm font-semibold text-gray-800 line-clamp-2">EMS Foot Massager Mat</h3>
-                <p class="text-xs text-gray-500 mt-1">Quantity: 1</p>
-                <div class="flex items-center justify-between mt-2">
-                    <span class="text-sm font-bold text-amber-600">₨ 2,500</span>
-                    <button class="text-xs text-red-500 hover:underline">Remove</button>
-                </div>
-            </div>
-        </div>
-        {{-- Example Item --}}
-        <div class="flex items-center gap-4 pb-4 border-b">
-            <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
-                <img src="{{ asset('Products/Product Item 12/3 in 1 EMS Back Belt with Heating and RLT (1).webp') }}" alt="Back Brace" class="w-full h-full object-cover">
-            </div>
-            <div class="flex-1">
-                <h3 class="text-sm font-semibold text-gray-800 line-clamp-2">3 IN 1 Lower Back Brace Belt</h3>
-                <p class="text-xs text-gray-500 mt-1">Quantity: 1</p>
-                <div class="flex items-center justify-between mt-2">
-                    <span class="text-sm font-bold text-amber-600">₨ 4,200</span>
-                    <button class="text-xs text-red-500 hover:underline">Remove</button>
-                </div>
-            </div>
-        </div>
+    <div id="cart-drawer-items" class="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
+        {{-- Items will be loaded dynamically --}}
     </div>
     
     {{-- Drawer Footer --}}
     <div class="border-t p-6 bg-gray-50">
         <div class="flex items-center justify-between mb-4">
             <span class="text-gray-600 font-medium">Subtotal</span>
-            <span class="text-xl font-bold text-gray-900">₨ 6,700</span>
+            <span id="cart-drawer-subtotal" class="text-xl font-bold text-gray-900">₨ 0</span>
         </div>
         <p class="text-xs text-gray-500 mb-4 text-center">Shipping and taxes calculated at checkout.</p>
         <div class="space-y-3">
             <a href="{{ route('cart') }}" class="block w-full py-3 px-4 bg-gray-900 text-white text-center rounded-md font-semibold hover:bg-gray-800 transition">View Cart</a>
-            <a href="#" class="block w-full py-3 px-4 bg-amber-500 text-white text-center rounded-md font-semibold hover:bg-amber-600 transition shadow-md shadow-amber-200">Checkout</a>
+            <a href="/checkout" class="block w-full py-3 px-4 bg-amber-500 text-white text-center rounded-md font-semibold hover:bg-amber-600 transition shadow-md shadow-amber-200">Checkout</a>
         </div>
     </div>
 </div>
@@ -260,6 +259,7 @@
                 cartDrawer.classList.remove('translate-x-full');
             }, 10);
             document.body.classList.add('overflow-hidden');
+            window.updateCartDrawer();
         };
 
         window.closeCart = function() {
@@ -275,18 +275,116 @@
         if (closeCartBtn) closeCartBtn.addEventListener('click', window.closeCart);
         if (cartBackdrop) cartBackdrop.addEventListener('click', window.closeCart);
 
-        // Bind all Add to Cart buttons to open the drawer
-        document.querySelectorAll('button:contains("Add to Cart"), button:contains("ADD TO CART")').forEach(btn => {
-            // This is a naive selector, better use class or check text content
-        });
-        
-        // Let's just bind by searching innerText
-        const buttons = document.querySelectorAll('button, a');
-        buttons.forEach(btn => {
-            if (btn.innerText && btn.innerText.toUpperCase().includes('ADD TO CART')) {
-                btn.addEventListener('click', window.openCart);
-            }
-        });
+        // Fetch Cart Summary dynamically
+        window.updateCartDrawer = function() {
+            fetch('/api/cart/summary', {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    // Update badge count
+                    const badges = document.querySelectorAll('#cart-badge-count');
+                    badges.forEach(badge => {
+                        badge.innerText = data.cart_count;
+                        if (data.cart_count > 0) {
+                            badge.classList.remove('hidden');
+                        } else {
+                            badge.classList.add('hidden');
+                        }
+                    });
+                    
+                    // Update Drawer items
+                    const itemsContainer = document.getElementById('cart-drawer-items');
+                    if (!itemsContainer) return;
+                    
+                    if (data.items.length === 0) {
+                        itemsContainer.innerHTML = `
+                            <div class="flex flex-col items-center justify-center h-full text-gray-400 py-12">
+                                <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                                <p class="text-sm font-medium">Your cart is empty</p>
+                            </div>
+                        `;
+                        document.getElementById('cart-drawer-subtotal').innerText = data.formatted_subtotal || '₨ 0';
+                        return;
+                    }
+                    
+                    let html = '';
+                    data.items.forEach(item => {
+                        html += `
+                        <div class="flex items-center gap-4 pb-4 border-b">
+                            <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
+                                <img src="${item.image_url}" alt="${item.name}" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-sm font-semibold text-gray-800 line-clamp-2">${item.name}</h3>
+                                <p class="text-xs text-gray-500 mt-1">Quantity: ${item.quantity}</p>
+                                <div class="flex items-center justify-between mt-2">
+                                    <span class="text-sm font-bold text-amber-600">${item.formatted_price}</span>
+                                    <button onclick="window.removeCartItem(${item.id})" class="text-xs text-red-500 hover:underline">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                    });
+                    itemsContainer.innerHTML = html;
+                    document.getElementById('cart-drawer-subtotal').innerText = data.formatted_subtotal;
+                });
+        };
+
+        // Remove item AJAX
+        window.removeCartItem = function(id) {
+            fetch(`/cart/remove/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                window.updateCartDrawer();
+                // If we are on the cart details page, reload to update the main page
+                if (window.location.pathname === '/cart') {
+                    window.location.reload();
+                }
+            });
+        };
+
+        // Add item AJAX
+        window.addToCart = function(productId, quantity = 1) {
+            fetch('/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    quantity: quantity
+                })
+            })
+            .then(res => {
+                if (!res.ok) {
+                    return res.json().then(err => { throw new Error(err.error || 'Failed to add item to cart'); });
+                }
+                return res.json();
+            })
+            .then(data => {
+                window.updateCartDrawer();
+                window.openCart();
+            })
+            .catch(err => {
+                alert(err.message);
+            });
+        };
+
+        // Initial fetch on page load
+        window.updateCartDrawer();
 
         // Search Modal Logic
         const searchIcon = document.getElementById('search-icon');
@@ -319,5 +417,40 @@
 
         if (searchIcon) searchIcon.addEventListener('click', window.openSearch);
         if (closeSearchBtn) closeSearchBtn.addEventListener('click', window.closeSearch);
+
+        // Countdown Timer Logic
+        const banner = document.getElementById('promo-countdown-banner');
+        if (banner) {
+            const endTimeStr = banner.getAttribute('data-end');
+            if (endTimeStr) {
+                const endTime = new Date(endTimeStr).getTime();
+                
+                function updateTimer() {
+                    const now = new Date().getTime();
+                    const distance = endTime - now;
+                    
+                    if (distance < 0) {
+                        banner.classList.add('hidden');
+                        clearInterval(timerInterval);
+                        return;
+                    }
+                    
+                    const hours = Math.floor(distance / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                    const hrsEl = document.getElementById('countdown-hours');
+                    const minsEl = document.getElementById('countdown-minutes');
+                    const secsEl = document.getElementById('countdown-seconds');
+                    
+                    if(hrsEl) hrsEl.innerText = hours.toString().padStart(2, '0');
+                    if(minsEl) minsEl.innerText = minutes.toString().padStart(2, '0');
+                    if(secsEl) secsEl.innerText = seconds.toString().padStart(2, '0');
+                }
+                
+                updateTimer();
+                const timerInterval = setInterval(updateTimer, 1000);
+            }
+        }
     });
 </script>

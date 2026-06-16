@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -18,8 +19,13 @@ class AuthController extends Controller
 
         $remember = $request->has('remember');
 
+        $oldSessionId = session()->getId();
+
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
+
+            // Merge session cart to user cart
+            $this->mergeSessionCart($oldSessionId, Auth::id());
 
             if (Auth::user()->is_admin) {
                 return redirect()->intended('/admin/dashboard');
@@ -41,6 +47,8 @@ class AuthController extends Controller
             'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
 
+        $oldSessionId = session()->getId();
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -49,6 +57,9 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
+
+        // Merge session cart to user cart
+        $this->mergeSessionCart($oldSessionId, $user->id);
 
         return redirect('/dashboard');
     }
@@ -62,4 +73,35 @@ class AuthController extends Controller
 
         return redirect('/');
     }
+
+    /**
+     * Merge guest session cart items into authenticated user cart.
+     */
+    private function mergeSessionCart($sessionId, $userId)
+    {
+        $sessionItems = CartItem::where('session_id', $sessionId)->get();
+
+        foreach ($sessionItems as $item) {
+            // Check if user already has this product in cart
+            $userItem = CartItem::where('user_id', $userId)
+                ->where('product_id', $item->product_id)
+                ->first();
+
+            if ($userItem) {
+                $newQuantity = $userItem->quantity + $item->quantity;
+                // Cap quantity to product stock if available
+                if ($item->product) {
+                    $newQuantity = min($newQuantity, $item->product->stock);
+                }
+                $userItem->update(['quantity' => $newQuantity]);
+                $item->delete();
+            } else {
+                $item->update([
+                    'user_id' => $userId,
+                    'session_id' => null,
+                ]);
+            }
+        }
+    }
 }
+

@@ -73,7 +73,7 @@
                         </a>
                         <div class="p-4">
                             <a href="{{ route('product.detail', $product->slug) }}" class="text-sm font-medium text-gray-900 hover:text-amber-600 line-clamp-2">{{ $product->name }}</a>
-                            <p class="text-lg font-bold text-amber-600 mt-2">${{ number_format($product->price, 2) }}</p>
+                            <p class="text-lg font-bold text-amber-600 mt-2">{!! \App\Helpers\CurrencyHelper::format($product->price) !!}</p>
                         </div>
                     </div>
                     @endforeach

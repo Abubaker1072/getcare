@@ -52,7 +52,7 @@
                     <option value="">Do Not Link to a Product</option>
                     @foreach($products as $product)
                         <option value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>
-                            {{ $product->name }} (${{ number_format($product->price, 2) }})
+                            {{ $product->name }} ({{ strip_tags(\App\Helpers\CurrencyHelper::format($product->price)) }})
                         </option>
                     @endforeach
                 </select>

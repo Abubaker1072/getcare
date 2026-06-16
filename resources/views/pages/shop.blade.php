@@ -192,7 +192,7 @@
                             
                             {{-- Quick Add Overlay Button --}}
                             <div class="absolute bottom-4 left-4 right-4 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                                <button class="w-full bg-white/90 backdrop-blur-sm text-slate-900 font-semibold py-3 rounded-lg shadow-lg hover:bg-slate-900 hover:text-white transition-colors text-sm" onclick="event.preventDefault(); window.openCart(event)">
+                                <button class="w-full bg-white/90 backdrop-blur-sm text-slate-900 font-semibold py-3 rounded-lg shadow-lg hover:bg-slate-900 hover:text-white transition-colors text-sm" onclick="event.preventDefault(); window.addToCart({{ $product->id }}, 1)">
                                     Quick Add
                                 </button>
                             </div>
@@ -214,9 +214,9 @@
                             </p>
 
                             <div class="flex items-center gap-3 mt-auto pt-4 border-t border-slate-100">
-                                <span class="text-lg font-extrabold text-slate-900">${{ number_format($product->price, 2) }}</span>
+                                <span class="text-lg font-extrabold text-slate-900">{!! \App\Helpers\CurrencyHelper::format($product->price) !!}</span>
                                 @if($product->compare_price)
-                                    <span class="text-sm text-slate-400 line-through">${{ number_format($product->compare_price, 2) }}</span>
+                                    <span class="text-sm text-slate-400 line-through">{!! \App\Helpers\CurrencyHelper::format($product->compare_price) !!}</span>
                                 @endif
                             </div>
                         </div>

@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premium Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#090d16',
+                        darkCard: '#111827',
+                        darkBorder: '#1f2937'
+                    }
+                }
+            }
+        }
+        
+        // Immediate execution to prevent flash of light theme
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -15,7 +36,7 @@
         .sidebar-scroll:hover::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
     </style>
 </head>
-<body class="bg-[#f8f9fc] text-slate-800 antialiased h-screen flex overflow-hidden selection:bg-indigo-500 selection:text-white">
+<body class="bg-[#f8f9fc] text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased h-screen flex overflow-hidden selection:bg-indigo-500 selection:text-white transition-colors duration-300">
 
     <!-- Premium Dark Sidebar -->
     <aside class="w-72 bg-[#0b0f19] text-slate-400 flex flex-col h-full hidden md:flex transition-all duration-300 relative overflow-hidden">
@@ -67,6 +88,11 @@
         <svg class="w-5 h-5 mr-3 {{ request()->routeIs('admin.store-manage') ? 'opacity-100' : 'opacity-70 group-hover:opacity-100' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0..."></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
         <span class="font-medium text-sm">Store Manage</span>
     </a>
+
+    <a href="{{ route('admin.payment-gateways') }}" class="flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('admin.payment-gateways') ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' : 'hover:bg-white/5 hover:text-white text-slate-400' }}">
+        <svg class="w-5 h-5 mr-3 {{ request()->routeIs('admin.payment-gateways') ? 'opacity-100' : 'opacity-70 group-hover:opacity-100' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+        <span class="font-medium text-sm">Payment Gateways</span>
+    </a>
     
     <a href="{{ route('admin.orders') }}" class="flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('admin.orders') ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' : 'hover:bg-white/5 hover:text-white text-slate-400' }}">
         <svg class="w-5 h-5 mr-3 {{ request()->routeIs('admin.orders') ? 'opacity-100' : 'opacity-70 group-hover:opacity-100' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293..."></path></svg>
@@ -78,6 +104,16 @@
     <a href="{{ route('admin.customers') }}" class="flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('admin.customers') ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' : 'hover:bg-white/5 hover:text-white text-slate-400' }}">
         <svg class="w-5 h-5 mr-3 {{ request()->routeIs('admin.customers') ? 'opacity-100' : 'opacity-70 group-hover:opacity-100' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
         <span class="font-medium text-sm">Customers</span>
+    </a>
+
+    <a href="{{ route('admin.messages') }}" class="flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('admin.messages') ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' : 'hover:bg-white/5 hover:text-white text-slate-400' }}">
+        <svg class="w-5 h-5 mr-3 {{ request()->routeIs('admin.messages') ? 'opacity-100' : 'opacity-70 group-hover:opacity-100' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+        <span class="font-medium text-sm">Customer Messages</span>
+    </a>
+
+    <a href="{{ route('admin.reviews') }}" class="flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('admin.reviews') ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' : 'hover:bg-white/5 hover:text-white text-slate-400' }}">
+        <svg class="w-5 h-5 mr-3 {{ request()->routeIs('admin.reviews') ? 'opacity-100' : 'opacity-70 group-hover:opacity-100' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+        <span class="font-medium text-sm">Testimonials</span>
     </a>
     
     <a href="{{ route('admin.settings') }}" class="flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('admin.settings') ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' : 'hover:bg-white/5 hover:text-white text-slate-400' }}">
@@ -103,16 +139,16 @@
     <div class="flex-1 flex flex-col h-full overflow-hidden relative">
         
         <!-- Glassmorphism Top Navbar -->
-        <header class="h-20 bg-white/70 backdrop-blur-lg border-b border-slate-200/60 flex items-center justify-between px-8 z-20 sticky top-0">
+        <header class="h-20 bg-white/70 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200/60 dark:border-slate-800/80 flex items-center justify-between px-8 z-20 sticky top-0 transition-colors duration-300">
             <!-- Breadcrumbs -->
             <div class="flex items-center text-sm font-medium text-slate-500">
-                <button class="md:hidden mr-4 text-slate-600 focus:outline-none bg-slate-100 p-2 rounded-lg">
+                <button class="md:hidden mr-4 text-slate-600 dark:text-slate-400 focus:outline-none bg-slate-100 dark:bg-slate-800 p-2 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
-                <div class="flex items-center px-4 py-2 bg-slate-100/80 rounded-xl">
-                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                    <span class="mx-2.5 text-slate-300">/</span>
-                    <span class="text-indigo-600 font-bold tracking-wide">Dashboard</span>
+                <div class="flex items-center px-4 py-2 bg-slate-100/80 dark:bg-slate-800/80 rounded-xl">
+                    <svg class="w-4 h-4 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    <span class="mx-2.5 text-slate-300 dark:text-slate-600">/</span>
+                    <span class="text-indigo-600 dark:text-indigo-400 font-bold tracking-wide">Dashboard</span>
                 </div>
             </div>
 
@@ -120,35 +156,171 @@
             <div class="flex-1 max-w-lg px-12 hidden md:block">
                 <div class="relative group">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                        <svg class="w-5 h-5 text-slate-400 transition-colors group-focus-within:text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <svg class="w-5 h-5 text-slate-400 dark:text-slate-500 transition-colors group-focus-within:text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
-                    <input type="text" placeholder="Search for products, orders..." class="w-full bg-slate-100/50 border-transparent rounded-2xl pl-12 pr-4 py-2.5 text-sm font-medium transition-all focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none shadow-sm shadow-slate-200/50 placeholder-slate-400">
+                    <input type="text" placeholder="Search for products, orders..." class="w-full bg-slate-100/50 dark:bg-slate-800 border-transparent rounded-2xl pl-12 pr-4 py-2.5 text-sm font-medium transition-all focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:focus:border-indigo-500 outline-none shadow-sm dark:shadow-none placeholder-slate-400 dark:placeholder-slate-500 dark:text-slate-200">
                 </div>
             </div>
 
             <!-- Right side (Actions) -->
             <div class="flex items-center space-x-3">
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()" class="w-10 h-10 flex items-center justify-center bg-slate-100/80 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 rounded-xl transition-colors">
+                    <svg id="theme-sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg id="theme-moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+
+                <!-- Currency Switcher -->
+                @php
+                    $activeCurrencies = \App\Models\Currency::where('is_active', true)->get();
+                    $currentCurrency = \App\Helpers\CurrencyHelper::getCurrent();
+                @endphp
+                <div class="flex items-center gap-1.5 bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 px-3 py-1.5 rounded-xl mr-2">
+                    <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Currency</span>
+                    <select onchange="window.location.href='/currency/switch/' + this.value" class="bg-transparent border-none outline-none text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer focus:ring-0 py-0 pl-1 pr-6 focus:outline-none">
+                        @foreach($activeCurrencies as $curr)
+                            <option value="{{ $curr->code }}" {{ $currentCurrency->code === $curr->code ? 'selected' : '' }} class="dark:bg-slate-900 dark:text-slate-100">
+                                {{ $curr->code }} ({{ $curr->symbol }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <!-- Go to Website Button -->
-                <a href="{{ route('home') }}" target="_blank" class="hidden md:flex items-center px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl text-sm font-bold transition-colors">
+                <a href="{{ route('home') }}" target="_blank" class="hidden md:flex items-center px-4 py-2 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-950/60 rounded-xl text-sm font-bold transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                     Go to Website
                 </a>
 
                 <!-- Notifications -->
-                <button class="w-10 h-10 flex items-center justify-center bg-slate-100/80 hover:bg-slate-200 text-slate-500 hover:text-indigo-600 rounded-xl transition-colors relative">
-                    <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-slate-100"></span>
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                </button>
+                @php
+                    $pendingMessages = \App\Models\CustomerMessage::where('is_read', false)->latest()->take(5)->get();
+                    $pendingReviews = \App\Models\Review::where('is_approved', false)->latest()->take(5)->get();
+                    $pendingOrders = \App\Models\Order::where('status', 'pending')->latest()->take(5)->get();
+                    $totalNotifications = $pendingMessages->count() + $pendingReviews->count() + $pendingOrders->count();
+                @endphp
+                <div class="relative" id="notifications-dropdown-container">
+                    <button onclick="toggleNotifications()" class="w-10 h-10 flex items-center justify-center bg-slate-100/80 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-indigo-655 dark:text-slate-400 rounded-xl transition-colors relative">
+                        @if($totalNotifications > 0)
+                            <span class="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+                        @endif
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                    </button>
+
+                    <!-- Floating Dropdown list -->
+                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden">
+                        <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
+                            <span class="font-extrabold text-sm text-slate-950 dark:text-white">Notifications</span>
+                            <span class="px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 rounded-lg text-xs font-bold">{{ $totalNotifications }} Pending</span>
+                        </div>
+                        
+                        <div class="max-h-72 overflow-y-auto divide-y divide-slate-50 dark:divide-slate-800/60">
+                            @if($pendingOrders->isNotEmpty())
+                                @foreach($pendingOrders as $order)
+                                    <a href="{{ route('admin.orders') }}" class="block p-4 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+                                        <div class="flex gap-3">
+                                            <span class="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-500 flex items-center justify-center text-sm font-bold flex-shrink-0">📦</span>
+                                            <div>
+                                                <p class="text-xs font-bold text-slate-900 dark:text-white">New Order #{{ $order->order_number }}</p>
+                                                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">Awaiting approval • {{ $order->created_at->diffForHumans() }}</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            @endif
+
+                            @if($pendingMessages->isNotEmpty())
+                                @foreach($pendingMessages as $msg)
+                                    <a href="{{ route('admin.messages') }}" class="block p-4 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+                                        <div class="flex gap-3">
+                                            <span class="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 flex items-center justify-center text-sm font-bold flex-shrink-0">✉️</span>
+                                            <div>
+                                                <p class="text-xs font-bold text-slate-900 dark:text-white">Message from {{ $msg->first_name }}</p>
+                                                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">Unread inquiry • {{ $msg->created_at->diffForHumans() }}</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            @endif
+
+                            @if($pendingReviews->isNotEmpty())
+                                @foreach($pendingReviews as $rev)
+                                    <a href="{{ route('admin.reviews') }}" class="block p-4 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+                                        <div class="flex gap-3">
+                                            <span class="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-950/40 text-purple-500 flex items-center justify-center text-sm font-bold flex-shrink-0">★</span>
+                                            <div>
+                                                <p class="text-xs font-bold text-slate-900 dark:text-white">Review pending approval</p>
+                                                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">By {{ $rev->name }} • {{ $rev->created_at->diffForHumans() }}</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            @endif
+
+                            @if($totalNotifications === 0)
+                                <div class="p-6 text-center text-slate-400 dark:text-slate-500 text-xs italic">
+                                    No pending notifications.
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Logout Button -->
                 <form method="POST" action="{{ route('logout') }}" class="m-0">
                     @csrf
-                    <button type="submit" title="Logout" class="w-10 h-10 flex items-center justify-center bg-rose-50 hover:bg-rose-100 text-rose-500 rounded-xl transition-colors">
+                    <button type="submit" title="Logout" class="w-10 h-10 flex items-center justify-center bg-rose-50 dark:bg-rose-950/20 hover:bg-rose-100 dark:hover:bg-rose-950/40 text-rose-500 dark:text-rose-455 rounded-xl transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                     </button>
                 </form>
             </div>
         </header>
+
+        <script>
+            function toggleNotifications() {
+                const dropdown = document.getElementById('notifications-dropdown');
+                if (dropdown) {
+                    dropdown.classList.toggle('hidden');
+                }
+            }
+
+            // Close notifications dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const dropdown = document.getElementById('notifications-dropdown');
+                const container = document.getElementById('notifications-dropdown-container');
+                if (dropdown && container && !container.contains(event.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+
+            function toggleTheme() {
+                const isDark = document.documentElement.classList.contains('dark');
+                if (isDark) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                    document.getElementById('theme-sun-icon')?.classList.add('hidden');
+                    document.getElementById('theme-moon-icon')?.classList.remove('hidden');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                    document.getElementById('theme-sun-icon')?.classList.remove('hidden');
+                    document.getElementById('theme-moon-icon')?.classList.add('hidden');
+                }
+                window.dispatchEvent(new Event('theme-changed'));
+            }
+
+            // Initialize toggle icon states
+            document.addEventListener('DOMContentLoaded', function() {
+                const isDark = document.documentElement.classList.contains('dark');
+                if (isDark) {
+                    document.getElementById('theme-sun-icon')?.classList.remove('hidden');
+                    document.getElementById('theme-moon-icon')?.classList.add('hidden');
+                } else {
+                    document.getElementById('theme-sun-icon')?.classList.add('hidden');
+                    document.getElementById('theme-moon-icon')?.classList.remove('hidden');
+                }
+            });
+        </script>
 
         <!-- Dynamic Main Content -->
         <main class="flex-1 overflow-x-hidden overflow-y-auto p-8 z-10">
@@ -158,6 +330,9 @@
         </main>
         
     </div>
+
+    {{-- Premium Toasts --}}
+    @include('partials.toasts')
 
 </body>
 </html>

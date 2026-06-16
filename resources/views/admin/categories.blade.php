@@ -60,10 +60,10 @@
                                          alt="{{ $cat->name }}"
                                          class="w-full h-full object-cover">
                                 </div>
-                                <div>
-                                    <p class="font-bold text-slate-900 text-base">{{ $cat->name }}</p>
-                                    <p class="text-xs text-slate-500 font-medium">/{{ $cat->slug }}</p>
-                                </div>
+                                 <div>
+                                     <p class="text-base"><a href="{{ route('admin.products.index', ['category_id' => $cat->id]) }}" class="font-bold text-indigo-600 hover:text-indigo-900 hover:underline">{{ $cat->name }}</a></p>
+                                     <p class="text-xs text-slate-500 font-medium">/{{ $cat->slug }}</p>
+                                 </div>
                             </div>
                         </td>
                         <td class="p-5 text-center">
@@ -101,6 +101,11 @@
                 </tbody>
             </table>
         </div>
+        @if($categories->hasPages())
+            <div class="p-4 border-t border-slate-50">
+                {{ $categories->links() }}
+            </div>
+        @endif
     </div>
 
     {{-- Add Category Modal --}}

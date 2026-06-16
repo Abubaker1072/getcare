@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\CustomerMessage;
+use App\Models\Review;
+use Illuminate\Http\Request;
+
+class CRMController extends Controller
+{
+    /**
+     * Display a listing of customer messages.
+     */
+    public function messagesIndex()
+    {
+        $messages = CustomerMessage::latest()->paginate(15);
+        return view('admin.messages', compact('messages'));
+    }
+
+    /**
+     * Toggle the read/unread status of a customer message.
+     */
+    public function toggleMessageRead(CustomerMessage $message)
+    {
+        $message->update([
+            'is_read' => !$message->is_read
+        ]);
+
+        return back()->with('success', 'Message status updated successfully.');
+    }
+
+    /**
+     * Delete a customer message.
+     */
+    public function destroyMessage(CustomerMessage $message)
+    {
+        $message->delete();
+        return back()->with('success', 'Message deleted successfully.');
+    }
+
+    /**
+     * Display a listing of product reviews / testimonials.
+     */
+    public function reviewsIndex()
+    {
+        $reviews = Review::latest()->paginate(15);
+        return view('admin.reviews', compact('reviews'));
+    }
+
+    /**
+     * Toggle the approval status of a review.
+     */
+    public function toggleReviewApproval(Review $review)
+    {
+        $review->update([
+            'is_approved' => !$review->is_approved
+        ]);
+
+        return back()->with('success', 'Review approval status updated successfully.');
+    }
+
+    /**
+     * Delete a review.
+     */
+    public function destroyReview(Review $review)
+    {
+        $review->delete();
+        return back()->with('success', 'Review deleted successfully.');
+    }
+}

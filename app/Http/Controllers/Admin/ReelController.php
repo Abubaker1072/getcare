@@ -12,7 +12,7 @@ class ReelController extends Controller
 {
     public function index()
     {
-        $reels = Reel::with('product')->latest()->paginate(10);
+        $reels = Reel::with('product')->latest()->paginate(15);
         return view('admin.reels', compact('reels'));
     }
 

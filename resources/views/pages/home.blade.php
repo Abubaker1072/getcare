@@ -49,13 +49,42 @@
 
 
 {{-- HERO SECTION --}}
+@php
+    $heroTitle = \App\Models\StoreSetting::getValue('hero_title', 'SEMI-ANNUAL SALE');
+    $heroSubtitle = \App\Models\StoreSetting::getValue('hero_subtitle', 'Science Your Skin Deserves');
+    $heroMediaType = \App\Models\StoreSetting::getValue('hero_media_type', 'image');
+    $heroMediaPath = \App\Models\StoreSetting::getValue('hero_media_path');
+
+    // Schedule check
+    $schStart = \App\Models\StoreSetting::getValue('hero_scheduled_start');
+    $schEnd = \App\Models\StoreSetting::getValue('hero_scheduled_end');
+    $now = now();
+
+    if ($schStart && $schEnd) {
+        $schStartDt = \Carbon\Carbon::parse($schStart);
+        $schEndDt = \Carbon\Carbon::parse($schEnd);
+        if ($now->between($schStartDt, $schEndDt)) {
+            $heroMediaType = \App\Models\StoreSetting::getValue('hero_scheduled_media_type', $heroMediaType);
+            $heroMediaPath = \App\Models\StoreSetting::getValue('hero_scheduled_media_path', $heroMediaPath);
+        }
+    }
+
+    $heroUrl = $heroMediaPath 
+        ? asset('storage/' . $heroMediaPath) 
+        : 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=1400&h=700&fit=crop';
+@endphp
 <section class="relative min-h-screen md:h-[600px] lg:h-[700px] overflow-hidden">
-    {{-- Background Image --}}
+    {{-- Background Media --}}
     <div class="absolute inset-0 z-0">
-        <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=1400&h=700&fit=crop" 
-             alt="LED Light Therapy Hero" 
-             class="w-full h-full object-cover object-center">
-        <div class="absolute inset-0 bg-black/20"></div>
+        @if($heroMediaType === 'video')
+            <video autoplay loop muted playsinline class="w-full h-full object-cover object-center">
+                <source src="{{ $heroUrl }}" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 bg-black/30"></div>
+        @else
+            <img src="{{ $heroUrl }}" alt="LED Light Therapy Hero" class="w-full h-full object-cover object-center">
+            <div class="absolute inset-0 bg-black/20"></div>
+        @endif
     </div>
 
     {{-- Content --}}
@@ -64,12 +93,12 @@
             <div class="max-w-xl">
                 {{-- Main Heading --}}
                 <h1 class="text-4xl sm:text-5xl md:text-5xl lg:text-7xl font-bold text-white mb-2 md:mb-3 leading-tight tracking-wide">
-                    SEMI-ANNUAL<br>SALE
+                    {!! nl2br(e($heroTitle)) !!}
                 </h1>
 
                 {{-- Subtitle --}}
                 <p class="text-base sm:text-lg md:text-lg lg:text-xl text-gray-100 mb-4 md:mb-6 font-light tracking-wide">
-                    Science Your Skin Deserves
+                    {{ $heroSubtitle }}
                 </p>
 
                 {{-- Offers --}}
@@ -185,11 +214,11 @@
                         <div class="mb-4 pb-4 border-b border-gray-100">
                             <div class="flex items-baseline gap-2 mb-1">
                                 @if($product->discount_price && $product->discount_price < $product->price)
-                                    <span class="text-xl sm:text-2xl font-bold text-gray-900">${{ number_format($product->discount_price, 2) }}</span>
-                                    <span class="text-xs text-gray-400 line-through">${{ number_format($product->price, 2) }}</span>
+                                    <span class="text-xl sm:text-2xl font-bold text-gray-900">{{ \App\Helpers\CurrencyHelper::format($product->discount_price) }}</span>
+                                    <span class="text-xs text-gray-400 line-through">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
                                     <span class="text-xs font-bold text-green-600">{{ round((1 - $product->discount_price/$product->price) * 100) }}% OFF</span>
                                 @else
-                                    <span class="text-xl sm:text-2xl font-bold text-gray-900">${{ number_format($product->price, 2) }}</span>
+                                    <span class="text-xl sm:text-2xl font-bold text-gray-900">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
                                 @endif
                             </div>
                         </div>
@@ -242,13 +271,13 @@
                         <div class="flex items-end gap-6 mb-10">
                             <div>
                                 @if($featuredCompare && $featuredCompare > $featuredSale)
-                                    <span class="text-slate-400 line-through text-sm block mb-1">Standard Price ${{ number_format($featuredCompare, 0) }}</span>
+                                    <span class="text-slate-400 line-through text-sm block mb-1">Standard Price {{ \App\Helpers\CurrencyHelper::format($featuredCompare) }}</span>
                                 @endif
-                                <span class="text-5xl font-bold text-slate-900">${{ number_format($featuredSale, 0) }}</span>
+                                <span class="text-5xl font-bold text-slate-900">{{ \App\Helpers\CurrencyHelper::format($featuredSale) }}</span>
                             </div>
                             @if($featuredSavings > 0)
                             <div class="bg-red-50 border border-red-100 px-4 py-2 rounded-lg">
-                                <span class="text-red-600 font-bold tracking-wider uppercase text-xs">You Save ${{ number_format($featuredSavings, 0) }}</span>
+                                <span class="text-red-600 font-bold tracking-wider uppercase text-xs">You Save {{ \App\Helpers\CurrencyHelper::format($featuredSavings) }}</span>
                             </div>
                             @endif
                         </div>
@@ -339,7 +368,7 @@
                                     {{ $reel->product->name }}
                                 </h4>
                             </div>
-                            <p class="text-xs text-gray-600 mt-1">${{ number_format($reel->product->price, 2) }}</p>
+                            <p class="text-xs text-gray-600 mt-1">{{ \App\Helpers\CurrencyHelper::format($reel->product->price) }}</p>
                         </div>
                     </div>
                     <a href="{{ route('product.detail', $reel->product->id) }}" class="bg-[#d5c3ba] hover:bg-[#c4b0a6] transition text-white rounded-full w-8 h-8 flex items-center justify-center shrink-0">

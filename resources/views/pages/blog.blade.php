@@ -87,22 +87,34 @@
                 <div class="bg-white p-8 md:p-10 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.04)] border border-slate-100">
                     <h3 class="text-2xl font-light text-slate-900 mb-6">Send a Message</h3>
                     
-                    <form action="#" method="POST" class="space-y-5">
+                    @if(session('success') && session('success-type') === 'message')
+                        <div class="mb-6 bg-emerald-50 text-emerald-600 border border-emerald-100 p-4 rounded-xl text-sm font-bold shadow-sm">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    @if(session('success') && !session('success-type'))
+                        <div class="mb-6 bg-emerald-50 text-emerald-600 border border-emerald-100 p-4 rounded-xl text-sm font-bold shadow-sm">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <form action="{{ route('contact.store') }}" method="POST" class="space-y-5">
+                        @csrf
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <input type="text" placeholder="First Name" class="luxury-input" required>
+                                <input type="text" name="first_name" placeholder="First Name" class="luxury-input" required>
                             </div>
                             <div>
-                                <input type="text" placeholder="Last Name" class="luxury-input" required>
+                                <input type="text" name="last_name" placeholder="Last Name" class="luxury-input" required>
                             </div>
                         </div>
                         
                         <div>
-                            <input type="email" placeholder="Email Address" class="luxury-input" required>
+                            <input type="email" name="email" placeholder="Email Address" class="luxury-input" required>
                         </div>
                         
                         <div>
-                            <select class="luxury-input text-slate-500 appearance-none cursor-pointer">
+                            <select name="inquiry_type" class="luxury-input text-slate-500 appearance-none cursor-pointer" required>
                                 <option value="" disabled selected>Select Inquiry Type</option>
                                 <option value="support">Product Support</option>
                                 <option value="order">Order Status</option>
@@ -112,7 +124,7 @@
                         </div>
 
                         <div>
-                            <textarea placeholder="How can we assist you today?" rows="4" class="luxury-input resize-none" required></textarea>
+                            <textarea name="message" placeholder="How can we assist you today?" rows="4" class="luxury-input resize-none" required></textarea>
                         </div>
 
                         <button type="submit" class="w-full bg-slate-900 text-white px-8 py-4 rounded-xl text-xs font-bold tracking-[0.2em] uppercase hover:bg-amber-600 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
@@ -194,53 +206,31 @@
             
             {{-- Left: Display Reviews Grid --}}
             <div class="w-full lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
-                @php
-                    $reviews = [
-                        [
-                            'name' => 'Eleanor R.',
-                            'product' => 'Clinical Renewal Bundle',
-                            'title' => 'Absolutely Transformative',
-                            'text' => 'Within three weeks of using the LED protocol alongside the 24K serum, my fine lines have visibly diminished. The clinical quality is undeniable.'
-                        ],
-                        [
-                            'name' => 'Sophia M.',
-                            'product' => 'Microcurrent Device',
-                            'title' => 'My Secret Weapon',
-                            'text' => 'I no longer need professional facials. This device provides an instant lift that lasts all day. The packaging and experience are pure luxury.'
-                        ],
-                        [
-                            'name' => 'Claire T.',
-                            'product' => 'Advanced Retinol Duo',
-                            'title' => 'Gentle yet Powerful',
-                            'text' => 'Finally, a retinol formulation that doesn\'t irritate my sensitive skin. Waking up to a glowing, plump complexion has become my new normal.'
-                        ],
-                        [
-                            'name' => 'Isabella L.',
-                            'product' => 'Ultrasonic Skin Scrubber',
-                            'title' => 'Spa Results at Home',
-                            'text' => 'The extraction mode cleared my pores in a way I didn\'t think was possible outside of a dermatologist\'s office. Worth every penny.'
-                        ]
-                    ];
-                @endphp
-
-                @foreach($reviews as $index => $review)
+                @forelse($reviews as $index => $review)
                 <div class="fade-up-contact bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-500" style="animation-delay: {{ ($index * 150) + 200 }}ms;">
                     {{-- Stars --}}
                     <div class="flex gap-1 text-amber-400 mb-4">
-                        @for($i=0; $i<5; $i++)
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        @for($i=0; $i<$review->rating; $i++)
+                        <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        @endfor
+                        @for($i=$review->rating; $i<5; $i++)
+                        <svg class="w-4 h-4 text-slate-200" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                         @endfor
                     </div>
                     
-                    <h4 class="font-bold text-slate-900 mb-3 text-lg">{{ $review['title'] }}</h4>
-                    <p class="text-slate-500 text-sm font-light leading-relaxed mb-6 italic">"{{ $review['text'] }}"</p>
+                    <h4 class="font-bold text-slate-900 mb-3 text-lg">{{ $review->title }}</h4>
+                    <p class="text-slate-500 text-sm font-light leading-relaxed mb-6 italic">"{{ $review->text }}"</p>
                     
                     <div class="border-t border-slate-50 pt-4 flex items-center justify-between">
-                        <span class="text-xs font-bold text-slate-900 uppercase tracking-wider">{{ $review['name'] }}</span>
-                        <span class="text-[10px] text-slate-400 uppercase tracking-widest">{{ $review['product'] }}</span>
+                        <span class="text-xs font-bold text-slate-900 uppercase tracking-wider">{{ $review->name }}</span>
+                        <span class="text-[10px] text-slate-400 uppercase tracking-widest">{{ $review->product_name ?? 'Concierge Client' }}</span>
                     </div>
                 </div>
-                @endforeach
+                @empty
+                <div class="col-span-2 text-center text-slate-400 py-12">
+                    No testimonials found. Be the first to share your journey!
+                </div>
+                @endforelse
             </div>
 
             {{-- Right: Add a Review Form --}}
@@ -253,28 +243,30 @@
                         <h3 class="text-2xl font-light mb-2 text-white">Share Your Journey</h3>
                         <p class="text-slate-400 text-sm font-light mb-8">Your experience inspires others. Leave a review to help our community discover their perfect protocol.</p>
                         
-                        <form action="#" method="POST" class="space-y-5">
+                        <form action="{{ route('review.store') }}" method="POST" class="space-y-5">
+                            @csrf
                             
-                            {{-- Interactive Star Rating Mockup --}}
+                            {{-- Interactive Star Rating Selector --}}
                             <div class="mb-6">
                                 <span class="block text-xs text-slate-400 uppercase tracking-widest mb-3">Overall Rating</span>
-                                <div class="flex gap-2 star-rating text-slate-600 hover:text-amber-400">
-                                    @for($i=0; $i<5; $i++)
-                                    <svg class="w-8 h-8 transition-colors duration-200" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                <input type="hidden" name="rating" id="review-rating-value" value="5" required>
+                                <div class="flex gap-2 text-amber-400" id="star-selector">
+                                    @for($i=1; $i<=5; $i++)
+                                    <svg onclick="setRating({{ $i }})" data-star="{{ $i }}" class="w-8 h-8 cursor-pointer transition-all hover:scale-110 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                                     @endfor
                                 </div>
                             </div>
 
                             <div>
-                                <input type="text" placeholder="Your Name" class="w-full bg-white/5 border border-white/10 p-4 rounded-lg text-sm text-white focus:border-amber-500 focus:bg-white/10 outline-none transition-all placeholder:text-slate-500" required>
+                                <input type="text" name="name" placeholder="Your Name" class="w-full bg-white/5 border border-white/10 p-4 rounded-lg text-sm text-white focus:border-amber-500 focus:bg-white/10 outline-none transition-all placeholder:text-slate-500" required>
                             </div>
 
                             <div>
-                                <input type="text" placeholder="Review Title" class="w-full bg-white/5 border border-white/10 p-4 rounded-lg text-sm text-white focus:border-amber-500 focus:bg-white/10 outline-none transition-all placeholder:text-slate-500" required>
+                                <input type="text" name="title" placeholder="Review Title" class="w-full bg-white/5 border border-white/10 p-4 rounded-lg text-sm text-white focus:border-amber-500 focus:bg-white/10 outline-none transition-all placeholder:text-slate-500" required>
                             </div>
 
                             <div>
-                                <textarea placeholder="Tell us about your experience..." rows="4" class="w-full bg-white/5 border border-white/10 p-4 rounded-lg text-sm text-white focus:border-amber-500 focus:bg-white/10 outline-none transition-all placeholder:text-slate-500 resize-none" required></textarea>
+                                <textarea name="text" placeholder="Tell us about your experience..." rows="4" class="w-full bg-white/5 border border-white/10 p-4 rounded-lg text-sm text-white focus:border-amber-500 focus:bg-white/10 outline-none transition-all placeholder:text-slate-500 resize-none" required></textarea>
                             </div>
 
                             <button type="submit" class="w-full bg-amber-600 text-white px-8 py-4 rounded-xl text-xs font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-slate-900 transition-all duration-300">
@@ -284,6 +276,22 @@
                     </div>
                 </div>
             </div>
+
+            <script>
+                function setRating(val) {
+                    document.getElementById('review-rating-value').value = val;
+                    document.querySelectorAll('#star-selector svg').forEach(star => {
+                        const starVal = parseInt(star.getAttribute('data-star'));
+                        if (starVal <= val) {
+                            star.classList.remove('text-slate-600');
+                            star.classList.add('text-amber-400');
+                        } else {
+                            star.classList.remove('text-amber-400');
+                            star.classList.add('text-slate-600');
+                        }
+                    });
+                }
+            </script>
 
         </div>
     </div>

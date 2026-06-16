@@ -69,13 +69,13 @@
                         <div class="flex items-end gap-6 mb-10">
                             <div>
                                 @if($featuredCompare && $featuredCompare > $featuredSale)
-                                    <span class="text-slate-400 line-through text-sm block mb-1">Standard Price ${{ number_format($featuredCompare, 0) }}</span>
+                                    <span class="text-slate-400 line-through text-sm block mb-1">Standard Price {!! \App\Helpers\CurrencyHelper::format($featuredCompare) !!}</span>
                                 @endif
-                                <span class="text-5xl font-bold text-slate-900">${{ number_format($featuredSale, 0) }}</span>
+                                <span class="text-5xl font-bold text-slate-900">{!! \App\Helpers\CurrencyHelper::format($featuredSale) !!}</span>
                             </div>
                             @if($featuredSavings > 0)
                             <div class="bg-red-50 border border-red-100 px-4 py-2 rounded-lg">
-                                <span class="text-red-600 font-bold tracking-wider uppercase text-xs">You Save ${{ number_format($featuredSavings, 0) }}</span>
+                                <span class="text-red-600 font-bold tracking-wider uppercase text-xs">You Save {!! \App\Helpers\CurrencyHelper::format($featuredSavings) !!}</span>
                             </div>
                             @endif
                         </div>
@@ -116,7 +116,7 @@
                         @endif
                         @if($savings > 0)
                         <div class="absolute top-4 left-4 bg-[#831b1b] text-white px-3 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-md">
-                            Save ${{ number_format($savings, 0) }}
+                            Save {!! \App\Helpers\CurrencyHelper::format($savings) !!}
                         </div>
                         @endif
                         <div class="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-20">
@@ -131,9 +131,9 @@
                         </a>
                         <p class="text-slate-500 text-xs font-light mb-6 flex-grow line-clamp-2">{{ $product->description }}</p>
                         <div class="flex items-center justify-between mt-auto">
-                            <span class="text-2xl font-bold text-slate-900">${{ number_format($salePrice, 0) }}</span>
+                            <span class="text-2xl font-bold text-slate-900">{!! \App\Helpers\CurrencyHelper::format($salePrice) !!}</span>
                             @if($comparePrice && $comparePrice > $salePrice)
-                                <span class="text-sm text-slate-400 line-through">${{ number_format($comparePrice, 0) }}</span>
+                                <span class="text-sm text-slate-400 line-through">{!! \App\Helpers\CurrencyHelper::format($comparePrice) !!}</span>
                             @endif
                         </div>
                     </div>

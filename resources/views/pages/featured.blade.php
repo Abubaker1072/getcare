@@ -217,14 +217,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 @php
                     $products = [
-                        ['name' => 'Premium LED Mask', 'category' => 'Light Therapy', 'price' => '$199.99', 'image' => 'product-1.jpg', 'rating' => 4.8],
-                        ['name' => 'Anti-Aging Serum', 'category' => 'Skincare', 'price' => '$79.99', 'image' => 'product-2.jpg', 'rating' => 4.9],
-                        ['name' => 'Facial Cleansing Brush', 'category' => 'Cleansing', 'price' => '$89.99', 'image' => 'product-3.jpg', 'rating' => 4.7],
-                        ['name' => 'Microneedle Roller', 'category' => 'Treatment', 'price' => '$49.99', 'image' => 'product-4.jpg', 'rating' => 4.6],
-                        ['name' => 'Hydrating Face Mask', 'category' => 'Skincare', 'price' => '$34.99', 'image' => 'product-5.jpg', 'rating' => 4.8],
-                        ['name' => 'Ultra Sonic Pen', 'category' => 'Device', 'price' => '$129.99', 'image' => 'product-6.jpg', 'rating' => 4.9],
-                        ['name' => 'Gold Eye Patches', 'category' => 'Treatment', 'price' => '$24.99', 'image' => 'product-7.jpg', 'rating' => 4.7],
-                        ['name' => 'Vitamin C Brightener', 'category' => 'Serum', 'price' => '$59.99', 'image' => 'product-8.jpg', 'rating' => 4.8],
+                        ['name' => 'Premium LED Mask', 'category' => 'Light Therapy', 'price' => 199.99, 'image' => 'product-1.jpg', 'rating' => 4.8],
+                        ['name' => 'Anti-Aging Serum', 'category' => 'Skincare', 'price' => 79.99, 'image' => 'product-2.jpg', 'rating' => 4.9],
+                        ['name' => 'Facial Cleansing Brush', 'category' => 'Cleansing', 'price' => 89.99, 'image' => 'product-3.jpg', 'rating' => 4.7],
+                        ['name' => 'Microneedle Roller', 'category' => 'Treatment', 'price' => 49.99, 'image' => 'product-4.jpg', 'rating' => 4.6],
+                        ['name' => 'Hydrating Face Mask', 'category' => 'Skincare', 'price' => 34.99, 'image' => 'product-5.jpg', 'rating' => 4.8],
+                        ['name' => 'Ultra Sonic Pen', 'category' => 'Device', 'price' => 129.99, 'image' => 'product-6.jpg', 'rating' => 4.9],
+                        ['name' => 'Gold Eye Patches', 'category' => 'Treatment', 'price' => 24.99, 'image' => 'product-7.jpg', 'rating' => 4.7],
+                        ['name' => 'Vitamin C Brightener', 'category' => 'Serum', 'price' => 59.99, 'image' => 'product-8.jpg', 'rating' => 4.8],
                     ];
                 @endphp
 
@@ -260,8 +260,8 @@
 
                         {{-- Price --}}
                         <div class="flex items-center gap-2">
-                            <span class="text-2xl font-bold text-gray-900">{{ $product['price'] }}</span>
-                            <span class="text-lg text-gray-400 line-through">${{ number_format(floatval(str_replace('$', '', $product['price'])) * 1.3, 2) }}</span>
+                            <span class="text-2xl font-bold text-gray-900">{!! \App\Helpers\CurrencyHelper::format($product['price']) !!}</span>
+                            <span class="text-lg text-gray-400 line-through">{!! \App\Helpers\CurrencyHelper::format($product['price'] * 1.3) !!}</span>
                         </div>
                     </div>
                 </div>

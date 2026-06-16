@@ -53,7 +53,7 @@
                             </div>
                         </td>
                         <td class="p-5 text-slate-600">{{ $product->category->name ?? '—' }}</td>
-                        <td class="p-5 font-bold text-slate-900">${{ number_format($product->price, 2) }}</td>
+                        <td class="p-5 font-bold text-slate-900">{!! \App\Helpers\CurrencyHelper::format($product->price) !!}</td>
                         <td class="p-5 text-slate-600">{{ $product->stock }}</td>
                         <td class="p-5">
                             @if($product->homepageHotDeal)

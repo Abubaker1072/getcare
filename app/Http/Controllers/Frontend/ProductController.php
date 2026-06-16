@@ -39,7 +39,7 @@ class ProductController extends Controller
             };
         }
 
-        $products = $this->productService->getFilteredProducts($filters, 15, true);
+        $products = $this->productService->getFilteredProducts($filters, 20, true);
         $categories = $this->categoryRepository->active();
 
         return view('pages.shop', compact('products', 'categories', 'selectedCategories', 'filters'));

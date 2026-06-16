@@ -37,7 +37,7 @@ class HomepageHotDealService
 
     public function getAllProducts()
     {
-        return Product::with('homepageHotDeal')->paginate(10);
+        return Product::with('homepageHotDeal')->paginate(15);
     }
 
     public function getHotDealProducts()

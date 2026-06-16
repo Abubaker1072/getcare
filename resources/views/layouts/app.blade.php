@@ -28,5 +28,8 @@
     {{-- Footer --}}
     @include('partials.footer')
 
+    {{-- Premium Toasts --}}
+    @include('partials.toasts')
+
 </body>
 </html>

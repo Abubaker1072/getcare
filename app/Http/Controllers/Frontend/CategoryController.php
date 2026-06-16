@@ -25,7 +25,7 @@ class CategoryController extends Controller
     {
         $category = $this->categoryRepository->findBySlug($slug);
         $categories = $this->categoryRepository->active();
-        $products = $category->products()->where('is_active', true)->latest()->paginate(12);
+        $products = $category->products()->where('is_active', true)->latest()->paginate(10);
 
         return view('pages.category-detail', compact('category', 'categories', 'products', 'slug'));
     }

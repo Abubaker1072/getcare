@@ -71,12 +71,12 @@
                 {{-- Price --}}
                 <div class="mb-6">
                     <div class="flex flex-wrap items-end gap-3 mb-1">
-                        <span class="text-3xl sm:text-4xl font-extrabold text-amber-600">${{ number_format($product->price, 2) }}</span>
+                        <span class="text-3xl sm:text-4xl font-extrabold text-amber-600">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
                         @if($product->compare_price)
-                            <span class="text-xl text-gray-400 line-through mb-1">${{ number_format($product->compare_price, 2) }}</span>
+                            <span class="text-xl text-gray-400 line-through mb-1">{{ \App\Helpers\CurrencyHelper::format($product->compare_price) }}</span>
                         @endif
                         @if($product->discount_price && $product->discount_price > 0)
-                            <span class="text-sm font-bold text-green-600 bg-green-100 px-2 py-1 rounded-md mb-2">Save ${{ number_format($product->discount_price, 2) }}</span>
+                            <span class="text-sm font-bold text-green-600 bg-green-100 px-2 py-1 rounded-md mb-2">Save {{ \App\Helpers\CurrencyHelper::format($product->discount_price) }}</span>
                         @elseif($product->compare_price && $product->compare_price > $product->price)
                             <span class="text-sm font-bold text-green-600 bg-green-100 px-2 py-1 rounded-md mb-2">{{ round((1 - $product->price / $product->compare_price) * 100) }}% OFF</span>
                         @endif
@@ -86,20 +86,48 @@
                 {{-- Quantity & Actions --}}
                 <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-8 mt-8">
                     <div class="flex items-center border border-gray-300 rounded-md bg-white">
-                        <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 transition">-</button>
-                        <input type="number" value="1" min="1" max="{{ $product->stock }}" class="w-12 text-center border-none focus:ring-0 text-gray-900 font-medium bg-transparent">
-                        <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 transition">+</button>
+                        <button onclick="let input = document.getElementById('product-qty'); if(parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;" class="px-4 py-2 text-gray-600 hover:bg-gray-100 transition">-</button>
+                        <input type="number" id="product-qty" value="1" min="1" max="{{ $product->stock }}" class="w-12 text-center border-none focus:ring-0 text-gray-900 font-medium bg-transparent">
+                        <button onclick="let input = document.getElementById('product-qty'); if(parseInt(input.value) < {{ $product->stock }}) input.value = parseInt(input.value) + 1;" class="px-4 py-2 text-gray-600 hover:bg-gray-100 transition">+</button>
                     </div>
                     
                     <div class="flex-1 flex flex-col sm:flex-row gap-3 w-full">
-                        <button class="flex-1 bg-amber-500 text-white px-6 py-3.5 rounded-md font-bold text-sm sm:text-base hover:bg-amber-600 transition shadow-lg shadow-amber-200 uppercase tracking-wide" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                        <button onclick="window.buyNow({{ $product->id }})" class="flex-1 bg-amber-500 text-white px-6 py-3.5 rounded-md font-bold text-sm sm:text-base hover:bg-amber-600 transition shadow-lg shadow-amber-200 uppercase tracking-wide" {{ $product->stock <= 0 ? 'disabled' : '' }}>
                             Buy Now
                         </button>
-                        <button class="flex-1 bg-gray-900 text-white px-6 py-3.5 rounded-md font-bold text-sm sm:text-base hover:bg-gray-800 transition shadow-lg uppercase tracking-wide flex items-center justify-center gap-2" onclick="window.openCart(event)" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                        <button class="flex-1 bg-gray-900 text-white px-6 py-3.5 rounded-md font-bold text-sm sm:text-base hover:bg-gray-800 transition shadow-lg uppercase tracking-wide flex items-center justify-center gap-2" onclick="window.addToCart({{ $product->id }}, parseInt(document.getElementById('product-qty').value))" {{ $product->stock <= 0 ? 'disabled' : '' }}>
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                             Add to Cart
                         </button>
                     </div>
+
+                    <script>
+                        window.buyNow = function(productId) {
+                            const qty = parseInt(document.getElementById('product-qty')?.value || 1);
+                            fetch('/cart/add', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Accept': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                body: JSON.stringify({
+                                    product_id: productId,
+                                    quantity: qty
+                                })
+                            })
+                            .then(res => {
+                                if (!res.ok) {
+                                    return res.json().then(err => { throw new Error(err.error || 'Failed to add item to cart'); });
+                                }
+                                window.location.href = '/checkout';
+                            })
+                            .catch(err => {
+                                alert(err.message);
+                            });
+                        };
+                    </script>
                     @if($product->stock <= 0)
                         <div class="text-red-500 font-bold mt-2">Out of Stock</div>
                     @endif

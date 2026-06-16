@@ -20,7 +20,7 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = $this->categoryRepository->all();
+        $categories = \App\Models\Category::withCount('products')->latest()->paginate(15);
         return view('admin.categories', compact('categories'));
     }
 
@@ -50,7 +50,7 @@ class CategoryController extends Controller
 
     public function edit($id)
     {
-        $categories = $this->categoryRepository->all();
+        $categories = \App\Models\Category::withCount('products')->latest()->paginate(15);
         $category = $this->categoryRepository->find($id);
 
         return view('admin.categories', compact('categories', 'category'));

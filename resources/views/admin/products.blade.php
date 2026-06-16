@@ -70,7 +70,7 @@
                             </form>
                         </td>
                         <td class="p-5 text-slate-600 font-medium">{{ $product->stock }}</td>
-                        <td class="p-5 text-slate-900 font-bold">${{ number_format($product->price, 2) }}</td>
+                        <td class="p-5 text-slate-900 font-bold">{!! \App\Helpers\CurrencyHelper::format($product->price) !!}</td>
                         <td class="p-5">
                             @if($product->is_active)
                                 <span class="bg-emerald-50 text-emerald-600 border border-emerald-100 px-2.5 py-1 rounded-lg text-xs font-bold tracking-wide">Active</span>

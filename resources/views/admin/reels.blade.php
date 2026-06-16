@@ -64,7 +64,7 @@
                                     @endif
                                     <div>
                                         <p class="font-bold text-slate-900 leading-tight">{{ $reel->product->name }}</p>
-                                        <p class="text-xs text-slate-500">${{ number_format($reel->product->price, 2) }}</p>
+                                        <p class="text-xs text-slate-500">{!! \App\Helpers\CurrencyHelper::format($reel->product->price) !!}</p>
                                     </div>
                                 </div>
                             @else
