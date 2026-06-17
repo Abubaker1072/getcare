@@ -22,6 +22,10 @@
         <!-- Table Search & Filters -->
         <div class="p-5 border-b border-slate-50 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col sm:flex-row justify-between items-center gap-4">
             <form action="{{ route('admin.orders') }}" method="GET" class="flex flex-col sm:flex-row justify-between items-center gap-4 w-full">
+                <div class="relative w-full sm:w-72">
+                    <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Search orders by number, name, phone..." class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl pl-10 pr-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all shadow-sm" onchange="this.form.submit()">
+                </div>
                 <div class="flex space-x-2 w-full sm:w-auto">
                     <select name="status" onchange="this.form.submit()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 outline-none shadow-sm">
                         <option value="All Statuses" {{ $status === 'All Statuses' || !$status ? 'selected' : '' }}>All Statuses</option>

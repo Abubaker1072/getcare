@@ -281,11 +281,11 @@
             <h2 class="text-3xl md:text-4xl font-light text-gray-800">Used by the professionals</h2>
             <p class="text-sm md:text-base text-gray-500 mt-3">See our product in action</p>
         </div>
-        <div class="swiper reel-swiper w-full max-w-7xl mx-auto relative">
-            <div class="swiper-wrapper">
+        @if($product->reviewVideos->count() < 3)
+            <div class="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto px-4 relative">
                 @foreach($product->reviewVideos as $video)
-                <div class="swiper-slide w-72 md:w-80 flex flex-col items-center group/slide">
-                    <div class="relative w-full h-[450px] rounded-2xl overflow-hidden bg-gray-900 shadow-lg cursor-pointer">
+                <div class="w-64 sm:w-72 md:w-80 flex flex-col items-center group/slide">
+                    <div class="relative w-full h-[360px] sm:h-[450px] rounded-2xl overflow-hidden bg-gray-900 shadow-lg cursor-pointer">
                         <video src="{{ asset('storage/' . $video->video_path) }}" 
                                class="reel-video object-cover w-full h-full opacity-80" 
                                loop muted playsinline>
@@ -304,14 +304,44 @@
                         </div>
                     </div>
                     @if($video->caption)
-                    <p class="mt-4 text-sm font-medium text-gray-800">{{ $video->caption }}</p>
+                    <p class="mt-4 text-sm font-medium text-gray-800 text-center">{{ $video->caption }}</p>
                     @endif
                 </div>
                 @endforeach
             </div>
-            <div class="swiper-button-prev !left-4 lg:!left-10"></div>
-            <div class="swiper-button-next !right-4 lg:!right-10"></div>
-        </div>
+        @else
+            <div class="swiper reel-swiper w-full max-w-7xl mx-auto relative">
+                <div class="swiper-wrapper">
+                    @foreach($product->reviewVideos as $video)
+                    <div class="swiper-slide w-64 sm:w-72 md:w-80 flex flex-col items-center group/slide">
+                        <div class="relative w-full h-[360px] sm:h-[450px] rounded-2xl overflow-hidden bg-gray-900 shadow-lg cursor-pointer">
+                            <video src="{{ asset('storage/' . $video->video_path) }}" 
+                                   class="reel-video object-cover w-full h-full opacity-80" 
+                                   loop muted playsinline>
+                            </video>
+                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <div class="play-btn bg-black/50 p-4 rounded-full text-white opacity-0 group-hover/slide:opacity-100 transition duration-300">
+                                    <svg class="w-8 h-8 play-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                    <svg class="w-8 h-8 pause-icon hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                                </div>
+                            </div>
+                            <div class="absolute top-4 right-4 flex flex-col gap-2 text-white z-20">
+                                <button class="mute-btn bg-black/40 p-2 rounded-full backdrop-blur-sm hover:bg-black/60 transition pointer-events-auto">
+                                    <svg class="w-4 h-4 mute-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                    <svg class="w-4 h-4 sound-icon hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                        @if($video->caption)
+                        <p class="mt-4 text-sm font-medium text-gray-800">{{ $video->caption }}</p>
+                        @endif
+                    </div>
+                    @endforeach
+                </div>
+                <div class="swiper-button-prev !left-4 lg:!left-10"></div>
+                <div class="swiper-button-next !right-4 lg:!right-10"></div>
+            </div>
+        @endif
     </section>
     @endif
 
@@ -477,6 +507,7 @@
                     prevEl: '.swiper-button-prev',
                 },
                 breakpoints: {
+                    320: { slidesPerView: 1.2, spaceBetween: 10 },
                     640: { slidesPerView: 2, spaceBetween: 20 },
                     1024: { slidesPerView: 3, spaceBetween: 30 }
                 }

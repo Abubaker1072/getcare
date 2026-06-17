@@ -29,6 +29,14 @@ class ProductService
             $query->where('is_active', true);
         }
 
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
         if (!empty($filters['categories'])) {
             $query->whereIn('category_id', $filters['categories']);
         }

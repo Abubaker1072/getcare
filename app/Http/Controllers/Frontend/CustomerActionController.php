@@ -56,4 +56,31 @@ class CustomerActionController extends Controller
 
         return back()->with('success', 'Thank you for sharing your transformation story! Your review has been submitted.');
     }
+
+    /**
+     * Update customer saved bank details from dashboard.
+     */
+    public function updateBankDetails(Request $request)
+    {
+        $request->validate([
+            'bank_name' => 'nullable|string|max:255',
+            'account_number' => 'nullable|string|max:255',
+            'account_holder_name' => 'nullable|string|max:255',
+            'cvc' => 'nullable|string|max:4',
+            'expiry_date' => 'nullable|string|max:10',
+        ]);
+
+        \App\Models\UserBankDetail::updateOrCreate(
+            ['user_id' => auth()->id()],
+            [
+                'bank_name' => $request->input('bank_name'),
+                'account_number' => $request->input('account_number'),
+                'account_holder_name' => $request->input('account_holder_name'),
+                'cvc' => $request->input('cvc'),
+                'expiry_date' => $request->input('expiry_date'),
+            ]
+        );
+
+        return back()->with('success', 'Your gateway payment details have been saved successfully.');
+    }
 }

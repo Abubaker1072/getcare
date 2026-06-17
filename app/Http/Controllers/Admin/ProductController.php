@@ -22,16 +22,24 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $categoryId = $request->input('category_id');
+        $search = $request->input('search');
         $categories = $this->categoryRepository->all();
         
         $query = Product::with('category');
         if ($categoryId) {
             $query->where('category_id', $categoryId);
         }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
         
         $products = $query->latest()->paginate(15)->withQueryString();
         
-        return view('admin.products', compact('products', 'categories', 'categoryId'));
+        return view('admin.products', compact('products', 'categories', 'categoryId', 'search'));
     }
 
     public function create()

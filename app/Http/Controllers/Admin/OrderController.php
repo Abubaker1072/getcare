@@ -14,15 +14,28 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $status = $request->input('status');
+        $search = $request->input('search');
         $query = Order::with(['user', 'items.product'])->latest();
 
         if ($status && $status !== 'All Statuses') {
             $query->where('status', $status);
         }
 
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('order_number', 'like', "%{$search}%")
+                  ->orWhere('shipping_name', 'like', "%{$search}%")
+                  ->orWhere('shipping_phone', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($userQuery) use ($search) {
+                      $userQuery->where('name', 'like', "%{$search}%")
+                                ->orWhere('email', 'like', "%{$search}%");
+                  });
+            });
+        }
+
         $orders = $query->paginate(15)->withQueryString();
 
-        return view('admin.orders', compact('orders', 'status'));
+        return view('admin.orders', compact('orders', 'status', 'search'));
     }
 
     /**

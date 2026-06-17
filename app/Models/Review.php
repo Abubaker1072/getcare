@@ -14,10 +14,12 @@ class Review extends Model
         'product_name',
         'product_id',
         'is_approved',
+        'show_on_homepage',
     ];
 
     protected $casts = [
         'is_approved' => 'boolean',
+        'show_on_homepage' => 'boolean',
     ];
 
     public function product()

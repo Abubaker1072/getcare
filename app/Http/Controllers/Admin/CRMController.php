@@ -61,6 +61,18 @@ class CRMController extends Controller
     }
 
     /**
+     * Toggle the homepage visibility status of a review.
+     */
+    public function toggleReviewHomepage(Review $review)
+    {
+        $review->update([
+            'show_on_homepage' => !$review->show_on_homepage
+        ]);
+
+        return back()->with('success', 'Review homepage visibility status updated successfully.');
+    }
+
+    /**
      * Delete a review.
      */
     public function destroyReview(Review $review)

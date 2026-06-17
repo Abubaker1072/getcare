@@ -60,6 +60,14 @@
                         <svg class="w-5 h-5 mr-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
                         Shipping & Payments
                     </button>
+                    <button type="button" onclick="switchTab('tab-layout')" id="nav-tab-layout" class="tab-btn w-full flex items-center px-4 py-3 text-slate-500 hover:text-slate-900 rounded-2xl text-sm font-medium text-left transition-colors">
+                        <svg class="w-5 h-5 mr-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                        Theme & Layout Customizer
+                    </button>
+                    <button type="button" onclick="switchTab('tab-content')" id="nav-tab-content" class="tab-btn w-full flex items-center px-4 py-3 text-slate-500 hover:text-slate-900 rounded-2xl text-sm font-medium text-left transition-colors">
+                        <svg class="w-5 h-5 mr-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path></svg>
+                        Main Page Content
+                    </button>
                 </nav>
             </div>
 
@@ -404,6 +412,309 @@
                     </div>
                 </div>
 
+                <!-- Tab: Theme & Layout Customizer -->
+                <div id="tab-layout" class="tab-content hidden space-y-6">
+                    <!-- Theme Selection -->
+                    <div class="bg-white rounded-3xl border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] p-8">
+                        <h3 class="text-lg font-extrabold text-slate-900 mb-2 flex items-center">
+                            <span class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
+                            </span>
+                            Select Storefront Theme
+                        </h3>
+                        <p class="text-sm text-slate-500 mb-6 font-medium pl-11">Choose a theme to redefine the visual aesthetic of your entire homepage, header, and footer.</p>
+                        
+                        @php
+                            $selectedTheme = \App\Models\StoreSetting::getValue('homepage_theme', 'theme_1');
+                        @endphp
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pl-11">
+                            <!-- Theme 1 Card -->
+                            <label class="relative flex flex-col p-6 bg-white border-2 {{ $selectedTheme === 'theme_1' ? 'border-indigo-600 ring-2 ring-indigo-500/20 shadow-md' : 'border-slate-200 hover:border-slate-300' }} rounded-2xl cursor-pointer transition-all group">
+                                <input type="radio" name="homepage_theme" value="theme_1" class="sr-only" {{ $selectedTheme === 'theme_1' ? 'checked' : '' }} onchange="updateThemeSelection(this)">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-base font-bold text-slate-800">Theme 1: Classic Light</span>
+                                    <span class="w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center transition-all theme-radio-outer {{ $selectedTheme === 'theme_1' ? 'border-indigo-600 bg-indigo-600' : '' }}">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-white theme-radio-dot {{ $selectedTheme === 'theme_1' ? 'block' : 'hidden' }}"></span>
+                                    </span>
+                                </div>
+                                <div class="w-full h-32 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden relative shadow-inner flex flex-col">
+                                    <div class="h-6 bg-white border-b flex items-center px-3 justify-between">
+                                        <div class="w-10 h-2 bg-slate-200 rounded"></div>
+                                        <div class="flex gap-1">
+                                            <div class="w-2.5 h-2.5 bg-slate-200 rounded-full"></div>
+                                            <div class="w-2.5 h-2.5 bg-slate-200 rounded-full"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 p-3 flex flex-col justify-center items-center gap-1.5">
+                                        <div class="w-2/3 h-3.5 bg-indigo-100 rounded"></div>
+                                        <div class="w-1/2 h-2.5 bg-slate-200 rounded"></div>
+                                        <div class="w-12 h-4 bg-indigo-600 rounded-full mt-1.5"></div>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-slate-500 mt-3 font-medium">Warm, clean light background with elegant fonts and responsive collections.</span>
+                            </label>
+
+                            <!-- Theme 2 Card -->
+                            <label class="relative flex flex-col p-6 bg-slate-900 border-2 {{ $selectedTheme === 'theme_2' ? 'border-amber-500 ring-2 ring-amber-500/20 shadow-md shadow-amber-950/20' : 'border-slate-800 hover:border-slate-700' }} rounded-2xl cursor-pointer transition-all group">
+                                <input type="radio" name="homepage_theme" value="theme_2" class="sr-only" {{ $selectedTheme === 'theme_2' ? 'checked' : '' }} onchange="updateThemeSelection(this)">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-base font-bold text-amber-500">Theme 2: Midnight Luxury Dark</span>
+                                    <span class="w-5 h-5 rounded-full border-2 border-slate-700 flex items-center justify-center transition-all theme-radio-outer {{ $selectedTheme === 'theme_2' ? 'border-amber-500 bg-amber-500' : '' }}">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-slate-900 theme-radio-dot {{ $selectedTheme === 'theme_2' ? 'block' : 'hidden' }}"></span>
+                                    </span>
+                                </div>
+                                <div class="w-full h-32 rounded-xl bg-slate-950 border border-slate-850 overflow-hidden relative shadow-inner flex flex-col">
+                                    <div class="h-6 bg-slate-900 border-b border-slate-800 flex items-center px-3 justify-between">
+                                        <div class="w-10 h-2 bg-slate-700 rounded"></div>
+                                        <div class="flex gap-1">
+                                            <div class="w-2.5 h-2.5 bg-amber-500 rounded-full"></div>
+                                            <div class="w-2.5 h-2.5 bg-slate-700 rounded-full"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 p-3 flex flex-col justify-center items-center gap-1.5 bg-gradient-to-b from-slate-950 to-slate-900">
+                                        <div class="w-2/3 h-3.5 bg-amber-500/20 border border-amber-500/30 rounded"></div>
+                                        <div class="w-1/2 h-2.5 bg-slate-700 rounded"></div>
+                                        <div class="w-12 h-4 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full mt-1.5"></div>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-slate-400 mt-3 font-medium">Ultra-premium dark aesthetic, metallic gold/bronze gradients, and glowing accents.</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Layout Customization -->
+                    <div class="bg-white rounded-3xl border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] p-8">
+                        <h3 class="text-lg font-extrabold text-slate-900 mb-2 flex items-center">
+                            <span class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                            </span>
+                            Reorder & Customize Sections
+                        </h3>
+                        <p class="text-sm text-slate-500 mb-6 font-medium pl-11">Reorder homepage elements using the Up/Down controls, or toggle their visibility using the hide/show button.</p>
+                        
+                        @php
+                            $homepageLayout = \App\Models\StoreSetting::getHomepageLayout();
+                        @endphp
+                        
+                        <input type="hidden" name="homepage_layout" id="homepage_layout_input" value="{{ json_encode($homepageLayout) }}">
+                        
+                        <div class="space-y-3 pl-11" id="sections-container">
+                            @foreach($homepageLayout as $section)
+                            <div class="section-item flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-2xl hover:shadow-sm transition-all" data-id="{{ $section['id'] }}" data-name="{{ $section['name'] }}">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-6 h-6 text-slate-400 flex items-center justify-center flex-shrink-0 cursor-default">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8h16M4 16h16"></path></svg>
+                                    </span>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-slate-800 leading-none section-title">{{ $section['name'] }}</h4>
+                                        <span class="text-[10px] uppercase tracking-widest font-bold mt-1 inline-block section-visibility-status {{ $section['visible'] ? 'text-slate-400' : 'text-rose-400' }}">{{ $section['visible'] ? 'Visible' : 'Hidden' }}</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <!-- Visibility Toggle -->
+                                    <button type="button" onclick="toggleSectionVisibility(this)" class="visibility-btn p-2 rounded-lg border {{ $section['visible'] ? 'bg-indigo-50 border-indigo-100 text-indigo-600 hover:bg-indigo-100' : 'bg-slate-100 border-slate-200 text-slate-400 hover:bg-slate-200' }} transition-colors animate-all" title="Toggle visibility">
+                                        <svg class="w-4 h-4 eye-icon {{ $section['visible'] ? '' : 'hidden' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                        <svg class="w-4 h-4 eye-off-icon {{ $section['visible'] ? 'hidden' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18"></path></svg>
+                                    </button>
+                                    
+                                    <!-- Order Buttons -->
+                                    <button type="button" onclick="moveSection(this, 'up')" class="p-2 rounded-lg border bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors" title="Move Up">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                                    </button>
+                                    <button type="button" onclick="moveSection(this, 'down')" class="p-2 rounded-lg border bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors" title="Move Down">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Main Page Content -->
+                <div id="tab-content" class="tab-content hidden space-y-6">
+                    <!-- Complete Routine Section Images -->
+                    <div class="bg-white rounded-3xl border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] p-8">
+                        <h3 class="text-lg font-extrabold text-slate-900 mb-6 flex items-center">
+                            <span class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012-2.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            </span>
+                            Complete Routine Section Customizer
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <!-- Left Side: Product Image -->
+                            <div class="border border-slate-100 rounded-2xl p-6 bg-slate-50/50">
+                                <h4 class="text-sm font-bold text-slate-800 mb-3">Left Side (Product Image)</h4>
+                                
+                                @if(\App\Models\StoreSetting::getValue('routine_product_image_path'))
+                                    <div class="w-full h-48 mb-4 rounded-xl overflow-hidden shadow-inner bg-slate-200">
+                                        <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('routine_product_image_path')) }}" class="w-full h-full object-cover">
+                                    </div>
+                                @endif
+                                
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Upload Custom Image</label>
+                                <input type="file" name="routine_product_image" class="w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100 cursor-pointer">
+                                <p class="text-xs text-slate-400 mt-2 font-medium">Replaces the product/routine steps image. Max size: 5MB.</p>
+                            </div>
+
+                            <!-- Right Side: Lifestyle Image -->
+                            <div class="border border-slate-100 rounded-2xl p-6 bg-slate-50/50">
+                                <h4 class="text-sm font-bold text-slate-800 mb-3">Right Side (Lifestyle Image)</h4>
+                                
+                                @if(\App\Models\StoreSetting::getValue('routine_lifestyle_image_path'))
+                                    <div class="w-full h-48 mb-4 rounded-xl overflow-hidden shadow-inner bg-slate-200">
+                                        <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('routine_lifestyle_image_path')) }}" class="w-full h-full object-cover">
+                                    </div>
+                                @endif
+                                
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Upload Custom Image</label>
+                                <input type="file" name="routine_lifestyle_image" class="w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100 cursor-pointer">
+                                <p class="text-xs text-slate-400 mt-2 font-medium">Replaces the right lifestyle background image. Max size: 5MB.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- The Skin Edit Articles Customizer -->
+                    <div class="bg-white rounded-3xl border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] p-8">
+                        <h3 class="text-lg font-extrabold text-slate-900 mb-2 flex items-center">
+                            <span class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1M19 20a2 2 0 002-2V8a2 2 0 00-2-2h-5a2 2 0 00-2-2z"></path></svg>
+                            </span>
+                            "The Skin Edit" (Articles Section)
+                        </h3>
+                        <p class="text-sm text-slate-500 mb-6 font-medium pl-11">Customize the title, text, destination URL, and cover image for all three skin care articles shown on the homepage.</p>
+                        
+                        <div class="space-y-8 pl-11">
+                            @for($i = 1; $i <= 3; $i++)
+                                <div class="border border-slate-200 rounded-2xl p-6 bg-slate-50">
+                                    <h4 class="text-base font-extrabold text-slate-800 mb-4 pb-2 border-b border-slate-200/60">Article {{ $i }}</h4>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <!-- Left column: Title, Text, Link -->
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Article Title</label>
+                                                <input type="text" name="article_{{ $i }}_title" value="{{ \App\Models\StoreSetting::getValue('article_' . $i . '_title') }}" placeholder="Enter article title" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                            </div>
+                                            
+                                            <div>
+                                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Description / Body Text</label>
+                                                <textarea name="article_{{ $i }}_text" rows="3" placeholder="Enter article summary/description" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ \App\Models\StoreSetting::getValue('article_' . $i . '_text') }}</textarea>
+                                            </div>
+                                            
+                                            <div>
+                                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Button / CTA Link (URL)</label>
+                                                <input type="text" name="article_{{ $i }}_link" value="{{ \App\Models\StoreSetting::getValue('article_' . $i . '_link') }}" placeholder="/blog/skincare-routine or https://..." class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Right column: Image upload and preview -->
+                                        <div class="flex flex-col justify-between">
+                                            <div>
+                                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Cover Image</label>
+                                                <input type="file" name="article_{{ $i }}_image" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100 cursor-pointer">
+                                                <p class="text-[11px] text-slate-400 mt-1 font-medium">Upload custom image. Max size: 5MB.</p>
+                                            </div>
+                                            
+                                            <div class="mt-4 md:mt-0">
+                                                <span class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Active Cover Image:</span>
+                                                <div class="w-full h-32 rounded-xl overflow-hidden bg-slate-200 shadow-inner border border-slate-200">
+                                                    @if(\App\Models\StoreSetting::getValue('article_' . $i . '_image_path'))
+                                                        <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('article_' . $i . '_image_path')) }}" class="w-full h-full object-cover">
+                                                    @else
+                                                        <div class="w-full h-full flex items-center justify-center bg-slate-100 text-slate-400">
+                                                            <span class="text-xs font-semibold">Using Default Placeholder</span>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endfor
+                        </div>
+                    </div>
+
+                    <!-- Why Choose Us Customizer -->
+                    <div class="bg-white rounded-3xl border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] p-8 mt-6">
+                        <h3 class="text-lg font-extrabold text-slate-900 mb-2 flex items-center">
+                            <span class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </span>
+                            "Why Choose Us" Section Customizer
+                        </h3>
+                        <p class="text-sm text-slate-500 mb-6 font-medium pl-11">Customize the section title, subtitle, and the details for each of the three philosophy cards.</p>
+                        
+                        <div class="space-y-6 pl-11">
+                            <!-- Section Heading Details -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 border border-slate-200 rounded-2xl bg-slate-50">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Section Subtitle</label>
+                                    <input type="text" name="why_choose_us_subtitle" value="{{ \App\Models\StoreSetting::getValue('why_choose_us_subtitle', 'Our Philosophy') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Section Title</label>
+                                    <input type="text" name="why_choose_us_title" value="{{ \App\Models\StoreSetting::getValue('why_choose_us_title', 'Why Choose Us') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <!-- Card 1 -->
+                                <div class="border border-slate-200 rounded-2xl p-6 bg-slate-50">
+                                    <h4 class="text-sm font-extrabold text-slate-800 mb-4 pb-1.5 border-b border-slate-200/60 flex items-center">
+                                        <span class="w-2 h-2 rounded-full bg-pink-500 mr-2"></span> Card 1 (Advanced Tech)
+                                    </h4>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card Title</label>
+                                            <input type="text" name="why_choose_us_card1_title" value="{{ \App\Models\StoreSetting::getValue('why_choose_us_card1_title', 'Advanced Tech') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card Description</label>
+                                            <textarea name="why_choose_us_card1_desc" rows="3" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ \App\Models\StoreSetting::getValue('why_choose_us_card1_desc', 'FDA-cleared devices and premium formulations engineered for visible results.') }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Card 2 -->
+                                <div class="border border-slate-200 rounded-2xl p-6 bg-slate-50">
+                                    <h4 class="text-sm font-extrabold text-slate-800 mb-4 pb-1.5 border-b border-slate-200/60 flex items-center">
+                                        <span class="w-2 h-2 rounded-full bg-amber-500 mr-2"></span> Card 2 (Expert Care)
+                                    </h4>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card Title</label>
+                                            <input type="text" name="why_choose_us_card2_title" value="{{ \App\Models\StoreSetting::getValue('why_choose_us_card2_title', 'Expert Care') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card Description</label>
+                                            <textarea name="why_choose_us_card2_desc" rows="3" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ \App\Models\StoreSetting::getValue('why_choose_us_card2_desc', 'Professional guidance and fully customized skincare routines for your unique needs.') }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Card 3 -->
+                                <div class="border border-slate-200 rounded-2xl p-6 bg-slate-50">
+                                    <h4 class="text-sm font-extrabold text-slate-800 mb-4 pb-1.5 border-b border-slate-200/60 flex items-center">
+                                        <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span> Card 3 (Guaranteed Results)
+                                    </h4>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card Title</label>
+                                            <input type="text" name="why_choose_us_card3_title" value="{{ \App\Models\StoreSetting::getValue('why_choose_us_card3_title', 'Guaranteed Results') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card Description</label>
+                                            <textarea name="why_choose_us_card3_desc" rows="3" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ \App\Models\StoreSetting::getValue('why_choose_us_card3_desc', 'Experience visible transformations driven by our proven, high-end beauty solutions.') }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </form>
@@ -433,6 +744,99 @@
                     activeBtn.querySelector('svg').classList.remove('opacity-70');
                 }
             }
+        }
+
+        function updateThemeSelection(input) {
+            const cards = input.closest('.grid').querySelectorAll('label');
+            cards.forEach(card => {
+                const isTheme1 = card.querySelector('input').value === 'theme_1';
+                const outerSpan = card.querySelector('.theme-radio-outer');
+                const dotSpan = card.querySelector('.theme-radio-dot');
+                if (isTheme1) {
+                    card.className = "relative flex flex-col p-6 bg-white border-2 border-slate-200 hover:border-slate-300 rounded-2xl cursor-pointer transition-all group";
+                    outerSpan.className = "w-5 h-5 rounded-full border-2 border-slate-300 flex items-center justify-center transition-all theme-radio-outer";
+                } else {
+                    card.className = "relative flex flex-col p-6 bg-slate-900 border-2 border-slate-800 hover:border-slate-700 rounded-2xl cursor-pointer transition-all group";
+                    outerSpan.className = "w-5 h-5 rounded-full border-2 border-slate-700 flex items-center justify-center transition-all theme-radio-outer";
+                }
+                dotSpan.classList.add('hidden');
+            });
+
+            const activeCard = input.closest('label');
+            const outerActiveSpan = activeCard.querySelector('.theme-radio-outer');
+            const dotActiveSpan = activeCard.querySelector('.theme-radio-dot');
+            const isTheme1Selected = input.value === 'theme_1';
+            if (isTheme1Selected) {
+                activeCard.className = "relative flex flex-col p-6 bg-white border-2 border-indigo-600 ring-2 ring-indigo-500/20 shadow-md rounded-2xl cursor-pointer transition-all group";
+                outerActiveSpan.className = "w-5 h-5 rounded-full border-2 border-indigo-600 bg-indigo-600 flex items-center justify-center transition-all theme-radio-outer";
+            } else {
+                activeCard.className = "relative flex flex-col p-6 bg-slate-900 border-2 border-amber-500 ring-2 ring-amber-500/20 shadow-md shadow-amber-950/20 rounded-2xl cursor-pointer transition-all group";
+                outerActiveSpan.className = "w-5 h-5 rounded-full border-2 border-amber-500 bg-amber-500 flex items-center justify-center transition-all theme-radio-outer";
+            }
+            dotActiveSpan.classList.remove('hidden');
+        }
+
+        function moveSection(btn, direction) {
+            const item = btn.closest('.section-item');
+            const container = document.getElementById('sections-container');
+            
+            if (direction === 'up') {
+                const prev = item.previousElementSibling;
+                if (prev) {
+                    container.insertBefore(item, prev);
+                }
+            } else if (direction === 'down') {
+                const next = item.nextElementSibling;
+                if (next) {
+                    container.insertBefore(next, item);
+                }
+            }
+            
+            serializeLayout();
+        }
+
+        function toggleSectionVisibility(btn) {
+            const item = btn.closest('.section-item');
+            const eyeIcon = btn.querySelector('.eye-icon');
+            const eyeOffIcon = btn.querySelector('.eye-off-icon');
+            const statusSpan = item.querySelector('.section-visibility-status');
+            
+            const isVisible = eyeIcon.classList.contains('hidden');
+            
+            if (isVisible) {
+                eyeIcon.classList.remove('hidden');
+                eyeOffIcon.classList.add('hidden');
+                btn.className = "visibility-btn p-2 rounded-lg border bg-indigo-50 border-indigo-100 text-indigo-600 hover:bg-indigo-100 transition-colors animate-all";
+                statusSpan.innerText = "Visible";
+                statusSpan.className = "text-[10px] uppercase tracking-widest font-bold mt-1 inline-block section-visibility-status text-slate-400";
+            } else {
+                eyeIcon.classList.add('hidden');
+                eyeOffIcon.classList.remove('hidden');
+                btn.className = "visibility-btn p-2 rounded-lg border bg-slate-100 border-slate-200 text-slate-400 hover:bg-slate-200 transition-colors animate-all";
+                statusSpan.innerText = "Hidden";
+                statusSpan.className = "text-[10px] uppercase tracking-widest font-bold mt-1 inline-block section-visibility-status text-rose-400";
+            }
+            
+            serializeLayout();
+        }
+
+        function serializeLayout() {
+            const items = document.querySelectorAll('#sections-container .section-item');
+            const layout = [];
+            
+            items.forEach(item => {
+                const id = item.getAttribute('data-id');
+                const name = item.getAttribute('data-name');
+                const isVisible = !item.querySelector('.eye-icon').classList.contains('hidden');
+                
+                layout.push({
+                    id: id,
+                    name: name,
+                    visible: isVisible
+                });
+            });
+            
+            document.getElementById('homepage_layout_input').value = JSON.stringify(layout);
         }
     </script>
 

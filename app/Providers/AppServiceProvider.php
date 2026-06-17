@@ -35,6 +35,14 @@ class AppServiceProvider extends ServiceProvider
             HomepageFeaturedCategoryRepositoryInterface::class,
             HomepageFeaturedCategoryRepository::class
         );
+        $this->app->bind(
+            \App\Repositories\Contracts\PaymentGatewayRepositoryInterface::class,
+            \App\Repositories\Eloquent\PaymentGatewayRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Contracts\PaymentTransactionRepositoryInterface::class,
+            \App\Repositories\Eloquent\PaymentTransactionRepository::class
+        );
     }
 
     /**

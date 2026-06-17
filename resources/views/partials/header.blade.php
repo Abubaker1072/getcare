@@ -1,5 +1,7 @@
 @php
     $cartItemsCount = \App\Models\CartItem::where(auth()->check() ? ['user_id' => auth()->id()] : ['session_id' => session()->getId()])->sum('quantity');
+    $homepageTheme = \App\Models\StoreSetting::getValue('homepage_theme', 'theme_1');
+    $isTheme2 = ($homepageTheme === 'theme_2');
 @endphp
 
 <style>
@@ -21,6 +23,33 @@
     /* Change text/icon colors to dark when scrolled */
     #main-header.is-scrolled .dynamic-color {
         color: #111827 !important; /* Tailwind gray-900 */
+    }
+
+    /* Theme 2 custom styles */
+    .theme-2-header#main-header.is-scrolled {
+        background-color: rgba(12, 12, 14, 0.93) !important;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .theme-2-header#main-header.is-scrolled .dynamic-color {
+        color: #ffffff !important;
+    }
+    .theme-2-header .nav-link:hover,
+    .theme-2-header .dynamic-color:hover {
+        color: #fbbf24 !important; /* amber-400 */
+    }
+    .theme-2-promo {
+        background-color: #08080a !important;
+        color: #fbbf24 !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .theme-2-dark {
+        background-color: #0c0c0e !important;
+        color: #f3e8ff !important;
+    }
+    .theme-2-dark-border {
+        border-color: rgba(255, 255, 255, 0.05) !important;
     }
 
     /* Elegant Nav Link Hover/Click Animation */
@@ -47,10 +76,50 @@
     }
 </style>
 
-<header id="main-header" class="w-full fixed top-0 left-0 z-50 flex flex-col bg-transparent">
+<header id="main-header" class="w-full fixed top-0 left-0 z-50 flex flex-col bg-transparent {{ $isTheme2 ? 'theme-2-header' : '' }}">
+    @php
+        $countdownActive = \App\Models\StoreSetting::getValue('countdown_is_active', '0') === '1';
+        $countdownEndTime = \App\Models\StoreSetting::getValue('countdown_end_time');
+        $countdownText = \App\Models\StoreSetting::getValue('countdown_text', 'Up to 20% Off | Code REFRESH20');
+    @endphp
+
+    @if($countdownActive && $countdownEndTime)
+        <div id="store-countdown-timer" data-target-time="{{ $countdownEndTime }}" class="w-full bg-gradient-to-r {{ $isTheme2 ? 'from-amber-600 to-orange-600 text-slate-950 font-bold' : 'from-[#c45a49] to-[#b04b3a] text-white' }} py-2.5 px-4 flex items-center justify-between text-xs tracking-wider uppercase relative z-[60] shadow-md transition-all duration-300">
+            <div class="flex-1 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-center">
+                <span class="font-extrabold flex items-center gap-1.5">
+                    <svg class="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    {{ $countdownText }}
+                </span>
+                <div class="flex items-center gap-3 font-mono font-bold text-[13px] bg-black/10 px-3 py-1 rounded-md">
+                    <div class="flex flex-col items-center">
+                        <span id="countdown-days">00</span>
+                        <span class="text-[8px] opacity-75 font-sans -mt-0.5">DAYS</span>
+                    </div>
+                    <span>:</span>
+                    <div class="flex flex-col items-center">
+                        <span id="countdown-hours">00</span>
+                        <span class="text-[8px] opacity-75 font-sans -mt-0.5">HRS</span>
+                    </div>
+                    <span>:</span>
+                    <div class="flex flex-col items-center">
+                        <span id="countdown-mins">00</span>
+                        <span class="text-[8px] opacity-75 font-sans -mt-0.5">MINS</span>
+                    </div>
+                    <span>:</span>
+                    <div class="flex flex-col items-center">
+                        <span id="countdown-secs">00</span>
+                        <span class="text-[8px] opacity-75 font-sans -mt-0.5">SECS</span>
+                    </div>
+                </div>
+            </div>
+            <button onclick="dismissCountdown()" class="text-current opacity-70 hover:opacity-100 transition p-1 hover:rotate-90 duration-200" title="Dismiss">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+    @endif
     
     {{-- Promotional Banner (Continuous Text) --}}
-    <div class="w-full bg-[#dce0da] py-2 overflow-hidden flex whitespace-nowrap text-[13px] text-gray-800 font-medium">
+    <div class="w-full {{ $isTheme2 ? 'theme-2-promo' : 'bg-[#dce0da]' }} py-2 overflow-hidden flex whitespace-nowrap text-[13px] text-gray-800 font-medium">
         <div class="flex items-center justify-start gap-12 px-4 animate-marquee w-full">
             <span class="flex items-center gap-2">Free Shipping Over $50! Returns are always on us. <span class="text-gray-500 text-lg leading-none">›</span></span>
             <span class="flex items-center gap-2 hidden md:flex">Free Shipping Over $50! Returns are always on us. <span class="text-gray-500 text-lg leading-none">›</span></span>
@@ -77,7 +146,7 @@
                     <a href="{{ route('products.all') ?? '#' }}" class="dynamic-color text-white nav-link">Products</a>
                     <a href="{{ route('hot-deals') ?? '#' }}" class="dynamic-color text-white nav-link">Hot Deals</a>
                     <a href="{{ route('categories') ?? '#' }}" class="dynamic-color text-white nav-link">Categories</a>
-                    <a href="{{ route('brands') ?? '#' }}" class="dynamic-color text-white nav-link">Shop</a>
+                    {{-- <a href="{{ route('brands') ?? '#' }}" class="dynamic-color text-white nav-link">Shop</a> --}}
                     <a href="{{ route('blog') ?? '#' }}" class="dynamic-color text-white nav-link">Contact Us</a>
                 </nav>
             </div>
@@ -98,12 +167,12 @@
                     $currentCurrency = \App\Helpers\CurrencyHelper::getCurrent();
                 @endphp
                 <div class="hidden md:flex items-center gap-2 dynamic-color text-white">
-                    <span class="text-lg leading-none">🇺🇸</span>
+                    <span class="text-lg leading-none" id="currency-active-flag">{{ \App\Helpers\CurrencyHelper::getFlag($currentCurrency->code) }}</span>
                     <div class="relative flex items-center">
                         <select onchange="window.location.href='/currency/switch/' + this.value" class="bg-transparent border-none outline-none text-sm font-semibold cursor-pointer focus:ring-0 py-1 pl-1 pr-5 appearance-none z-10 dynamic-color text-white">
                             @foreach($activeCurrencies as $curr)
                                 <option value="{{ $curr->code }}" {{ $currentCurrency->code === $curr->code ? 'selected' : '' }} class="text-black">
-                                    {{ $curr->code }}
+                                    {{ \App\Helpers\CurrencyHelper::getFlag($curr->code) }} {{ $curr->code }}
                                 </option>
                             @endforeach
                         </select>
@@ -162,24 +231,24 @@
     </div>
 
     {{-- Mobile Menu Navigation --}}
-    <div id="mobile-menu" class="lg:hidden hidden w-full bg-white border-t max-h-96 overflow-y-auto absolute top-full left-0 shadow-lg text-gray-900 uppercase">
+    <div id="mobile-menu" class="lg:hidden hidden w-full {{ $isTheme2 ? 'theme-2-dark border-t border-white/5' : 'bg-white border-t' }} max-h-96 overflow-y-auto absolute top-full left-0 shadow-lg {{ $isTheme2 ? 'text-slate-100' : 'text-gray-900' }} uppercase">
         <ul class="main-nav nav flex flex-col">
-            <li class="border-b"><a href="{{ route('home') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold hover:bg-gray-50 transition">Home</a></li>
-            <li class="border-b"><a href="{{ route('products.all') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold hover:bg-gray-50 transition">Products</a></li>
-            <li class="border-b"><a href="{{ route('hot-deals') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold hover:bg-gray-50 transition">Hot Deals</a></li>
-            <li class="border-b"><a href="{{ route('categories') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold hover:bg-gray-50 transition">Categories</a></li>
-            <li class="border-b"><a href="{{ route('brands') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold hover:bg-gray-50 transition">Shop</a></li>
-            <li class="border-b"><a href="{{ route('blog') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold hover:bg-gray-50 transition">Contact Us</a></li>
+            <li class="{{ $isTheme2 ? 'border-b border-white/5' : 'border-b' }}"><a href="{{ route('home') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold {{ $isTheme2 ? 'hover:bg-slate-900 hover:text-amber-400' : 'hover:bg-gray-50' }} transition">Home</a></li>
+            <li class="{{ $isTheme2 ? 'border-b border-white/5' : 'border-b' }}"><a href="{{ route('products.all') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold {{ $isTheme2 ? 'hover:bg-slate-900 hover:text-amber-400' : 'hover:bg-gray-50' }} transition">Products</a></li>
+            <li class="{{ $isTheme2 ? 'border-b border-white/5' : 'border-b' }}"><a href="{{ route('hot-deals') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold {{ $isTheme2 ? 'hover:bg-slate-900 hover:text-amber-400' : 'hover:bg-gray-50' }} transition">Hot Deals</a></li>
+            <li class="{{ $isTheme2 ? 'border-b border-white/5' : 'border-b' }}"><a href="{{ route('categories') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold {{ $isTheme2 ? 'hover:bg-slate-900 hover:text-amber-400' : 'hover:bg-gray-50' }} transition">Categories</a></li>
+            {{-- <li class="{{ $isTheme2 ? 'border-b border-white/5' : 'border-b' }}"><a href="{{ route('brands') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold {{ $isTheme2 ? 'hover:bg-slate-900 hover:text-amber-400' : 'hover:bg-gray-50' }} transition">Shop</a></li> --}}
+            <li class="{{ $isTheme2 ? 'border-b border-white/5' : 'border-b' }}"><a href="{{ route('blog') ?? '#' }}" class="block px-6 py-4 text-sm font-semibold {{ $isTheme2 ? 'hover:bg-slate-900 hover:text-amber-400' : 'hover:bg-gray-50' }} transition">Contact Us</a></li>
         </ul>
     </div>
 </header>
 
 {{-- Cart Drawer HTML --}}
-<div id="cart-drawer-backdrop" class="fixed inset-0 bg-black/50 z-[60] hidden opacity-0 transition-opacity duration-300"></div>
-<div id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white z-[70] transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
-    <div class="px-6 py-4 border-b flex items-center justify-between">
-        <h2 class="text-xl font-bold text-gray-800">Your Cart</h2>
-        <button id="close-cart" class="text-gray-500 hover:text-red-500 transition transform hover:rotate-90 duration-300">
+<div id="cart-drawer-backdrop" class="fixed inset-0 bg-black/60 z-[60] hidden opacity-0 transition-opacity duration-300"></div>
+<div id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-96 {{ $isTheme2 ? 'theme-2-dark border-l border-white/5' : 'bg-white shadow-2xl' }} z-[70] transform translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="px-6 py-4 {{ $isTheme2 ? 'border-b border-white/5' : 'border-b' }} flex items-center justify-between">
+        <h2 class="text-xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-800' }}">Your Cart</h2>
+        <button id="close-cart" class="{{ $isTheme2 ? 'text-slate-400 hover:text-amber-400' : 'text-gray-500 hover:text-red-500' }} transition transform hover:rotate-90 duration-300">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
     </div>
@@ -188,39 +257,39 @@
         {{-- Items loaded dynamically --}}
     </div>
     
-    <div class="border-t p-6 bg-gray-50">
+    <div class="{{ $isTheme2 ? 'border-t border-white/5 bg-[#0a0a0c]' : 'border-t bg-gray-50' }} p-6">
         <div class="flex items-center justify-between mb-4">
-            <span class="text-gray-600 font-medium">Subtotal</span>
-            <span id="cart-drawer-subtotal" class="text-xl font-bold text-gray-900">₨ 0</span>
+            <span class="{{ $isTheme2 ? 'text-slate-400' : 'text-gray-600' }} font-medium">Subtotal</span>
+            <span id="cart-drawer-subtotal" class="text-xl font-bold {{ $isTheme2 ? 'text-amber-500' : 'text-gray-900' }}">₨ 0</span>
         </div>
         <p class="text-xs text-gray-500 mb-4 text-center">Shipping and taxes calculated at checkout.</p>
         <div class="space-y-3">
-            <a href="{{ route('cart') }}" class="block w-full py-3 px-4 bg-gray-900 text-white text-center rounded-md font-semibold hover:bg-gray-800 transition transform active:scale-95 duration-150">View Cart</a>
-            <a href="/checkout" class="block w-full py-3 px-4 bg-amber-500 text-white text-center rounded-md font-semibold hover:bg-amber-600 transition shadow-md shadow-amber-200 transform active:scale-95 duration-150">Checkout</a>
+            <a href="{{ route('cart') }}" class="block w-full py-3 px-4 {{ $isTheme2 ? 'bg-slate-800 text-white hover:bg-slate-700' : 'bg-gray-900 text-white hover:bg-gray-800' }} text-center rounded-md font-semibold transition transform active:scale-95 duration-150">View Cart</a>
+            <a href="/checkout" class="block w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center rounded-md font-semibold hover:from-amber-600 hover:to-orange-600 transition shadow-md {{ $isTheme2 ? 'shadow-amber-500/10' : 'shadow-amber-200' }} transform active:scale-95 duration-150">Checkout</a>
         </div>
     </div>
 </div>
 
 {{-- Search Modal HTML --}}
-<div id="search-modal" class="fixed inset-0 bg-white/95 backdrop-blur-sm z-[80] hidden opacity-0 transition-opacity duration-300 flex-col">
+<div id="search-modal" class="fixed inset-0 {{ $isTheme2 ? 'bg-[#0c0c0e]/95 backdrop-blur-md text-[#f3e8ff]' : 'bg-white/95 backdrop-blur-sm' }} z-[80] hidden opacity-0 transition-opacity duration-300 flex-col">
     <div class="max-w-4xl mx-auto w-full px-4 pt-16 sm:pt-24 relative flex-1">
-        <button id="close-search" class="absolute top-4 right-4 sm:top-8 sm:right-8 text-gray-500 hover:text-red-500 transition transform hover:rotate-90 duration-300">
+        <button id="close-search" class="absolute top-4 right-4 sm:top-8 sm:right-8 {{ $isTheme2 ? 'text-slate-400 hover:text-amber-400' : 'text-gray-500 hover:text-red-500' }} transition transform hover:rotate-90 duration-300">
             <svg class="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         
         <div class="text-center mb-8 transform -translate-y-4 opacity-0 transition-all duration-500" id="search-content">
-            <h2 class="text-3xl sm:text-5xl font-bold text-gray-800 mb-6 font-serif">What are you looking for?</h2>
-            <form action="#" method="GET" class="relative max-w-2xl mx-auto">
-                <input type="text" name="q" placeholder="Search products, brands, categories..." class="w-full text-lg sm:text-2xl px-0 py-4 border-b-2 border-gray-300 focus:border-amber-500 bg-transparent outline-none placeholder:text-gray-400 transition-colors" autofocus>
-                <button type="submit" class="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-amber-500 transition transform hover:scale-110">
+            <h2 class="text-3xl sm:text-5xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-800' }} mb-6 font-serif">What are you looking for?</h2>
+            <form action="{{ route('products.all') }}" method="GET" class="relative max-w-2xl mx-auto">
+                <input type="text" name="q" placeholder="Search products, brands, categories..." class="w-full text-lg sm:text-2xl px-0 py-4 {{ $isTheme2 ? 'border-b-2 border-slate-800 focus:border-amber-400 text-white placeholder:text-slate-600' : 'border-b-2 border-gray-300 focus:border-amber-500 text-gray-800 placeholder:text-gray-400' }} bg-transparent outline-none transition-colors" autofocus>
+                <button type="submit" class="absolute right-0 top-1/2 -translate-y-1/2 {{ $isTheme2 ? 'text-slate-500 hover:text-amber-400' : 'text-gray-400 hover:text-amber-500' }} transition transform hover:scale-110">
                     <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </button>
             </form>
             
             <div class="mt-10 flex flex-wrap justify-center gap-2 sm:gap-4 text-sm">
                 <span class="text-gray-500">Popular:</span>
-                <a href="#" class="text-amber-600 hover:underline">Skincare</a>
-                <a href="#" class="text-amber-600 hover:underline">Gifts</a>
+                <a href="#" class="text-amber-500 hover:underline">Skincare</a>
+                <a href="#" class="text-amber-500 hover:underline">Gifts</a>
             </div>
         </div>
     </div>
@@ -334,19 +403,27 @@
                     return;
                 }
                 
+                const isTheme2 = document.getElementById('main-header').classList.contains('theme-2-header');
+                const borderClass = isTheme2 ? 'border-b border-white/5' : 'border-b';
+                const imgBgClass = isTheme2 ? 'bg-slate-900' : 'bg-gray-100';
+                const nameClass = isTheme2 ? 'text-slate-200' : 'text-gray-800';
+                const qtyClass = isTheme2 ? 'text-slate-500' : 'text-gray-500';
+                const priceClass = isTheme2 ? 'text-amber-450 font-bold' : 'text-amber-600';
+                const removeClass = isTheme2 ? 'text-rose-400 hover:text-rose-350' : 'text-red-500 hover:underline';
+
                 let html = '';
                 data.items.forEach(item => {
                     html += `
-                    <div class="flex items-center gap-4 pb-4 border-b">
-                        <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
+                    <div class="flex items-center gap-4 pb-4 ${borderClass}">
+                        <div class="w-20 h-20 ${imgBgClass} rounded-md overflow-hidden flex-shrink-0">
                             <img src="${item.image_url}" alt="${item.name}" class="w-full h-full object-cover">
                         </div>
                         <div class="flex-1">
-                            <h3 class="text-sm font-semibold text-gray-800 line-clamp-2">${item.name}</h3>
-                            <p class="text-xs text-gray-500 mt-1">Quantity: ${item.quantity}</p>
+                            <h3 class="text-sm font-semibold ${nameClass} line-clamp-2">${item.name}</h3>
+                            <p class="text-xs ${qtyClass} mt-1">Quantity: ${item.quantity}</p>
                             <div class="flex items-center justify-between mt-2">
-                                <span class="text-sm font-bold text-amber-600">${item.formatted_price}</span>
-                                <button onclick="window.removeCartItem(${item.id})" class="text-xs text-red-500 hover:underline">Remove</button>
+                                <span class="text-sm ${priceClass}">${item.formatted_price}</span>
+                                <button onclick="window.removeCartItem(${item.id})" class="text-xs ${removeClass}">Remove</button>
                             </div>
                         </div>
                     </div>
@@ -409,5 +486,58 @@
 
         if (searchIcon) searchIcon.addEventListener('click', window.openSearch);
         if (closeSearchBtn) closeSearchBtn.addEventListener('click', window.closeSearch);
+
+        // --- 5. Countdown Banner Logic ---
+        const countdownEl = document.getElementById('store-countdown-timer');
+        if (countdownEl) {
+            const targetDateStr = countdownEl.getAttribute('data-target-time');
+            const dismissedDate = localStorage.getItem('countdown_dismissed_date');
+            
+            if (dismissedDate === targetDateStr) {
+                countdownEl.style.display = 'none';
+            } else if (targetDateStr) {
+                const targetDate = new Date(targetDateStr).getTime();
+                if (!isNaN(targetDate)) {
+                    const daysVal = document.getElementById('countdown-days');
+                    const hoursVal = document.getElementById('countdown-hours');
+                    const minsVal = document.getElementById('countdown-mins');
+                    const secsVal = document.getElementById('countdown-secs');
+
+                    function updateTimer() {
+                        const now = new Date().getTime();
+                        const difference = targetDate - now;
+
+                        if (difference <= 0) {
+                            countdownEl.style.display = 'none';
+                            return;
+                        }
+
+                        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                        if (daysVal) daysVal.innerText = String(days).padStart(2, '0');
+                        if (hoursVal) hoursVal.innerText = String(hours).padStart(2, '0');
+                        if (minsVal) minsVal.innerText = String(minutes).padStart(2, '0');
+                        if (secsVal) secsVal.innerText = String(seconds).padStart(2, '0');
+                    }
+
+                    updateTimer();
+                    setInterval(updateTimer, 1000);
+                }
+            }
+        }
+
+        window.dismissCountdown = function() {
+            const el = document.getElementById('store-countdown-timer');
+            if (el) {
+                el.style.display = 'none';
+                const targetDateStr = el.getAttribute('data-target-time');
+                if (targetDateStr) {
+                    localStorage.setItem('countdown_dismissed_date', targetDateStr);
+                }
+            }
+        };
     });
 </script>

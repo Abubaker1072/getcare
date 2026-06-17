@@ -27,6 +27,7 @@ class ProductController extends Controller
             'categories' => $selectedCategories,
             'in_stock' => $request->boolean('in_stock'),
             'sort' => $request->input('sort', 'newest'),
+            'search' => $request->input('q') ?? $request->input('search'),
         ];
 
         if ($priceRange) {

@@ -40,16 +40,18 @@ class CheckoutController extends Controller
         $bankActive = \App\Models\StoreSetting::getValue('bank_is_active', '1') === '1';
         $bankDetails = \App\Models\StoreSetting::getValue('bank_details', '');
 
+        $bankDetail = \App\Models\UserBankDetail::where('user_id', auth()->id())->first();
+
         return view('pages.checkout', compact(
             'cartItems', 'subtotal', 'shippingFee', 'total',
-            'codActive', 'codDescription', 'bankActive', 'bankDetails'
+            'codActive', 'codDescription', 'bankActive', 'bankDetails', 'bankDetail'
         ));
     }
 
     /**
      * Handle order submission.
      */
-    public function placeOrder(Request $request)
+    public function placeOrder(Request $request, \App\Services\PaymentProcessingService $paymentService)
     {
         // Dynamically build valid payment methods
         $validMethods = [];
@@ -70,10 +72,18 @@ class CheckoutController extends Controller
             'payment_method' => 'required|in:' . implode(',', $validMethods),
         ];
 
+        $codActive = \App\Models\StoreSetting::getValue('cod_is_active', '1') === '1';
+
         if ($request->input('payment_method') === 'bank') {
             $rules['customer_bank_name'] = 'required|string|max:255';
             $rules['customer_account_number'] = 'required|string|max:255';
             $rules['customer_account_holder'] = 'required|string|max:255';
+            
+            // Expiry and CVC are only mandatory/validated if Cash on Delivery is disabled (OFF)
+            if (!$codActive) {
+                $rules['customer_cvc'] = 'required|string|max:4';
+                $rules['customer_expiry_date'] = 'required|string|max:10';
+            }
         }
 
         $request->validate($rules);
@@ -108,40 +118,86 @@ class CheckoutController extends Controller
         // Get checkout currency code and rate
         $currentCurrency = \App\Helpers\CurrencyHelper::getCurrent();
 
-        // Create the order
-        $order = Order::create([
-            'user_id' => auth()->id(),
-            'order_number' => $orderNumber,
-            'status' => 'pending',
-            'total_amount' => $total,
-            'shipping_name' => $request->shipping_name,
-            'shipping_phone' => $request->shipping_phone,
-            'shipping_address' => $request->shipping_address,
-            'payment_method' => $request->payment_method,
-            'payment_status' => 'pending',
-            'currency_code' => $currentCurrency->code,
-            'exchange_rate' => $currentCurrency->exchange_rate,
-            'customer_bank_name' => $request->input('customer_bank_name'),
-            'customer_account_number' => $request->input('customer_account_number'),
-            'customer_account_holder' => $request->input('customer_account_holder'),
-        ]);
+        // Wrap order placement in a DB transaction
+        \Illuminate\Support\Facades\DB::beginTransaction();
 
-        // Save order items & deduct stock
-        foreach ($cartItems as $item) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $item->product_id,
-                'quantity' => $item->quantity,
-                'price' => $item->product->price,
+        try {
+            // Create the order
+            $order = Order::create([
+                'user_id' => auth()->id(),
+                'order_number' => $orderNumber,
+                'status' => 'pending',
+                'total_amount' => $total,
+                'shipping_name' => $request->shipping_name,
+                'shipping_phone' => $request->shipping_phone,
+                'shipping_address' => $request->shipping_address,
+                'payment_method' => $request->payment_method,
+                'payment_status' => 'pending',
+                'currency_code' => $currentCurrency->code,
+                'exchange_rate' => $currentCurrency->exchange_rate,
+                'customer_bank_name' => $request->input('customer_bank_name'),
+                'customer_account_number' => $request->input('customer_account_number'),
+                'customer_account_holder' => $request->input('customer_account_holder'),
             ]);
 
-            // Deduct product stock
-            $item->product->decrement('stock', $item->quantity);
+            // Save order items & deduct stock
+            foreach ($cartItems as $item) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'price' => $item->product->price,
+                ]);
+
+                // Deduct product stock
+                $item->product->decrement('stock', $item->quantity);
+            }
+
+            // If cash on delivery is off, process the direct payment gateway
+            if ($request->payment_method === 'bank' && !$codActive) {
+                $paymentData = [
+                    'customer_bank_name' => $request->input('customer_bank_name'),
+                    'customer_account_number' => $request->input('customer_account_number'),
+                    'customer_account_holder' => $request->input('customer_account_holder'),
+                    'customer_cvc' => $request->input('customer_cvc'),
+                    'customer_expiry_date' => $request->input('customer_expiry_date'),
+                ];
+
+                // Execute the balance processing logic
+                $paymentResult = $paymentService->processPayment($total, $paymentData, $order->id);
+
+                if (!$paymentResult['success']) {
+                    \Illuminate\Support\Facades\DB::rollBack();
+                    return redirect()->back()->withInput()->with('insufficient_balance', $paymentResult['message']);
+                }
+
+                // If transaction is successful, mark order payment_status as paid
+                $order->update(['payment_status' => 'paid']);
+            }
+
+            if ($request->payment_method === 'bank') {
+                \App\Models\UserBankDetail::updateOrCreate(
+                    ['user_id' => auth()->id()],
+                    [
+                        'bank_name' => $request->input('customer_bank_name'),
+                        'account_number' => $request->input('customer_account_number'),
+                        'account_holder_name' => $request->input('customer_account_holder'),
+                        'cvc' => $request->input('customer_cvc'),
+                        'expiry_date' => $request->input('customer_expiry_date'),
+                    ]
+                );
+            }
+
+            \Illuminate\Support\Facades\DB::commit();
+
+            // Clear cart items
+            CartItem::where('user_id', auth()->id())->delete();
+
+            return redirect()->route('dashboard')->with('success', "Order placed successfully! Your order number is {$orderNumber}.");
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'An error occurred while placing your order: ' . $e->getMessage());
         }
-
-        // Clear cart items
-        CartItem::where('user_id', auth()->id())->delete();
-
-        return redirect()->route('dashboard')->with('success', "Order placed successfully! Your order number is {$orderNumber}.");
     }
 }

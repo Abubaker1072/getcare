@@ -8,6 +8,20 @@ use Illuminate\Support\Facades\Session;
 class CurrencyHelper
 {
     /**
+     * Get flag emoji for a currency code.
+     */
+    public static function getFlag($code)
+    {
+        $flags = [
+            'PKR' => '🇵🇰',
+            'USD' => '🇺🇸',
+            'GBP' => '🇬🇧',
+            'EUR' => '🇪🇺',
+        ];
+        return $flags[strtoupper($code)] ?? '🌐';
+    }
+
+    /**
      * Get the current active currency.
      */
     public static function getCurrent()

@@ -35,6 +35,69 @@
                         </button>
                     </form>
                 </div>
+
+                {{-- Saved Payment Gateway details --}}
+                <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 mt-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 font-serif text-left flex items-center gap-2">
+                        <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                        Saved Gateway Details
+                    </h3>
+                    <p class="text-xs text-gray-500 mb-4 text-left">Configure your default payment gateway credentials for faster checkout processing.</p>
+
+                    <form action="{{ route('dashboard.bank-details.update') }}" method="POST" class="space-y-4 text-left">
+                        @csrf
+                        <div>
+                            <label for="bank_name" class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Bank Name</label>
+                            <input type="text" name="bank_name" id="bank_name" placeholder="e.g. Meezan Bank" value="{{ old('bank_name', $bankDetail->bank_name ?? '') }}"
+                                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs focus:ring-amber-500 focus:border-amber-500 outline-none transition-colors">
+                            @error('bank_name')
+                                <p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="account_number" class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Account or IBAN Number</label>
+                            <input type="text" name="account_number" id="account_number" placeholder="e.g. PK00MEZN00000123456789" value="{{ old('account_number', $bankDetail->account_number ?? '') }}"
+                                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs focus:ring-amber-500 focus:border-amber-500 outline-none transition-colors">
+                            @error('account_number')
+                                <p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="account_holder_name" class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Account Title / Holder Name</label>
+                            <input type="text" name="account_holder_name" id="account_holder_name" placeholder="e.g. John Doe" value="{{ old('account_holder_name', $bankDetail->account_holder_name ?? '') }}"
+                                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs focus:ring-amber-500 focus:border-amber-500 outline-none transition-colors">
+                            @error('account_holder_name')
+                                <p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label for="expiry_date" class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Expiry (MM/YY)</label>
+                                <input type="text" name="expiry_date" id="expiry_date" placeholder="12/29" value="{{ old('expiry_date', $bankDetail->expiry_date ?? '') }}"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs focus:ring-amber-500 focus:border-amber-500 outline-none transition-colors">
+                                @error('expiry_date')
+                                    <p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="cvc" class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card CVC</label>
+                                <input type="text" name="cvc" id="cvc" placeholder="123" value="{{ old('cvc', $bankDetail->cvc ?? '') }}"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs focus:ring-amber-500 focus:border-amber-500 outline-none transition-colors">
+                                @error('cvc')
+                                    <p class="text-[10px] text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-2 px-4 bg-amber-500 text-white rounded-xl text-xs font-bold hover:bg-amber-600 transition shadow-md shadow-amber-100 flex items-center justify-center gap-1.5 uppercase tracking-wider">
+                            Update Details
+                        </button>
+                    </form>
+                </div>
             </div>
 
             {{-- Main Dashboard Content --}}

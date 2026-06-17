@@ -30,6 +30,12 @@
                     @if(request('price_range'))
                         <input type="hidden" name="price_range" value="{{ request('price_range') }}">
                     @endif
+                    @if(request('q'))
+                        <input type="hidden" name="q" value="{{ request('q') }}">
+                    @endif
+                    @if(request('search'))
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                    @endif
 
                     <div class="bg-[#0f172a] px-5 py-4 flex items-center justify-between">
                         <div class="flex items-center gap-2 text-amber-400 font-bold text-sm tracking-widest uppercase">
@@ -117,9 +123,18 @@
                     @if(request('price_range'))
                         <input type="hidden" name="price_range" value="{{ request('price_range') }}">
                     @endif
+                    @if(request('q'))
+                        <input type="hidden" name="q" value="{{ request('q') }}">
+                    @endif
+                    @if(request('search'))
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                    @endif
 
                     <div class="text-sm text-slate-500">
                         Showing <span class="font-bold text-slate-900">{{ $products->total() }}</span> products
+                        @if(!empty($filters['search']))
+                            for search "<span class="font-bold text-amber-600">{{ $filters['search'] }}</span>"
+                        @endif
                         @if(!empty($selectedCategories))
                             <span class="text-amber-600 font-medium">(filtered)</span>
                         @endif

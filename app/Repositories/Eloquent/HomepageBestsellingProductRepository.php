@@ -41,6 +41,6 @@ class HomepageBestsellingProductRepository implements HomepageBestsellingProduct
             return collect();
         }
         // Fetch products and preserve order of IDs if possible, or just fetch them
-        return Product::whereIn('id', $ids)->take(8)->get();
+        return Product::with('category')->whereIn('id', $ids)->take(8)->get();
     }
 }

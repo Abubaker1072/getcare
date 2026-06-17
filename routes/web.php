@@ -33,7 +33,8 @@ Route::get('/', function (
     $regularReels = \App\Models\Reel::with('product')->where('is_active', true)->latest()->get();
     $productReels = \App\Models\ProductReviewVideo::with('product')->where('is_active', true)->where('show_on_homepage', true)->latest()->get();
     $reels = $regularReels->concat($productReels)->sortByDesc('created_at')->values();
-    return view('pages.home', compact('bestsellingProducts', 'featuredCategories', 'hotDealProducts', 'reels'));
+    $homepageReviews = \App\Models\Review::where('is_approved', true)->where('show_on_homepage', true)->latest()->get();
+    return view('pages.home', compact('bestsellingProducts', 'featuredCategories', 'hotDealProducts', 'reels', 'homepageReviews'));
 })->name('home');
 
 Route::get('/shop/all', [FrontendProductController::class, 'index'])->name('products.all');
@@ -76,8 +77,13 @@ Route::get('/dashboard', function () {
         ->with('items.product')
         ->latest()
         ->get();
-    return view('pages.dashboard', compact('orders'));
+    $bankDetail = \App\Models\UserBankDetail::where('user_id', auth()->id())->first();
+    return view('pages.dashboard', compact('orders', 'bankDetail'));
 })->middleware(['auth'])->name('dashboard');
+
+Route::post('/dashboard/bank-details', [App\Http\Controllers\Frontend\CustomerActionController::class, 'updateBankDetails'])
+    ->middleware('auth')
+    ->name('dashboard.bank-details.update');
 
 Route::get('/product/{id}', [FrontendProductController::class, 'show'])->name('product.detail');
 
@@ -247,6 +253,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/store-manage', [StoreManageController::class, 'update'])->name('store-manage.update');
     Route::post('/store-manage/reset', [StoreManageController::class, 'reset'])->name('store-manage.reset');
     Route::get('/payment-gateways', [StoreManageController::class, 'paymentGateways'])->name('payment-gateways');
+    Route::get('/payment-gateways/download', [StoreManageController::class, 'downloadTransactions'])->name('payment-gateways.download');
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders');
     Route::post('/orders/{order}/update-status', [AdminOrderController::class, 'updateStatus'])->name('orders.update-status');
     Route::delete('/orders/{order}', [AdminOrderController::class, 'destroy'])->name('orders.destroy');
@@ -298,6 +305,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::get('/reviews', [App\Http\Controllers\Admin\CRMController::class, 'reviewsIndex'])->name('reviews');
     Route::post('/reviews/{review}/approve', [App\Http\Controllers\Admin\CRMController::class, 'toggleReviewApproval'])->name('reviews.approve');
+    Route::post('/reviews/{review}/toggle-homepage', [App\Http\Controllers\Admin\CRMController::class, 'toggleReviewHomepage'])->name('reviews.toggle_homepage');
     Route::delete('/reviews/{review}', [App\Http\Controllers\Admin\CRMController::class, 'destroyReview'])->name('reviews.destroy');
 
     // Reels CRUD

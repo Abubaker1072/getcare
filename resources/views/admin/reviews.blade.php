@@ -33,6 +33,7 @@
                         <th class="p-5 font-bold">Rating</th>
                         <th class="p-5 font-bold">Review Title & Text</th>
                         <th class="p-5 font-bold">Status</th>
+                        <th class="p-5 font-bold">On Home Screen</th>
                         <th class="p-5 font-bold text-right">Actions</th>
                     </tr>
                 </thead>
@@ -70,7 +71,13 @@
                             <td class="p-5">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $rev->is_approved ? 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400' : 'bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400' }}">
                                     <span class="w-1.5 h-1.5 mr-1.5 rounded-full {{ $rev->is_approved ? 'bg-emerald-500' : 'bg-amber-500' }}"></span>
-                                    {{ $rev->is_approved ? 'Approved' : 'Pending Approval' }}
+                                    {{ $rev->is_approved ? 'Approved' : 'Pending' }}
+                                </span>
+                            </td>
+                            <td class="p-5">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $rev->show_on_homepage ? 'bg-indigo-100 dark:bg-indigo-950/40 text-indigo-800 dark:text-indigo-400' : 'bg-slate-100 dark:bg-slate-800/40 text-slate-800 dark:text-slate-400' }}">
+                                    <span class="w-1.5 h-1.5 mr-1.5 rounded-full {{ $rev->show_on_homepage ? 'bg-indigo-500' : 'bg-slate-400' }}"></span>
+                                    {{ $rev->show_on_homepage ? 'Featured' : 'Hidden' }}
                                 </span>
                             </td>
                             <td class="p-5 text-right whitespace-nowrap space-x-1">
@@ -78,6 +85,13 @@
                                     @csrf
                                     <button type="submit" class="inline-flex items-center px-3 py-1.5 {{ $rev->is_approved ? 'bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700' : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm' }} rounded-xl text-xs font-bold transition-all">
                                         {{ $rev->is_approved ? 'Reject/Hide' : 'Approve' }}
+                                    </button>
+                                </form>
+
+                                <form action="{{ route('admin.reviews.toggle_homepage', $rev->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit" class="inline-flex items-center px-3 py-1.5 {{ $rev->show_on_homepage ? 'bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm' }} rounded-xl text-xs font-bold transition-all">
+                                        {{ $rev->show_on_homepage ? 'Remove from Home' : 'Show on Home' }}
                                     </button>
                                 </form>
 
@@ -92,7 +106,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="p-10 text-center text-slate-400 dark:text-slate-500 font-semibold">
+                            <td colspan="7" class="p-10 text-center text-slate-400 dark:text-slate-500 font-semibold">
                                 No reviews found.
                             </td>
                         </tr>

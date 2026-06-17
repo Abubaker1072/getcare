@@ -38,18 +38,27 @@
 </head>
 <body class="bg-[#f8f9fc] text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased h-screen flex overflow-hidden selection:bg-indigo-500 selection:text-white transition-colors duration-300">
 
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div id="admin-sidebar-backdrop" onclick="toggleAdminSidebar()" class="fixed inset-0 bg-black/60 z-40 hidden opacity-0 transition-opacity duration-300"></div>
+
     <!-- Premium Dark Sidebar -->
-    <aside class="w-72 bg-[#0b0f19] text-slate-400 flex flex-col h-full hidden md:flex transition-all duration-300 relative overflow-hidden">
+    <aside id="admin-sidebar" class="w-72 bg-[#0b0f19] text-slate-400 flex flex-col h-full fixed inset-y-0 left-0 z-50 transform -translate-x-full md:translate-x-0 md:relative md:flex transition-transform duration-300 ease-in-out overflow-hidden">
         
         <!-- Subtle background glow effect -->
         <div class="absolute top-0 left-0 w-full h-64 bg-indigo-500/10 blur-[80px] pointer-events-none"></div>
 
         <!-- Logo Area -->
-        <div class="h-20 flex items-center px-8 z-10 border-b border-white/5">
-            <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl text-white flex items-center justify-center mr-3 shadow-lg shadow-indigo-500/20 text-lg font-bold">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        <div class="h-20 flex items-center justify-between px-8 z-10 border-b border-white/5">
+            <div class="flex items-center">
+                <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl text-white flex items-center justify-center mr-3 shadow-lg shadow-indigo-500/20 text-lg font-bold">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <span class="text-white font-bold text-xl tracking-tight">GetCare</span>
             </div>
-            <span class="text-white font-bold text-xl tracking-tight">GetCare</span>
+            <!-- Mobile Sidebar Close Button -->
+            <button onclick="toggleAdminSidebar()" class="md:hidden text-slate-400 hover:text-white focus:outline-none p-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
         </div>
 
         <!-- Navigation Links -->
@@ -139,10 +148,10 @@
     <div class="flex-1 flex flex-col h-full overflow-hidden relative">
         
         <!-- Glassmorphism Top Navbar -->
-        <header class="h-20 bg-white/70 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200/60 dark:border-slate-800/80 flex items-center justify-between px-8 z-20 sticky top-0 transition-colors duration-300">
+        <header class="h-20 bg-white/70 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200/60 dark:border-slate-800/80 flex items-center justify-between px-4 md:px-8 z-20 sticky top-0 transition-colors duration-300">
             <!-- Breadcrumbs -->
             <div class="flex items-center text-sm font-medium text-slate-500">
-                <button class="md:hidden mr-4 text-slate-600 dark:text-slate-400 focus:outline-none bg-slate-100 dark:bg-slate-800 p-2 rounded-lg">
+                <button onclick="toggleAdminSidebar()" class="md:hidden mr-3 text-slate-600 dark:text-slate-400 focus:outline-none bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 p-2 rounded-lg transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
                 <div class="flex items-center px-4 py-2 bg-slate-100/80 dark:bg-slate-800/80 rounded-xl">
@@ -153,14 +162,25 @@
             </div>
 
             <!-- Elegant Search -->
-            <div class="flex-1 max-w-lg px-12 hidden md:block">
+            @php
+                $searchAction = route('admin.products.index');
+                $searchPlaceholder = 'Search products...';
+                if (request()->is('admin/orders*')) {
+                    $searchAction = route('admin.orders');
+                    $searchPlaceholder = 'Search orders...';
+                } elseif (request()->is('admin/customers*')) {
+                    $searchAction = route('admin.customers');
+                    $searchPlaceholder = 'Search customers by name/email...';
+                }
+            @endphp
+            <form action="{{ $searchAction }}" method="GET" class="flex-1 max-w-lg px-12 hidden md:block m-0">
                 <div class="relative group">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                         <svg class="w-5 h-5 text-slate-400 dark:text-slate-500 transition-colors group-focus-within:text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
-                    <input type="text" placeholder="Search for products, orders..." class="w-full bg-slate-100/50 dark:bg-slate-800 border-transparent rounded-2xl pl-12 pr-4 py-2.5 text-sm font-medium transition-all focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:focus:border-indigo-500 outline-none shadow-sm dark:shadow-none placeholder-slate-400 dark:placeholder-slate-500 dark:text-slate-200">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ $searchPlaceholder }}" class="w-full bg-slate-100/50 dark:bg-slate-800 border-transparent rounded-2xl pl-12 pr-4 py-2.5 text-sm font-medium transition-all focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:focus:border-indigo-500 outline-none shadow-sm dark:shadow-none placeholder-slate-400 dark:placeholder-slate-500 dark:text-slate-200">
                 </div>
-            </div>
+            </form>
 
             <!-- Right side (Actions) -->
             <div class="flex items-center space-x-3">
@@ -175,12 +195,13 @@
                     $activeCurrencies = \App\Models\Currency::where('is_active', true)->get();
                     $currentCurrency = \App\Helpers\CurrencyHelper::getCurrent();
                 @endphp
-                <div class="flex items-center gap-1.5 bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 px-3 py-1.5 rounded-xl mr-2">
-                    <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Currency</span>
+                <div class="flex items-center gap-1 bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 px-2 sm:px-3 py-1.5 rounded-xl mr-1 sm:mr-2">
+                    <span class="text-sm leading-none mr-0.5" id="admin-currency-active-flag">{{ \App\Helpers\CurrencyHelper::getFlag($currentCurrency->code) }}</span>
+                    <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider hidden sm:inline">Currency</span>
                     <select onchange="window.location.href='/currency/switch/' + this.value" class="bg-transparent border-none outline-none text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer focus:ring-0 py-0 pl-1 pr-6 focus:outline-none">
                         @foreach($activeCurrencies as $curr)
                             <option value="{{ $curr->code }}" {{ $currentCurrency->code === $curr->code ? 'selected' : '' }} class="dark:bg-slate-900 dark:text-slate-100">
-                                {{ $curr->code }} ({{ $curr->symbol }})
+                                {{ \App\Helpers\CurrencyHelper::getFlag($curr->code) }} {{ $curr->code }} ({{ $curr->symbol }})
                             </option>
                         @endforeach
                     </select>
@@ -320,10 +341,35 @@
                     document.getElementById('theme-moon-icon')?.classList.remove('hidden');
                 }
             });
+
+            // Toggle admin responsive sidebar
+            function toggleAdminSidebar() {
+                const sidebar = document.getElementById('admin-sidebar');
+                const backdrop = document.getElementById('admin-sidebar-backdrop');
+                if (!sidebar || !backdrop) return;
+                
+                if (sidebar.classList.contains('-translate-x-full')) {
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebar.classList.add('translate-x-0');
+                    backdrop.classList.remove('hidden');
+                    setTimeout(() => {
+                        backdrop.classList.remove('opacity-0');
+                        backdrop.classList.add('opacity-100');
+                    }, 50);
+                } else {
+                    sidebar.classList.remove('translate-x-0');
+                    sidebar.classList.add('-translate-x-full');
+                    backdrop.classList.remove('opacity-100');
+                    backdrop.classList.add('opacity-0');
+                    setTimeout(() => {
+                        backdrop.classList.add('hidden');
+                    }, 300);
+                }
+            }
         </script>
 
         <!-- Dynamic Main Content -->
-        <main class="flex-1 overflow-x-hidden overflow-y-auto p-8 z-10">
+        <main class="flex-1 overflow-x-hidden overflow-y-auto p-4 md:p-8 z-10">
             <div class="max-w-7xl mx-auto">
                 @yield('content')
             </div>

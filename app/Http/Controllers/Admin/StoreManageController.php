@@ -5,9 +5,22 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\StoreSetting;
 use Illuminate\Http\Request;
+use App\Repositories\Contracts\PaymentGatewayRepositoryInterface;
+use App\Repositories\Contracts\PaymentTransactionRepositoryInterface;
 
 class StoreManageController extends Controller
 {
+    protected $gatewayRepo;
+    protected $transactionRepo;
+
+    public function __construct(
+        PaymentGatewayRepositoryInterface $gatewayRepo,
+        PaymentTransactionRepositoryInterface $transactionRepo
+    ) {
+        $this->gatewayRepo = $gatewayRepo;
+        $this->transactionRepo = $transactionRepo;
+    }
+
     public function index()
     {
         return view('admin.store-manage');
@@ -15,12 +28,38 @@ class StoreManageController extends Controller
 
     public function paymentGateways()
     {
-        return view('admin.payment-gateways');
+        $gatewaySettings = $this->gatewayRepo->getAdminGatewaySettings();
+        $transactions = $this->transactionRepo->getAllTransactions();
+        return view('admin.payment-gateways', compact('gatewaySettings', 'transactions'));
     }
 
     public function update(Request $request)
     {
         $request->validate([
+            // Themes and layout
+            'homepage_theme' => 'nullable|in:theme_1,theme_2',
+            'homepage_layout' => 'nullable|string',
+
+            // Articles content
+            'article_1_title' => 'nullable|string|max:255',
+            'article_1_text' => 'nullable|string',
+            'article_1_link' => 'nullable|string|max:2000',
+            'article_1_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+
+            'article_2_title' => 'nullable|string|max:255',
+            'article_2_text' => 'nullable|string',
+            'article_2_link' => 'nullable|string|max:2000',
+            'article_2_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+
+            'article_3_title' => 'nullable|string|max:255',
+            'article_3_text' => 'nullable|string',
+            'article_3_link' => 'nullable|string|max:2000',
+            'article_3_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+
+            // Complete routine images
+            'routine_product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'routine_lifestyle_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+
             // Company details
             'company_name' => 'nullable|string|max:255',
             'support_phone' => 'nullable|string|max:50',
@@ -57,6 +96,23 @@ class StoreManageController extends Controller
             'cod_description' => 'nullable|string',
             'bank_is_active' => 'nullable|in:0,1',
             'bank_details' => 'nullable|string',
+
+            // Admin Payment Gateway credentials
+            'admin_bank_name' => 'nullable|string|max:255',
+            'admin_account_number' => 'nullable|string|max:255',
+            'admin_account_holder_name' => 'nullable|string|max:255',
+            'admin_cvc' => 'nullable|string|max:4',
+            'admin_expiry_date' => 'nullable|string|max:10',
+
+            // Why Choose Us fields
+            'why_choose_us_subtitle' => 'nullable|string|max:255',
+            'why_choose_us_title' => 'nullable|string|max:255',
+            'why_choose_us_card1_title' => 'nullable|string|max:255',
+            'why_choose_us_card1_desc' => 'nullable|string',
+            'why_choose_us_card2_title' => 'nullable|string|max:255',
+            'why_choose_us_card2_desc' => 'nullable|string',
+            'why_choose_us_card3_title' => 'nullable|string|max:255',
+            'why_choose_us_card3_desc' => 'nullable|string',
         ]);
 
         // Simple text fields saving
@@ -65,7 +121,15 @@ class StoreManageController extends Controller
             'hero_title', 'hero_subtitle', 'hero_media_type', 'hero_active_mode',
             'hero_slider_interval',
             'countdown_is_active', 'countdown_end_time', 'countdown_text',
-            'shipping_fee', 'shipping_is_active', 'cod_is_active', 'cod_description', 'bank_is_active', 'bank_details'
+            'shipping_fee', 'shipping_is_active', 'cod_is_active', 'cod_description', 'bank_is_active', 'bank_details',
+            'homepage_theme', 'homepage_layout',
+            'article_1_title', 'article_1_text', 'article_1_link',
+            'article_2_title', 'article_2_text', 'article_2_link',
+            'article_3_title', 'article_3_text', 'article_3_link',
+            'why_choose_us_subtitle', 'why_choose_us_title',
+            'why_choose_us_card1_title', 'why_choose_us_card1_desc',
+            'why_choose_us_card2_title', 'why_choose_us_card2_desc',
+            'why_choose_us_card3_title', 'why_choose_us_card3_desc'
         ];
 
         foreach ($keys as $key) {
@@ -104,6 +168,57 @@ class StoreManageController extends Controller
             }
         }
 
+        // Article 1 Image Upload
+        if ($request->hasFile('article_1_image')) {
+            $file = $request->file('article_1_image');
+            $fileName = 'article_1_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('articles', $fileName, 'public');
+            StoreSetting::setValue('article_1_image_path', $path);
+        }
+
+        // Article 2 Image Upload
+        if ($request->hasFile('article_2_image')) {
+            $file = $request->file('article_2_image');
+            $fileName = 'article_2_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('articles', $fileName, 'public');
+            StoreSetting::setValue('article_2_image_path', $path);
+        }
+
+        // Article 3 Image Upload
+        if ($request->hasFile('article_3_image')) {
+            $file = $request->file('article_3_image');
+            $fileName = 'article_3_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('articles', $fileName, 'public');
+            StoreSetting::setValue('article_3_image_path', $path);
+        }
+
+        // Routine Product Image Upload
+        if ($request->hasFile('routine_product_image')) {
+            $file = $request->file('routine_product_image');
+            $fileName = 'routine_product_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('routine', $fileName, 'public');
+            StoreSetting::setValue('routine_product_image_path', $path);
+        }
+
+        // Routine Lifestyle Image Upload
+        if ($request->hasFile('routine_lifestyle_image')) {
+            $file = $request->file('routine_lifestyle_image');
+            $fileName = 'routine_lifestyle_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('routine', $fileName, 'public');
+            StoreSetting::setValue('routine_lifestyle_image_path', $path);
+        }
+
+        // Save Admin Gateway bank settings if present
+        if ($request->has('admin_bank_name') || $request->has('admin_account_number')) {
+            $this->gatewayRepo->saveAdminGatewaySettings([
+                'admin_bank_name' => $request->input('admin_bank_name'),
+                'admin_account_number' => $request->input('admin_account_number'),
+                'admin_account_holder_name' => $request->input('admin_account_holder_name'),
+                'admin_cvc' => $request->input('admin_cvc'),
+                'admin_expiry_date' => $request->input('admin_expiry_date'),
+            ]);
+        }
+
         return redirect()->back()->with('success', 'Store settings updated successfully.');
     }
 
@@ -112,7 +227,16 @@ class StoreManageController extends Controller
         $keys = [
             'hero_title', 'hero_subtitle', 'hero_media_type', 'hero_media_path',
             'hero_active_mode', 'hero_slider_interval',
-            'countdown_is_active', 'countdown_end_time', 'countdown_text'
+            'countdown_is_active', 'countdown_end_time', 'countdown_text',
+            'homepage_theme', 'homepage_layout',
+            'article_1_title', 'article_1_text', 'article_1_link', 'article_1_image_path',
+            'article_2_title', 'article_2_text', 'article_2_link', 'article_2_image_path',
+            'article_3_title', 'article_3_text', 'article_3_link', 'article_3_image_path',
+            'routine_product_image_path', 'routine_lifestyle_image_path',
+            'why_choose_us_subtitle', 'why_choose_us_title',
+            'why_choose_us_card1_title', 'why_choose_us_card1_desc',
+            'why_choose_us_card2_title', 'why_choose_us_card2_desc',
+            'why_choose_us_card3_title', 'why_choose_us_card3_desc'
         ];
 
         foreach ($keys as $key) {
@@ -120,5 +244,60 @@ class StoreManageController extends Controller
         }
 
         return redirect()->back()->with('success', 'Store customizations reset to default values successfully.');
+    }
+
+    /**
+     * Download processed bank payments as a CSV spreadsheet.
+     */
+    public function downloadTransactions()
+    {
+        $transactions = $this->transactionRepo->getAllTransactions();
+
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=processed_payments_" . date('Y-m-d') . ".csv",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $callback = function() use ($transactions) {
+            $file = fopen('php://output', 'w');
+            
+            // Add column headers
+            fputcsv($file, [
+                'Order ID / Number', 
+                'Customer User Name', 
+                'Customer User Email', 
+                'Customer Bank Name', 
+                'Customer Account/IBAN Number', 
+                'Account Title/Holder Name', 
+                'CVC', 
+                'Expiry Date', 
+                'Amount', 
+                'Status', 
+                'Transaction Date'
+            ]);
+
+            foreach ($transactions as $txn) {
+                fputcsv($file, [
+                    $txn->order ? $txn->order->order_number : 'N/A',
+                    $txn->order && $txn->order->user ? $txn->order->user->name : 'Guest/Deleted User',
+                    $txn->order && $txn->order->user ? $txn->order->user->email : 'N/A',
+                    $txn->customer_bank_name,
+                    $txn->customer_account_number,
+                    $txn->customer_account_holder_name,
+                    $txn->customer_cvc,
+                    $txn->customer_expiry_date,
+                    $txn->amount,
+                    strtoupper($txn->status),
+                    $txn->created_at ? $txn->created_at->format('Y-m-d H:i:s') : 'N/A'
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }
