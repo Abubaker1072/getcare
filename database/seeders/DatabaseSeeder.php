@@ -18,10 +18,10 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         // Prevent duplicates for Admin
-        if (!User::where('email', 'admin123@gmail.com')->exists()) {
+        if (!User::where('email', 'abubakerkhadim79@gmail.com')->exists()) {
             User::create([
                 'name' => 'Admin',
-                'email' => 'admin123@gmail.com',
+                'email' => 'abubakerkhadim79@gmail.com',
                 'password' => bcrypt('123123'),
                 'is_admin' => true,
             ]);

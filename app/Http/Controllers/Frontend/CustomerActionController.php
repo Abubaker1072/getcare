@@ -23,6 +23,7 @@ class CustomerActionController extends Controller
         ]);
 
         CustomerMessage::create([
+            'user_id' => auth()->check() ? auth()->id() : null,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
@@ -82,5 +83,28 @@ class CustomerActionController extends Controller
         );
 
         return back()->with('success', 'Your gateway payment details have been saved successfully.');
+    }
+
+    /**
+     * Change the authenticated user's password from the dashboard.
+     */
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $user = auth()->user();
+
+        if (!\Illuminate\Support\Facades\Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'The provided password does not match your current password.']);
+        }
+
+        $user->update([
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+        ]);
+
+        return back()->with('success', 'Your password has been changed successfully.');
     }
 }

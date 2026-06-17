@@ -9,6 +9,8 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderPlacedMail;
 
 class CheckoutController extends Controller
 {
@@ -192,6 +194,15 @@ class CheckoutController extends Controller
 
             // Clear cart items
             CartItem::where('user_id', auth()->id())->delete();
+
+            // Send order confirmation email
+            try {
+                if ($order->user) {
+                    Mail::to($order->user->email)->send(new OrderPlacedMail($order));
+                }
+            } catch (\Exception $mailEx) {
+                \Illuminate\Support\Facades\Log::warning("OrderPlacedMail failed to send for order {$orderNumber}: " . $mailEx->getMessage());
+            }
 
             return redirect()->route('dashboard')->with('success', "Order placed successfully! Your order number is {$orderNumber}.");
 

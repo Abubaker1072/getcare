@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\CustomerMessage;
 use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InquiryRepliedMail;
 
 class CRMController extends Controller
 {
@@ -37,6 +39,30 @@ class CRMController extends Controller
     {
         $message->delete();
         return back()->with('success', 'Message deleted successfully.');
+    }
+
+    /**
+     * Reply to a customer message.
+     */
+    public function replyMessage(Request $request, CustomerMessage $message)
+    {
+        $request->validate([
+            'reply' => 'required|string',
+        ]);
+
+        $message->update([
+            'reply' => $request->reply,
+            'replied_at' => now(),
+            'is_read' => true,
+        ]);
+
+        try {
+            Mail::to($message->email)->send(new InquiryRepliedMail($message));
+        } catch (\Exception $mailEx) {
+            \Illuminate\Support\Facades\Log::warning("InquiryRepliedMail failed to send to {$message->email}: " . $mailEx->getMessage());
+        }
+
+        return back()->with('success', 'Reply sent successfully.');
     }
 
     /**

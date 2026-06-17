@@ -74,7 +74,15 @@
                             </td>
                             <td class="p-5 text-right whitespace-nowrap space-x-1">
                                 <button type="button" 
-                                        onclick="openMessageModal('{{ e($msg->first_name) }} {{ e($msg->last_name) }}', '{{ e($msg->email) }}', '{{ e($msg->inquiry_type) }}', '{{ e($msg->message) }}', '{{ $msg->created_at->format('M d, Y H:i') }}')"
+                                        data-id="{{ $msg->id }}"
+                                        data-name="{{ $msg->first_name }} {{ $msg->last_name }}"
+                                        data-email="{{ $msg->email }}"
+                                        data-type="{{ $msg->inquiry_type }}"
+                                        data-message="{{ $msg->message }}"
+                                        data-date="{{ $msg->created_at->format('M d, Y H:i') }}"
+                                        data-reply="{{ $msg->reply }}"
+                                        data-replied-at="{{ $msg->replied_at ? $msg->replied_at->format('M d, Y H:i') : '' }}"
+                                        onclick="openMessageFromButton(this)"
                                         class="inline-flex items-center px-3 py-1.5 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 rounded-xl text-xs font-bold transition-all">
                                     View Detail
                                 </button>
@@ -123,7 +131,7 @@
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             <div class="inline-block align-bottom bg-white dark:bg-slate-900 rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-slate-100 dark:border-slate-800">
                 <div class="bg-white dark:bg-slate-900 px-6 pt-6 pb-4 sm:p-8 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
+                    <div class="sm:flex sm:items-start w-full">
                         <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 sm:mx-0 sm:h-10 sm:w-10">
                             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                         </div>
@@ -140,15 +148,29 @@
                             <hr class="my-4 border-slate-100 dark:border-slate-800">
 
                             <div class="mt-4">
-                                <p class="text-sm font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Message</p>
-                                <div class="bg-slate-50 dark:bg-slate-850 rounded-2xl p-4 text-slate-700 dark:text-slate-300 text-sm leading-relaxed whitespace-pre-wrap overflow-y-auto max-h-60" id="modal-message-body"></div>
+                                <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Message</p>
+                                <div class="bg-slate-50 dark:bg-slate-850 rounded-2xl p-4 text-slate-700 dark:text-slate-300 text-xs leading-relaxed whitespace-pre-wrap overflow-y-auto max-h-40" id="modal-message-body"></div>
                             </div>
+
+                            <form id="modal-reply-form" method="POST" action="" class="mt-4 text-left">
+                                @csrf
+                                <div class="mt-4">
+                                    <label for="modal-reply-body" class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Concierge Response</label>
+                                    <textarea id="modal-reply-body" name="reply" rows="4" required class="w-full border border-slate-200 dark:border-slate-700 rounded-2xl p-4 bg-white dark:bg-slate-855 text-slate-800 dark:text-slate-200 text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="Type support response here..."></textarea>
+                                </div>
+                                <div id="modal-reply-status" class="mt-2 text-[10px] text-emerald-600 dark:text-emerald-400 font-bold hidden">
+                                    Last Response Sent On: <span id="modal-replied-at" class="font-normal text-slate-400 dark:text-slate-500"></span>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-                <div class="bg-slate-50/50 dark:bg-slate-950/50 px-6 py-4 sm:px-8 flex justify-end border-t dark:border-slate-800">
-                    <button type="button" onclick="closeMessageModal()" class="w-full inline-flex justify-center rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm px-4 py-2 bg-white dark:bg-slate-855 text-base font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 sm:w-auto sm:text-sm transition-all">
-                        Close
+                <div class="bg-slate-50/50 dark:bg-slate-950/50 px-6 py-4 sm:px-8 flex justify-end gap-3 border-t dark:border-slate-800">
+                    <button type="button" onclick="closeMessageModal()" class="inline-flex justify-center rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm px-4 py-2 bg-white dark:bg-slate-855 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 sm:text-xs transition-all">
+                        Cancel
+                    </button>
+                    <button type="submit" form="modal-reply-form" class="inline-flex justify-center rounded-xl px-4 py-2 bg-indigo-650 hover:bg-indigo-750 text-white text-xs font-bold transition-all shadow-md shadow-indigo-500/10">
+                        Send Response
                     </button>
                 </div>
             </div>
@@ -156,12 +178,37 @@
     </div>
 
     <script>
-        function openMessageModal(name, email, type, message, date) {
+        function openMessageFromButton(button) {
+            const id = button.dataset.id;
+            const name = button.dataset.name;
+            const email = button.dataset.email;
+            const type = button.dataset.type;
+            const message = button.dataset.message;
+            const date = button.dataset.date;
+            const reply = button.dataset.reply;
+            const repliedAt = button.dataset.repliedAt;
+
             document.getElementById('modal-title-name').innerText = name;
             document.getElementById('modal-email').innerText = email;
             document.getElementById('modal-inquiry-type').innerText = type;
             document.getElementById('modal-message-body').innerText = message;
             document.getElementById('modal-date').innerText = 'Received on: ' + date;
+            
+            const form = document.getElementById('modal-reply-form');
+            form.action = '/admin/messages/' + id + '/reply';
+            
+            const replyTextarea = document.getElementById('modal-reply-body');
+            replyTextarea.value = reply ? reply : '';
+            
+            const replyStatus = document.getElementById('modal-reply-status');
+            const repliedAtSpan = document.getElementById('modal-replied-at');
+            if (reply && repliedAt) {
+                replyStatus.classList.remove('hidden');
+                repliedAtSpan.innerText = repliedAt;
+            } else {
+                replyStatus.classList.add('hidden');
+                repliedAtSpan.innerText = '';
+            }
             
             const modal = document.getElementById('messageModal');
             modal.classList.remove('hidden');

@@ -7,6 +7,8 @@ use App\Models\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
 
 class AuthController extends Controller
 {
@@ -57,6 +59,12 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
+
+        try {
+            Mail::to($user->email)->send(new WelcomeMail($user));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning("WelcomeMail failed to send to {$user->email}: " . $e->getMessage());
+        }
 
         // Merge session cart to user cart
         $this->mergeSessionCart($oldSessionId, $user->id);

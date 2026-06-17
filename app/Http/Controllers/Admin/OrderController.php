@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderStatusUpdatedMail;
 
 class OrderController extends Controller
 {
@@ -48,8 +50,10 @@ class OrderController extends Controller
             'payment_status' => 'nullable|in:pending,paid',
         ]);
 
-        if ($request->has('status')) {
+        $statusChanged = false;
+        if ($request->has('status') && $order->status !== $request->status) {
             $order->status = $request->status;
+            $statusChanged = true;
         }
 
         if ($request->has('payment_status')) {
@@ -57,6 +61,16 @@ class OrderController extends Controller
         }
 
         $order->save();
+
+        if ($statusChanged) {
+            try {
+                if ($order->user) {
+                    Mail::to($order->user->email)->send(new OrderStatusUpdatedMail($order));
+                }
+            } catch (\Exception $mailEx) {
+                \Illuminate\Support\Facades\Log::warning("OrderStatusUpdatedMail failed to send for order {$order->order_number}: " . $mailEx->getMessage());
+            }
+        }
 
         return back()->with('success', 'Order updated successfully.');
     }

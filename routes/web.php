@@ -78,12 +78,28 @@ Route::get('/dashboard', function () {
         ->latest()
         ->get();
     $bankDetail = \App\Models\UserBankDetail::where('user_id', auth()->id())->first();
-    return view('pages.dashboard', compact('orders', 'bankDetail'));
+    $messages = \App\Models\CustomerMessage::where('user_id', auth()->id())
+        ->orWhere('email', auth()->user()->email)
+        ->latest()
+        ->get();
+    return view('pages.dashboard', compact('orders', 'bankDetail', 'messages'));
 })->middleware(['auth'])->name('dashboard');
 
 Route::post('/dashboard/bank-details', [App\Http\Controllers\Frontend\CustomerActionController::class, 'updateBankDetails'])
     ->middleware('auth')
     ->name('dashboard.bank-details.update');
+
+Route::post('/dashboard/change-password', [App\Http\Controllers\Frontend\CustomerActionController::class, 'changePassword'])
+    ->middleware('auth')
+    ->name('dashboard.change-password');
+
+// Password Reset Routes
+Route::get('/forgot-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'showForgotForm'])->name('password.request');
+Route::post('/forgot-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'sendResetCode'])->name('password.email');
+Route::get('/verify-code', [\App\Http\Controllers\Auth\PasswordResetController::class, 'showVerifyForm'])->name('password.verify');
+Route::post('/verify-code', [\App\Http\Controllers\Auth\PasswordResetController::class, 'verifyCode'])->name('password.verify.submit');
+Route::get('/reset-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'resetPassword'])->name('password.update');
 
 Route::get('/product/{id}', [FrontendProductController::class, 'show'])->name('product.detail');
 
@@ -301,6 +317,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // CRM Management
     Route::get('/messages', [App\Http\Controllers\Admin\CRMController::class, 'messagesIndex'])->name('messages');
     Route::post('/messages/{message}/read', [App\Http\Controllers\Admin\CRMController::class, 'toggleMessageRead'])->name('messages.read');
+    Route::post('/messages/{message}/reply', [App\Http\Controllers\Admin\CRMController::class, 'replyMessage'])->name('messages.reply');
     Route::delete('/messages/{message}', [App\Http\Controllers\Admin\CRMController::class, 'destroyMessage'])->name('messages.destroy');
 
     Route::get('/reviews', [App\Http\Controllers\Admin\CRMController::class, 'reviewsIndex'])->name('reviews');
