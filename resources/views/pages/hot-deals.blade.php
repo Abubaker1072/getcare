@@ -48,10 +48,9 @@
             @php
                 $featuredHotDeal = $hotDealProducts->first();
                 $gridHotDeals = $hotDealProducts->slice(1);
-                $featuredSale = ($featuredHotDeal->discount_price && $featuredHotDeal->discount_price < $featuredHotDeal->price)
-                    ? $featuredHotDeal->discount_price : $featuredHotDeal->price;
-                $featuredCompare = $featuredHotDeal->compare_price ?? ($featuredHotDeal->discount_price ? $featuredHotDeal->price : null);
-                $featuredSavings = ($featuredCompare && $featuredCompare > $featuredSale) ? $featuredCompare - $featuredSale : 0;
+                $featuredSale = $featuredHotDeal->price;
+                $featuredCompare = $featuredHotDeal->compare_price;
+                $featuredSavings = ($featuredCompare && $featuredCompare > $featuredSale) ? ($featuredHotDeal->discount_price && (float)$featuredHotDeal->discount_price > 0 ? (float)$featuredHotDeal->discount_price : $featuredCompare - $featuredSale) : 0;
             @endphp
 
             {{-- Featured: Clinical Renewal Bundle --}}
@@ -103,9 +102,9 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($gridHotDeals as $index => $product)
                 @php
-                    $salePrice = ($product->discount_price && $product->discount_price < $product->price) ? $product->discount_price : $product->price;
-                    $comparePrice = $product->compare_price ?? ($product->discount_price ? $product->price : null);
-                    $savings = ($comparePrice && $comparePrice > $salePrice) ? $comparePrice - $salePrice : 0;
+                    $salePrice = $product->price;
+                    $comparePrice = $product->compare_price;
+                    $savings = ($comparePrice && $comparePrice > $salePrice) ? ($product->discount_price && (float)$product->discount_price > 0 ? (float)$product->discount_price : $comparePrice - $salePrice) : 0;
                 @endphp
                 <div class="fade-up relative bg-white border border-slate-100 rounded-2xl overflow-hidden group hover:border-amber-200 hover:shadow-[0_10px_40px_rgba(0,0,0,0.06)] transition-all duration-500 flex flex-col" style="animation-delay: {{ ($index * 150) + 600 }}ms;">
                     <a href="{{ route('product.detail', $product->slug) }}" class="block relative h-64 overflow-hidden bg-[#F8F9FA]">

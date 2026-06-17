@@ -381,10 +381,14 @@
 
                                     <div class="mb-4 pb-4 border-b {{ $isTheme2 ? 'border-white/5' : 'border-gray-100' }}">
                                         <div class="flex items-baseline gap-2 mb-1">
-                                            @if($product->discount_price && $product->discount_price < $product->price)
-                                                <span class="text-xl sm:text-2xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }}">{{ \App\Helpers\CurrencyHelper::format($product->discount_price) }}</span>
-                                                <span class="text-xs text-gray-400 line-through">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
-                                                <span class="text-xs font-bold text-green-600">{{ round((1 - $product->discount_price/$product->price) * 100) }}% OFF</span>
+                                            @if($product->compare_price && $product->compare_price > $product->price)
+                                                <span class="text-xl sm:text-2xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }}">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
+                                                <span class="text-xs text-gray-400 line-through">{{ \App\Helpers\CurrencyHelper::format($product->compare_price) }}</span>
+                                                @if($product->discount_price && (float)$product->discount_price > 0)
+                                                    <span class="text-xs font-bold text-green-600">Save {{ \App\Helpers\CurrencyHelper::format($product->discount_price) }}</span>
+                                                @else
+                                                    <span class="text-xs font-bold text-green-600">{{ round((1 - $product->price/$product->compare_price) * 100) }}% OFF</span>
+                                                @endif
                                             @else
                                                 <span class="text-xl sm:text-2xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }}">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
                                             @endif
@@ -420,10 +424,9 @@
                 @if(isset($hotDealProducts) && $hotDealProducts->isNotEmpty())
                     @php
                         $featuredHotDeal = $hotDealProducts->first();
-                        $featuredSale = ($featuredHotDeal->discount_price && $featuredHotDeal->discount_price < $featuredHotDeal->price)
-                            ? $featuredHotDeal->discount_price : $featuredHotDeal->price;
-                        $featuredCompare = $featuredHotDeal->compare_price ?? ($featuredHotDeal->discount_price ? $featuredHotDeal->price : null);
-                        $featuredSavings = ($featuredCompare && $featuredCompare > $featuredSale) ? $featuredCompare - $featuredSale : 0;
+                        $featuredSale = $featuredHotDeal->price;
+                        $featuredCompare = $featuredHotDeal->compare_price;
+                        $featuredSavings = ($featuredCompare && $featuredCompare > $featuredSale) ? ($featuredHotDeal->discount_price && (float)$featuredHotDeal->discount_price > 0 ? (float)$featuredHotDeal->discount_price : $featuredCompare - $featuredSale) : 0;
                     @endphp
                     <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 mt-16">
                         <div class="fade-up relative rounded-[2rem] {{ $isTheme2 ? 'bg-slate-950 border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)]' : 'bg-white border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)]' }} overflow-hidden group">
@@ -885,7 +888,7 @@
                             <svg class="w-8 h-8 {{ $isTheme2 ? 'text-amber-500' : 'text-[#9b1c31]' }} mb-3 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                             </svg>
-                            <p class="text-[13px] md:text-sm {{ $isTheme2 ? 'text-slate-300' : 'text-gray-700' }} font-medium">Free Delivery on Orders Rs.43,000+</p>
+                            <p class="text-[13px] md:text-sm {{ $isTheme2 ? 'text-slate-300' : 'text-gray-700' }} font-medium">Free Delivery on Orders {!! \App\Helpers\CurrencyHelper::format(43000) !!}+</p>
                         </div>
 
                         {{-- Feature 2 --}}

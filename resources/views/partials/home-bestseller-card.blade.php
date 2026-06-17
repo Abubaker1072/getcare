@@ -76,9 +76,9 @@
 
             {{-- Price --}}
             <div class="mt-2 text-slate-900 dark:text-slate-100 font-bold text-sm">
-                @if($product->discount_price && $product->discount_price < $product->price)
-                    <span class="text-amber-600 dark:text-amber-400 font-extrabold text-base">{{ \App\Helpers\CurrencyHelper::format($product->discount_price) }}</span>
-                    <span class="text-slate-400 dark:text-slate-500 line-through text-xs ml-1">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
+                @if($product->compare_price && $product->compare_price > $product->price)
+                    <span class="text-amber-600 dark:text-amber-400 font-extrabold text-base">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
+                    <span class="text-slate-400 dark:text-slate-500 line-through text-xs ml-1">{{ \App\Helpers\CurrencyHelper::format($product->compare_price) }}</span>
                 @else
                     <span>{!! \App\Helpers\CurrencyHelper::format($product->price) !!}</span>
                 @endif

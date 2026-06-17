@@ -36,12 +36,20 @@ class DatabaseSeeder extends Seeder
             ['symbol' => '$', 'exchange_rate' => 0.003600, 'is_default' => false, 'is_active' => true]
         );
         \App\Models\Currency::updateOrCreate(
+            ['code' => 'USDT'],
+            ['symbol' => '$', 'exchange_rate' => 0.003600, 'is_default' => false, 'is_active' => true]
+        );
+        \App\Models\Currency::updateOrCreate(
             ['code' => 'GBP'],
             ['symbol' => '£', 'exchange_rate' => 0.002800, 'is_default' => false, 'is_active' => true]
         );
         \App\Models\Currency::updateOrCreate(
             ['code' => 'EUR'],
             ['symbol' => '€', 'exchange_rate' => 0.003300, 'is_default' => false, 'is_active' => true]
+        );
+        \App\Models\Currency::updateOrCreate(
+            ['code' => 'CAD'],
+            ['symbol' => 'C$', 'exchange_rate' => 0.004900, 'is_default' => false, 'is_active' => true]
         );
 
         // Seed default approved reviews/testimonials

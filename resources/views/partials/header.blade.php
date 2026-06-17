@@ -260,7 +260,7 @@
     <div class="{{ $isTheme2 ? 'border-t border-white/5 bg-[#0a0a0c]' : 'border-t bg-gray-50' }} p-6">
         <div class="flex items-center justify-between mb-4">
             <span class="{{ $isTheme2 ? 'text-slate-400' : 'text-gray-600' }} font-medium">Subtotal</span>
-            <span id="cart-drawer-subtotal" class="text-xl font-bold {{ $isTheme2 ? 'text-amber-500' : 'text-gray-900' }}">₨ 0</span>
+            <span id="cart-drawer-subtotal" class="text-xl font-bold {{ $isTheme2 ? 'text-amber-500' : 'text-gray-900' }}">{!! \App\Helpers\CurrencyHelper::format(0) !!}</span>
         </div>
         <p class="text-xs text-gray-500 mb-4 text-center">Shipping and taxes calculated at checkout.</p>
         <div class="space-y-3">
@@ -399,7 +399,7 @@
                             <p class="text-sm font-medium">Your cart is empty</p>
                         </div>
                     `;
-                    document.getElementById('cart-drawer-subtotal').innerText = data.formatted_subtotal || '₨ 0';
+                    document.getElementById('cart-drawer-subtotal').innerText = data.formatted_subtotal || '{!! \App\Helpers\CurrencyHelper::format(0) !!}';
                     return;
                 }
                 

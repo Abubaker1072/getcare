@@ -71,7 +71,7 @@
             .then(data => {
                 if(!data.items || data.items.length === 0) {
                     itemsContainer.innerHTML = '<div class="text-center text-gray-500 py-10">Your bag is empty.</div>';
-                    totalContainer.innerText = '$0.00';
+                    totalContainer.innerText = data.formatted_subtotal || '{!! \App\Helpers\CurrencyHelper::format(0) !!}';
                     return;
                 }
 

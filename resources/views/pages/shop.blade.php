@@ -235,7 +235,7 @@
                 <svg class="w-8 h-8 text-[#9b1c31] mb-3 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                 </svg>
-                <p class="text-[13px] md:text-sm text-gray-700 font-medium">Free Delivery on Orders Rs.43,000+</p>
+                <p class="text-[13px] md:text-sm text-gray-700 font-medium">Free Delivery on Orders {!! \App\Helpers\CurrencyHelper::format(43000) !!}+</p>
             </div>
 
             {{-- Feature 2 --}}

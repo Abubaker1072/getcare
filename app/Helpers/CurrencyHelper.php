@@ -15,8 +15,10 @@ class CurrencyHelper
         $flags = [
             'PKR' => '🇵🇰',
             'USD' => '🇺🇸',
+            'USDT' => '🇺🇸',
             'GBP' => '🇬🇧',
             'EUR' => '🇪🇺',
+            'CAD' => '🇨🇦',
         ];
         return $flags[strtoupper($code)] ?? '🌐';
     }
@@ -63,12 +65,18 @@ class CurrencyHelper
     {
         $currency = self::getCurrent();
         $converted = $price * $currency->exchange_rate;
+        $code = strtoupper($currency->code);
         
-        if ($currency->code === 'PKR') {
-            return $currency->symbol . ' ' . number_format($converted, 0);
+        $symbol = $currency->symbol;
+        if ($code === 'USDT' || $code === 'USD') {
+            $symbol = '$';
         }
         
-        return $currency->symbol . number_format($converted, 2);
+        if ($code === 'PKR') {
+            return $symbol . ' ' . number_format($converted, 0);
+        }
+        
+        return $symbol . number_format($converted, 2);
     }
 
     /**
@@ -76,11 +84,14 @@ class CurrencyHelper
      */
     public static function formatForOrder($price, $order)
     {
-        $code = $order->currency_code ?? 'PKR';
+        $code = strtoupper($order->currency_code ?? 'PKR');
         $rate = (float) ($order->exchange_rate ?? 1.000000);
         
         $currency = Currency::where('code', $code)->first();
         $symbol = $currency ? $currency->symbol : ($code === 'PKR' ? '₨' : '$');
+        if ($code === 'USDT' || $code === 'USD') {
+            $symbol = '$';
+        }
         
         $converted = $price * $rate;
         

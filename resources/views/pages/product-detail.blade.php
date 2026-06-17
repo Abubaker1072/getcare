@@ -105,7 +105,7 @@
                             <span class="text-lg text-gray-400 line-through">{{ \App\Helpers\CurrencyHelper::format($product->compare_price) }}</span>
                         @endif
                         
-                        @if($product->discount_price && $product->discount_price > 0)
+                        @if($product->discount_price && (float)$product->discount_price > 0)
                             <span class="text-xs font-bold text-[#c45a49] bg-[#f8f0ec] px-2 py-1 rounded">Save {{ \App\Helpers\CurrencyHelper::format($product->discount_price) }}</span>
                         @elseif($product->compare_price && $product->compare_price > $product->price)
                             <span class="text-xs font-bold text-[#c45a49] bg-[#f8f0ec] px-2 py-1 rounded">{{ round((1 - $product->price / $product->compare_price) * 100) }}% OFF</span>

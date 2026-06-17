@@ -209,9 +209,9 @@
                                                     @else
                                                         <h5 class="text-sm font-bold text-gray-500 truncate">Deleted Product</h5>
                                                     @endif
-                                                    <p class="text-xs text-gray-500 mt-0.5">Qty: {{ $item->quantity }} x {{ \App\Helpers\CurrencyHelper::format($item->price) }}</p>
+                                                    <p class="text-xs text-gray-500 mt-0.5">Qty: {{ $item->quantity }} x {{ \App\Helpers\CurrencyHelper::formatForOrder($item->price, $order) }}</p>
                                                 </div>
-                                                <span class="text-sm font-bold text-gray-900">{{ \App\Helpers\CurrencyHelper::format($item->price * $item->quantity) }}</span>
+                                                <span class="text-sm font-bold text-gray-900">{{ \App\Helpers\CurrencyHelper::formatForOrder($item->price * $item->quantity, $order) }}</span>
                                             </div>
                                         @endforeach
                                     </div>
@@ -224,7 +224,7 @@
                                         </div>
                                         <div class="text-right w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 flex justify-between sm:block gap-4">
                                             <span class="font-bold text-gray-500 sm:mr-2">Grand Total:</span>
-                                            <span class="text-lg font-extrabold text-amber-600">{{ \App\Helpers\CurrencyHelper::format($order->total_amount) }}</span>
+                                            <span class="text-lg font-extrabold text-amber-600">{{ \App\Helpers\CurrencyHelper::formatForOrder($order->total_amount, $order) }}</span>
                                         </div>
                                     </div>
                                 </div>

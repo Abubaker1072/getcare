@@ -106,7 +106,7 @@
                                 </form>
                             </td>
                             <td class="p-5">
-                                <p class="text-slate-900 dark:text-white font-extrabold text-base">{{ \App\Helpers\CurrencyHelper::format($order->total_amount) }}</p>
+                                <p class="text-slate-900 dark:text-white font-extrabold text-base">{{ \App\Helpers\CurrencyHelper::formatForOrder($order->total_amount, $order) }}</p>
                             </td>
                             <td class="p-5">
                                 <p class="text-slate-700 dark:text-slate-300 font-medium">{{ $order->shipping_name }}</p>
@@ -195,7 +195,7 @@
                     "shipping_name": {!! json_encode($order->shipping_name) !!},
                     "shipping_phone": {!! json_encode($order->shipping_phone) !!},
                     "shipping_address": {!! json_encode($order->shipping_address) !!},
-                    "total_amount": "{{ \App\Helpers\CurrencyHelper::format($order->total_amount) }}",
+                    "total_amount": "{{ \App\Helpers\CurrencyHelper::formatForOrder($order->total_amount, $order) }}",
                     "payment_method": {!! json_encode($order->payment_method) !!},
                     "payment_status": {!! json_encode($order->payment_status) !!},
                     "status": {!! json_encode($order->status) !!},
@@ -203,9 +203,9 @@
                         @foreach($order->items as $item)
                         {
                             "name": {!! json_encode($item->product->name ?? 'Deleted Product') !!},
-                            "price": "{{ \App\Helpers\CurrencyHelper::format($item->price) }}",
+                            "price": "{{ \App\Helpers\CurrencyHelper::formatForOrder($item->price, $order) }}",
                             "quantity": "{{ $item->quantity }}",
-                            "total": "{{ \App\Helpers\CurrencyHelper::format($item->price * $item->quantity) }}",
+                            "total": "{{ \App\Helpers\CurrencyHelper::formatForOrder($item->price * $item->quantity, $order) }}",
                             "image": "{{ asset('storage/' . ($item->product->cover_image ?? $item->product->image ?? '')) }}",
                             "description": {!! json_encode($item->product->description ?? 'No description available.') !!}
                         },
