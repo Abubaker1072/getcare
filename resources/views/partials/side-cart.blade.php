@@ -69,6 +69,16 @@
         fetch('/api/cart/summary')
             .then(res => res.json())
             .then(data => {
+                const badges = document.querySelectorAll('#cart-badge-count');
+                badges.forEach(badge => {
+                    badge.innerText = data.cart_count;
+                    if (data.cart_count > 0) {
+                        badge.classList.remove('hidden');
+                    } else {
+                        badge.classList.add('hidden');
+                    }
+                });
+
                 if(!data.items || data.items.length === 0) {
                     itemsContainer.innerHTML = '<div class="text-center text-gray-500 py-10">Your bag is empty.</div>';
                     totalContainer.innerText = data.formatted_subtotal || '{!! \App\Helpers\CurrencyHelper::format(0) !!}';
@@ -119,7 +129,12 @@
                 'X-Requested-With': 'XMLHttpRequest'
             },
             body: JSON.stringify({ quantity: qty })
-        }).then(() => window.updateSideCart());
+        }).then(() => {
+            window.updateSideCart();
+            if (window.location.pathname === '/cart' || window.location.pathname === '/checkout') {
+                window.location.reload();
+            }
+        });
     };
 
     window.removeCartItem = function(id) {
@@ -130,6 +145,11 @@
                 'Accept': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
             }
-        }).then(() => window.updateSideCart());
+        }).then(() => {
+            window.updateSideCart();
+            if (window.location.pathname === '/cart' || window.location.pathname === '/checkout') {
+                window.location.reload();
+            }
+        });
     };
 </script>

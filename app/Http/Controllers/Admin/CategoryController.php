@@ -21,7 +21,13 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = \App\Models\Category::withCount('products')->latest()->paginate(15);
-        return view('admin.categories', compact('categories'));
+        $pageSettings = [
+            'title' => \App\Models\StoreSetting::where('key', 'categories_page_title')->value('value'),
+            'subtitle' => \App\Models\StoreSetting::where('key', 'categories_page_subtitle')->value('value'),
+            'description' => \App\Models\StoreSetting::where('key', 'categories_page_description')->value('value'),
+            'image' => \App\Models\StoreSetting::where('key', 'categories_page_image')->value('value'),
+        ];
+        return view('admin.categories', compact('categories', 'pageSettings'));
     }
 
     public function store(Request $request)
@@ -52,8 +58,14 @@ class CategoryController extends Controller
     {
         $categories = \App\Models\Category::withCount('products')->latest()->paginate(15);
         $category = $this->categoryRepository->find($id);
+        $pageSettings = [
+            'title' => \App\Models\StoreSetting::where('key', 'categories_page_title')->value('value'),
+            'subtitle' => \App\Models\StoreSetting::where('key', 'categories_page_subtitle')->value('value'),
+            'description' => \App\Models\StoreSetting::where('key', 'categories_page_description')->value('value'),
+            'image' => \App\Models\StoreSetting::where('key', 'categories_page_image')->value('value'),
+        ];
 
-        return view('admin.categories', compact('categories', 'category'));
+        return view('admin.categories', compact('categories', 'category', 'pageSettings'));
     }
 
     public function update(Request $request, $id)
@@ -99,5 +111,30 @@ class CategoryController extends Controller
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category deleted successfully.');
+    }
+
+    public function updatePageSettings(Request $request)
+    {
+        $request->validate([
+            'title' => 'nullable|string|max:255',
+            'subtitle' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+        ]);
+
+        \App\Models\StoreSetting::updateOrCreate(['key' => 'categories_page_title'], ['value' => $request->title]);
+        \App\Models\StoreSetting::updateOrCreate(['key' => 'categories_page_subtitle'], ['value' => $request->subtitle]);
+        \App\Models\StoreSetting::updateOrCreate(['key' => 'categories_page_description'], ['value' => $request->description]);
+
+        if ($request->hasFile('image')) {
+            $oldImage = \App\Models\StoreSetting::where('key', 'categories_page_image')->value('value');
+            if ($oldImage) {
+                Storage::disk('public')->delete($oldImage);
+            }
+            $path = $request->file('image')->store('pages', 'public');
+            \App\Models\StoreSetting::updateOrCreate(['key' => 'categories_page_image'], ['value' => $path]);
+        }
+
+        return back()->with('success', 'Categories page settings updated successfully.');
     }
 }

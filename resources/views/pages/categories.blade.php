@@ -30,14 +30,13 @@
         {{-- Text Content (Left Side) --}}
         <div class="flex-1 py-12 md:py-16 px-4 md:px-6 lg:px-8 flex flex-col justify-center text-center md:text-left relative z-10">
             <span class="fade-in-up uppercase tracking-[0.3em] text-[10px] font-bold text-amber-500 mb-4 block">
-                Curated Collections
+                {{ $pageSettings['subtitle'] ?? 'Curated Collections' }}
             </span>
             <h1 class="fade-in-up stagger-1 text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-white mb-4">
-                Elevate Your Skincare <br class="hidden lg:block" />
-                <span class="italic font-serif text-white/90">Ritual</span>
+                {{ $pageSettings['title'] ?? 'Elevate Your Skincare Ritual' }}
             </h1>
             <p class="fade-in-up stagger-2 text-slate-400 text-sm md:text-base max-w-md font-light leading-relaxed mx-auto md:mx-0">
-                Explore our meticulously crafted categories of clinical-grade devices and potent formulations designed for transformative results.
+                {{ $pageSettings['description'] ?? 'Explore our meticulously crafted categories of clinical-grade devices and potent formulations designed for transformative results.' }}
             </p>
         </div>
 
@@ -46,7 +45,12 @@
             {{-- Gradient overlay to blend the image smoothly into the black background --}}
             <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent z-10"></div>
             
-            <img src="{{ asset('images/categories/header-collection.jpg') }}" 
+            @php
+                $headerImage = !empty($pageSettings['image']) 
+                    ? (Str::startsWith($pageSettings['image'], 'images/') ? asset($pageSettings['image']) : asset('storage/' . $pageSettings['image'])) 
+                    : asset('images/categories/header-collection.jpg');
+            @endphp
+            <img src="{{ $headerImage }}" 
                  alt="Premium Skincare Devices and Serums" 
                  class="absolute inset-0 w-full h-full object-cover object-center fade-in-up stagger-3 opacity-90 mix-blend-lighten">
         </div>
@@ -66,7 +70,7 @@
             @foreach($categories as $index => $category)
             
             {{-- Category Card --}}
-            <a href="{{ route('category.detail', $category->slug) }}" class="group relative block h-[400px] md:h-[450px] w-full rounded-2xl overflow-hidden fade-in-up" style="animation-delay: {{ ($index * 100) + 400 }}ms;">
+            <a href="{{ route('category.detail', $category->slug) }}" class="group relative block h-[250px] md:h-[300px] w-full rounded-2xl overflow-hidden fade-in-up" style="animation-delay: {{ ($index * 100) + 400 }}ms;">
                 
                 {{-- Background Image with slow zoom on hover --}}
                 <div class="absolute inset-0 bg-slate-200">
@@ -117,7 +121,11 @@
                     </div>
                 </div>
             </a>
-            @endforeach
+        @endforeach
+        </div>
+        
+        <div class="mt-12 flex justify-center">
+            {{ $categories->links() }}
         </div>
         @endif
     </div>

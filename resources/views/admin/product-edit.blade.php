@@ -65,6 +65,21 @@
                 </div>
             </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Rating (Out of 5)</label>
+                    <input type="number" step="0.01" name="rating" value="{{ old('rating', $product->rating) }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Reviews Count</label>
+                    <input type="number" name="reviews_count" value="{{ old('reviews_count', $product->reviews_count) }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Purchased Count</label>
+                    <input type="number" name="purchased_count" value="{{ old('purchased_count', $product->purchased_count) }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                </div>
+            </div>
+
             <div class="mb-6">
                 <label class="block text-sm font-bold text-slate-700 mb-2">Description</label>
                 <textarea name="description" rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ old('description', $product->description) }}</textarea>

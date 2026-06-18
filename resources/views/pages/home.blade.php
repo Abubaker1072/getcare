@@ -340,12 +340,12 @@
 
                     {{-- Products Grid --}}
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 mb-12 reveal-on-scroll">
-                        @foreach($bestsellingProducts as $index => $product)
+                        @foreach($bestsellingProducts->take(8) as $index => $product)
                         <div class="product-card group cursor-pointer animation-delay-{{ $index * 100 }}">
                             {{-- Card Container --}}
-                            <div class="relative h-full rounded-3xl overflow-hidden {{ $isTheme2 ? 'bg-slate-900/40 border border-white/5' : 'bg-white shadow-lg' }} hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                            <div class="relative h-full rounded-2xl overflow-hidden {{ $isTheme2 ? 'bg-slate-900/40 border border-white/5' : 'bg-white shadow-lg' }} hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
                                 {{-- Product Image Container --}}
-                                <a href="{{ route('product.detail', $product->id) }}" class="block relative bg-gradient-to-br from-slate-100 to-slate-200 h-72 sm:h-80 md:h-96 overflow-hidden">
+                                <a href="{{ route('product.detail', $product->id) }}" class="block relative bg-gradient-to-br from-slate-100 to-slate-200 h-32 sm:h-40 md:h-48 overflow-hidden">
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/0 group-hover:from-black/30 transition duration-500"></div>
                                     <img src="{{ asset('storage/' . ($product->cover_image ?? $product->image)) }}" 
                                          alt="{{ $product->name }}" 
@@ -367,22 +367,37 @@
                                 </a>
 
                                 {{-- Product Info --}}
-                                <div class="p-5 sm:p-6">
-                                    <span class="inline-block text-xs font-semibold {{ $isTheme2 ? 'text-amber-500' : 'text-amber-600' }} mb-2 uppercase tracking-wider">Product</span>
+                                <div class="p-3 sm:p-4">
                                     <a href="{{ route('product.detail', $product->id) }}">
-                                        <h3 class="font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }} text-sm sm:text-base line-clamp-2 mb-2.5 leading-tight group-hover:text-amber-600 transition-colors">
+                                        <h3 class="font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }} text-xs sm:text-sm line-clamp-2 mb-1.5 leading-tight group-hover:text-amber-600 transition-colors">
                                             {{ $product->name }}
                                         </h3>
                                     </a>
 
-                                    <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-gray-500' }} text-xs sm:text-sm leading-relaxed mb-4 line-clamp-2">
-                                        {{ $product->description ?? 'Premium quality product.' }}
-                                    </p>
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="flex items-center gap-1">
+                                            <div class="flex text-amber-400 text-[10px] sm:text-xs">
+                                                @for($i = 1; $i <= 5; $i++)
+                                                    @if($i <= floor((float)$product->rating))
+                                                        ★
+                                                    @elseif($i - 0.5 <= (float)$product->rating)
+                                                        <span class="relative">★<span class="absolute inset-0 overflow-hidden w-1/2 text-amber-400">★</span></span>
+                                                    @else
+                                                        <span class="text-gray-300">★</span>
+                                                    @endif
+                                                @endfor
+                                            </div>
+                                            <span class="text-[10px] sm:text-xs text-gray-500">({{ $product->reviews_count ?? 0 }})</span>
+                                        </div>
+                                        <div class="text-[10px] sm:text-xs font-medium text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+                                            {{ $product->purchased_count ?? 0 }}+ bought
+                                        </div>
+                                    </div>
 
-                                    <div class="mb-4 pb-4 border-b {{ $isTheme2 ? 'border-white/5' : 'border-gray-100' }}">
+                                    <div class="mb-3 pb-3 border-b {{ $isTheme2 ? 'border-white/5' : 'border-gray-100' }}">
                                         <div class="flex items-baseline gap-2 mb-1">
                                             @if($product->compare_price && $product->compare_price > $product->price)
-                                                <span class="text-xl sm:text-2xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }}">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
+                                                <span class="text-lg sm:text-xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }}">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
                                                 <span class="text-xs text-gray-400 line-through">{{ \App\Helpers\CurrencyHelper::format($product->compare_price) }}</span>
                                                 @if($product->discount_price && (float)$product->discount_price > 0)
                                                     <span class="text-xs font-bold text-green-600">Save {{ \App\Helpers\CurrencyHelper::format($product->discount_price) }}</span>
@@ -390,21 +405,12 @@
                                                     <span class="text-xs font-bold text-green-600">{{ round((1 - $product->price/$product->compare_price) * 100) }}% OFF</span>
                                                 @endif
                                             @else
-                                                <span class="text-xl sm:text-2xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }}">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
+                                                <span class="text-lg sm:text-xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }}">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
                                             @endif
                                         </div>
                                     </div>
 
-                                    <a href="{{ route('product.detail', $product->id) }}" class="block w-full bg-gradient-to-r {{ $isTheme2 ? 'from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 shadow-amber-500/10' : 'from-amber-600 to-orange-600 text-white hover:from-amber-700 hover:to-orange-700 shadow-md' }} text-center py-3 px-4 rounded-xl font-bold text-sm sm:text-base uppercase tracking-wider transition-all duration-300 transform hover:scale-105 active:scale-95 hover:shadow-lg group/btn relative overflow-hidden">
-                                        <span class="relative z-10 flex items-center justify-center gap-2">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                            </svg>
-                                            View Product
-                                        </span>
-                                        <div class="absolute inset-0 bg-white/20 transform -translate-x-full group-hover/btn:translate-x-full transition-transform duration-500"></div>
-                                    </a>
+
                                 </div>
                             </div>
                         </div>
@@ -429,22 +435,22 @@
                         $featuredSavings = ($featuredCompare && $featuredCompare > $featuredSale) ? ($featuredHotDeal->discount_price && (float)$featuredHotDeal->discount_price > 0 ? (float)$featuredHotDeal->discount_price : $featuredCompare - $featuredSale) : 0;
                     @endphp
                     <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 mt-16">
-                        <div class="fade-up relative rounded-[2rem] {{ $isTheme2 ? 'bg-slate-950 border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)]' : 'bg-white border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)]' }} overflow-hidden group">
-                            <div class="flex flex-col lg:flex-row items-center">
-                                <div class="w-full lg:w-1/2 p-10 md:p-16 relative z-10">
-                                    <span class="{{ $isTheme2 ? 'text-amber-500' : 'text-amber-600' }} text-xs font-bold tracking-widest uppercase mb-4 block">Master Collection</span>
-                                    <h2 class="text-4xl md:text-5xl font-light mb-6 {{ $isTheme2 ? 'text-white' : 'text-slate-900' }}">
+                        <div class="fade-up relative rounded-[2rem] {{ $isTheme2 ? 'bg-slate-950 border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.5)]' : 'bg-white border border-slate-100 shadow-[0_10px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)]' }} overflow-hidden group hover:-translate-y-2 transition-all duration-500">
+                            <div class="flex flex-col lg:flex-row items-stretch">
+                                <div class="w-full lg:w-1/2 p-6 md:p-10 relative z-10 flex flex-col justify-center">
+                                    <span class="{{ $isTheme2 ? 'text-amber-500' : 'text-amber-600' }} text-[10px] md:text-xs font-bold tracking-widest uppercase mb-3 block">Master Collection</span>
+                                    <h2 class="text-3xl md:text-4xl font-light mb-4 {{ $isTheme2 ? 'text-white' : 'text-slate-900' }}">
                                         The Clinical <br><span class="italic font-serif {{ $isTheme2 ? 'text-slate-300' : 'text-slate-700' }}">Renewal Bundle</span>
                                     </h2>
-                                    <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-slate-500' }} leading-relaxed mb-10 max-w-md font-light">
+                                    <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-slate-500' }} text-sm leading-relaxed mb-6 max-w-md font-light line-clamp-3">
                                         {{ $featuredHotDeal->description ?? 'Our highest-tier LED mask paired with the potent 24K gold serum. A complete clinical protocol for unprecedented cellular rejuvenation.' }}
                                     </p>
-                                    <div class="flex items-end gap-6 mb-10">
+                                    <div class="flex items-end gap-5 mb-6">
                                         <div>
                                             @if($featuredCompare && $featuredCompare > $featuredSale)
-                                                <span class="{{ $isTheme2 ? 'text-slate-500' : 'text-slate-400' }} line-through text-sm block mb-1">Standard Price {{ \App\Helpers\CurrencyHelper::format($featuredCompare) }}</span>
+                                                <span class="{{ $isTheme2 ? 'text-slate-500' : 'text-slate-400' }} line-through text-xs block mb-1">Standard Price {{ \App\Helpers\CurrencyHelper::format($featuredCompare) }}</span>
                                             @endif
-                                            <span class="text-5xl font-bold {{ $isTheme2 ? 'text-amber-400' : 'text-slate-900' }}">{{ \App\Helpers\CurrencyHelper::format($featuredSale) }}</span>
+                                            <span class="text-3xl md:text-4xl font-bold {{ $isTheme2 ? 'text-amber-400' : 'text-slate-900' }}">{{ \App\Helpers\CurrencyHelper::format($featuredSale) }}</span>
                                         </div>
                                         @if($featuredSavings > 0)
                                         <div class="{{ $isTheme2 ? 'bg-amber-950/20 border border-amber-500/20' : 'bg-red-50 border border-red-100' }} px-4 py-2 rounded-lg">
@@ -452,21 +458,23 @@
                                         </div>
                                         @endif
                                     </div>
-                                    <a href="{{ route('product.detail', $featuredHotDeal->slug) }}"
-                                       class="inline-block {{ $isTheme2 ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950' : 'bg-slate-900 text-white hover:bg-slate-800' }} px-10 py-4 rounded-xl text-sm font-bold tracking-[0.2em] uppercase hover:scale-105 hover:shadow-xl transition-all duration-300">
-                                        Claim Offer
-                                    </a>
+                                    <div class="mt-2">
+                                        <a href="{{ route('product.detail', $featuredHotDeal->slug) }}"
+                                           class="inline-block {{ $isTheme2 ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950' : 'bg-slate-900 text-white hover:bg-slate-800' }} px-8 py-3 rounded-xl text-xs md:text-sm font-bold tracking-[0.2em] uppercase hover:scale-105 hover:shadow-xl transition-all duration-300">
+                                            Claim Offer
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="w-full lg:w-1/2 relative h-[400px] lg:h-[500px] flex items-center justify-center p-10 {{ $isTheme2 ? 'bg-slate-900/30' : 'bg-slate-50/50' }}">
-                                    <div class="absolute w-[300px] h-[300px] {{ $isTheme2 ? 'bg-gradient-to-tr from-amber-500/10 to-transparent' : 'bg-gradient-to-tr from-amber-200/40 to-red-100/40' }} rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700"></div>
+                                <div class="w-full lg:w-1/2 relative h-[250px] lg:h-[300px] flex items-center justify-center p-6 {{ $isTheme2 ? 'bg-slate-900/30' : 'bg-slate-50/50' }} overflow-hidden rounded-b-[2rem] lg:rounded-r-[2rem] lg:rounded-bl-none">
+                                    <div class="absolute w-[250px] h-[250px] {{ $isTheme2 ? 'bg-gradient-to-tr from-amber-500/20 to-transparent' : 'bg-gradient-to-tr from-amber-300/40 to-rose-200/40' }} rounded-full blur-2xl group-hover:scale-125 group-hover:rotate-12 transition-all duration-700"></div>
                                     @if($featuredHotDeal->cover_image || $featuredHotDeal->image)
                                         <img src="{{ asset('storage/' . ($featuredHotDeal->cover_image ?? $featuredHotDeal->image)) }}"
                                              alt="{{ $featuredHotDeal->name }}"
-                                             class="relative z-10 w-full max-w-[400px] h-full object-contain drop-shadow-2xl">
+                                             class="relative z-10 w-full max-w-[250px] h-full object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
                                     @else
                                         <img src="{{ asset('images/categories/hero-deal.jpg') }}"
                                              alt="{{ $featuredHotDeal->name }}"
-                                             class="relative z-10 w-full max-w-[400px] object-contain drop-shadow-2xl">
+                                             class="relative z-10 w-full max-w-[250px] object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
                                     @endif
                                 </div>
                             </div>
@@ -733,41 +741,77 @@
 
         @elseif($section['id'] === 'why_choose_us')
             {{-- PREMIUM WHY CHOOSE US SECTION --}}
-            <section class="py-24 {{ $isTheme2 ? 'bg-[#0c0c0e] border-b border-white/5' : 'bg-white' }} overflow-hidden">
-                <div class="max-w-6xl mx-auto px-6">
-                    <div class="text-center mb-20 reveal-on-scroll">
-                        <span class="text-[10px] font-bold uppercase tracking-[0.4em] {{ $isTheme2 ? 'text-amber-500' : 'text-blue-800' }} mb-4 block">{{ \App\Models\StoreSetting::getValue('why_choose_us_subtitle', 'Our Philosophy') }}</span>
-                        <h2 class="text-4xl md:text-6xl font-serif {{ $isTheme2 ? 'text-white' : 'text-gray-900' }} mb-6">{{ \App\Models\StoreSetting::getValue('why_choose_us_title', 'Why Choose Us') }}</h2>
-                        <div class="h-[1px] w-12 {{ $isTheme2 ? 'bg-amber-500' : 'bg-blue-800' }} mx-auto"></div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal-on-scroll">
-                        
-                        {{-- Card 1 --}}
-                        <div class="group relative p-10 {{ $isTheme2 ? 'bg-slate-900/40 border border-white/5 hover:border-amber-500/30' : 'bg-white border border-gray-200' }} shadow-sm rounded-[2rem] transition-all duration-700 hover:shadow-2xl hover:-translate-y-2">
-                            <div class="mb-8 w-16 h-16 flex items-center justify-center rounded-2xl {{ $isTheme2 ? 'bg-amber-500/10 text-amber-500 shadow-inner' : 'bg-pink-50 text-pink-500' }} group-hover:scale-110 transition-transform duration-500">
-                                <svg class="w-8 h-8 transition-transform group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            </div>
-                            <h3 class="text-2xl font-light {{ $isTheme2 ? 'text-white' : 'text-gray-900' }} mb-4">{{ \App\Models\StoreSetting::getValue('why_choose_us_card1_title', 'Advanced Tech') }}</h3>
-                            <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-gray-500' }} leading-relaxed">{{ \App\Models\StoreSetting::getValue('why_choose_us_card1_desc', 'FDA-cleared devices and premium formulations engineered for visible results.') }}</p>
+            <section class="py-24 {{ $isTheme2 ? 'bg-[#0c0c0e] border-b border-white/5' : 'bg-[#faf9f8]' }} overflow-hidden">
+                <div class="max-w-7xl mx-auto px-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        {{-- Left Side: Images --}}
+                        <div class="flex flex-col gap-6 reveal-on-scroll">
+                            @if(\App\Models\StoreSetting::getValue('why_choose_us_card1_image_path'))
+                                <div class="w-full h-56 md:h-72 lg:h-64 rounded-3xl overflow-hidden shadow-lg transform transition hover:scale-[1.02] duration-500">
+                                    <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('why_choose_us_card1_image_path')) }}" class="w-full h-full object-cover" alt="Why Choose Us 1">
+                                </div>
+                            @endif
+                            @if(\App\Models\StoreSetting::getValue('why_choose_us_card2_image_path'))
+                                <div class="w-full h-56 md:h-72 lg:h-64 rounded-3xl overflow-hidden shadow-lg transform transition hover:scale-[1.02] duration-500">
+                                    <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('why_choose_us_card2_image_path')) }}" class="w-full h-full object-cover" alt="Why Choose Us 2">
+                                </div>
+                            @endif
+                            @if(\App\Models\StoreSetting::getValue('why_choose_us_card3_image_path'))
+                                <div class="w-full h-56 md:h-72 lg:h-64 rounded-3xl overflow-hidden shadow-lg transform transition hover:scale-[1.02] duration-500">
+                                    <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('why_choose_us_card3_image_path')) }}" class="w-full h-full object-cover" alt="Why Choose Us 3">
+                                </div>
+                            @endif
+                            {{-- Placeholder if no images uploaded --}}
+                            @if(!\App\Models\StoreSetting::getValue('why_choose_us_card1_image_path') && !\App\Models\StoreSetting::getValue('why_choose_us_card2_image_path') && !\App\Models\StoreSetting::getValue('why_choose_us_card3_image_path'))
+                                <div class="w-full h-64 rounded-3xl overflow-hidden bg-slate-200 animate-pulse flex items-center justify-center">
+                                    <span class="text-slate-400 font-medium">Upload images in Store Settings</span>
+                                </div>
+                            @endif
                         </div>
 
-                        {{-- Card 2 --}}
-                        <div class="group relative p-10 {{ $isTheme2 ? 'bg-slate-900/40 border border-white/5 hover:border-amber-500/30' : 'bg-white border border-gray-200' }} shadow-sm rounded-[2rem] transition-all duration-700 hover:shadow-2xl hover:-translate-y-2">
-                            <div class="mb-8 w-16 h-16 flex items-center justify-center rounded-2xl {{ $isTheme2 ? 'bg-amber-500/10 text-amber-500 shadow-inner' : 'bg-amber-50 text-amber-500' }} group-hover:scale-110 transition-transform duration-500">
-                                <svg class="w-8 h-8 transition-transform group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10h-2m0 0H8m4 0v4m0-4v-2m0 2h2m0 0v2m0-2h-2m0 2v4m6-6a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                            </div>
-                            <h3 class="text-2xl font-light {{ $isTheme2 ? 'text-white' : 'text-gray-900' }} mb-4">{{ \App\Models\StoreSetting::getValue('why_choose_us_card2_title', 'Expert Care') }}</h3>
-                            <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-gray-500' }} leading-relaxed">{{ \App\Models\StoreSetting::getValue('why_choose_us_card2_desc', 'Professional guidance and fully customized skincare routines for your unique needs.') }}</p>
-                        </div>
+                        {{-- Right Side: Content --}}
+                        <div class="reveal-on-scroll">
+                            <h2 class="text-4xl md:text-6xl font-serif {{ $isTheme2 ? 'text-white' : 'text-gray-900' }} font-bold mb-4 leading-tight">
+                                {{ \App\Models\StoreSetting::getValue('why_choose_us_title', 'Why Choose Us') }}
+                            </h2>
+                            <p class="text-lg {{ $isTheme2 ? 'text-slate-400' : 'text-slate-500' }} mb-12 font-medium tracking-wide">
+                                {{ \App\Models\StoreSetting::getValue('why_choose_us_subtitle', 'Our Philosophy') }}
+                            </p>
 
-                        {{-- Card 3 --}}
-                        <div class="group relative p-10 {{ $isTheme2 ? 'bg-slate-900/40 border border-white/5 hover:border-amber-500/30' : 'bg-white border border-gray-200' }} shadow-sm rounded-[2rem] transition-all duration-700 hover:shadow-2xl hover:-translate-y-2">
-                            <div class="mb-8 w-16 h-16 flex items-center justify-center rounded-2xl {{ $isTheme2 ? 'bg-amber-500/10 text-amber-500 shadow-inner' : 'bg-green-50 text-green-500' }} group-hover:scale-110 transition-transform duration-500">
-                                <svg class="w-8 h-8 transition-transform group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <div class="space-y-8">
+                                {{-- Feature 1 --}}
+                                <div class="flex items-start gap-5">
+                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[#1e293b] flex items-center justify-center mt-1 text-white shadow-md">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-bold {{ $isTheme2 ? 'text-white' : 'text-slate-900' }} mb-2">{{ \App\Models\StoreSetting::getValue('why_choose_us_card1_title', 'Advanced Tech') }}</h3>
+                                        <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-slate-600' }} leading-relaxed">{{ \App\Models\StoreSetting::getValue('why_choose_us_card1_desc', 'FDA-cleared devices and premium formulations engineered for visible results.') }}</p>
+                                    </div>
+                                </div>
+
+                                {{-- Feature 2 --}}
+                                <div class="flex items-start gap-5">
+                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[#1e293b] flex items-center justify-center mt-1 text-white shadow-md">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-bold {{ $isTheme2 ? 'text-white' : 'text-slate-900' }} mb-2">{{ \App\Models\StoreSetting::getValue('why_choose_us_card2_title', 'Expert Care') }}</h3>
+                                        <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-slate-600' }} leading-relaxed">{{ \App\Models\StoreSetting::getValue('why_choose_us_card2_desc', 'Professional guidance and fully customized skincare routines for your unique needs.') }}</p>
+                                    </div>
+                                </div>
+
+                                {{-- Feature 3 --}}
+                                <div class="flex items-start gap-5">
+                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[#1e293b] flex items-center justify-center mt-1 text-white shadow-md">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-bold {{ $isTheme2 ? 'text-white' : 'text-slate-900' }} mb-2">{{ \App\Models\StoreSetting::getValue('why_choose_us_card3_title', 'Guaranteed Results') }}</h3>
+                                        <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-slate-600' }} leading-relaxed">{{ \App\Models\StoreSetting::getValue('why_choose_us_card3_desc', 'Experience visible transformations driven by our proven, high-end beauty solutions.') }}</p>
+                                    </div>
+                                </div>
                             </div>
-                            <h3 class="text-2xl font-light {{ $isTheme2 ? 'text-white' : 'text-gray-900' }} mb-4">{{ \App\Models\StoreSetting::getValue('why_choose_us_card3_title', 'Guaranteed Results') }}</h3>
-                            <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-gray-500' }} leading-relaxed">{{ \App\Models\StoreSetting::getValue('why_choose_us_card3_desc', 'Experience visible transformations driven by our proven, high-end beauty solutions.') }}</p>
                         </div>
                     </div>
                 </div>

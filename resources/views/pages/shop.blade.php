@@ -23,7 +23,7 @@
             
             {{-- Left Sidebar Filters --}}
             <aside class="w-full lg:w-[280px] flex-shrink-0">
-                <form id="shop-filters" action="{{ route('products.all') }}" method="GET" class="bg-white rounded-xl shadow-[0_2px_20px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden sticky top-6">
+                <form id="shop-filters" action="{{ route('products.all') }}" method="GET" class="bg-white rounded-xl shadow-[0_2px_15px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 overflow-hidden sticky top-6 transition-all duration-500 transform hover:-translate-y-1">
                     @if(request('sort'))
                         <input type="hidden" name="sort" value="{{ request('sort') }}">
                     @endif
@@ -37,68 +37,68 @@
                         <input type="hidden" name="search" value="{{ request('search') }}">
                     @endif
 
-                    <div class="bg-[#0f172a] px-5 py-4 flex items-center justify-between">
-                        <div class="flex items-center gap-2 text-amber-400 font-bold text-sm tracking-widest uppercase">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-[#0f172a] px-4 py-3 flex items-center justify-between">
+                        <div class="flex items-center gap-2 text-amber-400 font-bold text-xs tracking-widest uppercase">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
                             </svg>
                             FILTERS
                         </div>
-                        <a href="{{ route('products.all') }}" class="text-xs text-slate-300 hover:text-white transition-colors font-medium">Clear all</a>
+                        <a href="{{ route('products.all') }}" class="text-[11px] text-slate-300 hover:text-white transition-colors font-medium">Clear all</a>
                     </div>
 
-                    <div class="p-5">
-                        <div class="mb-6">
-                            <div class="flex items-center gap-2 mb-4">
-                                <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="p-4">
+                        <div class="mb-4">
+                            <div class="flex items-center gap-2 mb-3">
+                                <svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                <span class="text-xs font-bold text-slate-800 tracking-wider uppercase">AVAILABILITY</span>
+                                <span class="text-[11px] font-bold text-slate-800 tracking-wider uppercase">AVAILABILITY</span>
                             </div>
-                            <label class="flex items-center justify-between cursor-pointer group">
-                                <div class="flex items-center gap-3 text-sm text-slate-600 group-hover:text-slate-900 transition-colors">
+                            <label class="flex items-center justify-between cursor-pointer group transition-transform duration-300 hover:translate-x-1">
+                                <div class="flex items-center gap-2.5 text-sm text-slate-600 group-hover:text-amber-600 transition-colors">
                                     <input type="checkbox" name="in_stock" value="1" onchange="this.form.submit()"
                                         {{ !empty($filters['in_stock']) ? 'checked' : '' }}
-                                        class="w-4 h-4 rounded border-slate-300 text-amber-600 focus:ring-amber-500 cursor-pointer">
-                                    <span class="font-medium">In Stock</span>
+                                        class="w-3.5 h-3.5 rounded border-slate-300 text-amber-600 focus:ring-amber-500 cursor-pointer">
+                                    <span class="font-medium text-xs">In Stock</span>
                                 </div>
                             </label>
                         </div>
 
-                        <hr class="border-slate-100 mb-6">
+                        <hr class="border-slate-100 mb-4">
 
                         <div>
-                            <div class="flex items-center gap-2 mb-4">
-                                <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="flex items-center gap-2 mb-3">
+                                <svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
                                 </svg>
-                                <span class="text-xs font-bold text-slate-800 tracking-wider uppercase">CATEGORIES</span>
+                                <span class="text-[11px] font-bold text-slate-800 tracking-wider uppercase">CATEGORIES</span>
                             </div>
 
-                            <div class="relative mb-5">
-                                <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="relative mb-3 group/search">
+                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 group-focus-within/search:text-amber-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
                                 <input type="text" id="category-search" placeholder="Search categories..."
-                                    class="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 focus:bg-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition-all placeholder:text-slate-400">
+                                    class="w-full pl-8 pr-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 focus:bg-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition-all placeholder:text-slate-400 shadow-sm">
                             </div>
 
                             @if($categories->isEmpty())
-                                <p class="text-sm text-slate-400">No categories available.</p>
+                                <p class="text-xs text-slate-400">No categories available.</p>
                             @else
-                            <div id="category-list" class="space-y-3.5 max-h-[400px] overflow-y-auto pr-3 custom-scrollbar">
+                            <div id="category-list" class="space-y-2.5 max-h-[220px] overflow-y-auto pr-2 custom-scrollbar">
                                 @foreach($categories as $category)
-                                <label class="category-item flex items-start justify-between cursor-pointer group" data-name="{{ strtolower($category->name) }}">
-                                    <div class="flex items-start gap-3 flex-1 pr-2">
+                                <label class="category-item flex items-start justify-between cursor-pointer group transition-transform duration-300 hover:translate-x-1" data-name="{{ strtolower($category->name) }}">
+                                    <div class="flex items-start gap-2.5 flex-1 pr-2">
                                         <input type="checkbox" name="categories[]" value="{{ $category->id }}" onchange="this.form.submit()"
                                             {{ in_array($category->id, $selectedCategories) ? 'checked' : '' }}
-                                            class="w-4 h-4 mt-0.5 rounded border-slate-300 text-amber-600 focus:ring-amber-500 cursor-pointer flex-shrink-0">
-                                        <span class="text-sm text-slate-600 group-hover:text-slate-900 leading-snug transition-colors">{{ $category->name }}</span>
+                                            class="w-3.5 h-3.5 mt-0.5 rounded border-slate-300 text-amber-600 focus:ring-amber-500 cursor-pointer flex-shrink-0 transition-transform hover:scale-110">
+                                        <span class="text-xs text-slate-600 group-hover:text-amber-600 font-medium leading-snug transition-colors">{{ $category->name }}</span>
                                     </div>
-                                    <div class="flex items-center gap-2 flex-shrink-0">
-                                        <span class="text-[11px] font-medium bg-slate-50 text-slate-500 px-2 py-0.5 rounded-full border border-slate-100">{{ $category->products_count ?? 0 }}</span>
-                                        <a href="{{ route('category.detail', $category->slug) }}" class="text-slate-300 hover:text-amber-500 transition-colors" title="View category">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    <div class="flex items-center gap-1.5 flex-shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
+                                        <span class="text-[10px] font-bold bg-slate-50 text-slate-500 px-1.5 py-0.5 rounded-md border border-slate-100 shadow-sm">{{ $category->products_count ?? 0 }}</span>
+                                        <a href="{{ route('category.detail', $category->slug) }}" class="text-slate-300 hover:text-amber-500 transition-colors transform hover:scale-110" title="View category">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                         </a>
                                     </div>
                                 </label>
@@ -171,7 +171,7 @@
                     @forelse($products as $product)
                     <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-100 transition-all duration-300 flex flex-col group">
                         {{-- Product Image Area --}}
-                        <a href="{{ route('product.detail', $product->slug) }}" class="block relative bg-[#F8F9FA] aspect-[4/5] overflow-hidden">
+                        <a href="{{ route('product.detail', $product->slug) }}" class="block relative bg-[#F8F9FA] h-32 sm:h-40 md:h-48 overflow-hidden">
                             @if($product->cover_image || $product->image)
                                 <img src="{{ asset('storage/' . ($product->cover_image ?? $product->image)) }}" 
                                      alt="{{ $product->name }}" 
@@ -189,19 +189,36 @@
                         </a>
 
                         {{-- Product Details --}}
-                        <div class="p-5 flex flex-col flex-grow">
+                        <div class="p-4 flex flex-col flex-grow">
                             <a href="{{ route('product.detail', $product->slug) }}">
                                 <h3 class="font-bold text-slate-900 text-sm md:text-base leading-snug mb-1 group-hover:text-amber-700 transition-colors">
                                     {{ $product->name }}
                                 </h3>
                             </a>
+
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-1">
+                                    <div class="flex text-amber-400 text-[10px] sm:text-xs">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            @if($i <= floor((float)$product->rating))
+                                                ★
+                                            @elseif($i - 0.5 <= (float)$product->rating)
+                                                <span class="relative">★<span class="absolute inset-0 overflow-hidden w-1/2 text-amber-400">★</span></span>
+                                            @else
+                                                <span class="text-gray-300">★</span>
+                                            @endif
+                                        @endfor
+                                    </div>
+                                    <span class="text-[10px] sm:text-xs text-gray-500">({{ $product->reviews_count ?? 0 }})</span>
+                                </div>
+                                <div class="text-[10px] sm:text-xs font-medium text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+                                    {{ $product->purchased_count ?? 0 }}+ bought
+                                </div>
+                            </div>
                             @if($product->category)
                                 <p class="text-xs text-amber-600 font-medium mb-2">{{ $product->category->name }}</p>
                             @endif
 
-                            <p class="text-slate-500 text-sm leading-relaxed mb-4 line-clamp-2 flex-grow">
-                                {{ $product->description }}
-                            </p>
 
                             <div class="flex items-center gap-3 mt-auto pt-4 border-t border-slate-100">
                                 <span class="text-lg font-extrabold text-slate-900">{!! \App\Helpers\CurrencyHelper::format($product->price) !!}</span>

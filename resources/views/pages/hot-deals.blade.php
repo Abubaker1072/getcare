@@ -54,23 +54,23 @@
             @endphp
 
             {{-- Featured: Clinical Renewal Bundle --}}
-            <div class="fade-up d-3 relative rounded-[2rem] bg-white border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)] overflow-hidden mb-24 group">
-                <div class="flex flex-col lg:flex-row items-center">
-                    <div class="w-full lg:w-1/2 p-10 md:p-16 relative z-10">
-                        <span class="text-amber-600 text-xs font-bold tracking-widest uppercase mb-4 block">Master Collection</span>
-                        <h2 class="text-4xl md:text-5xl font-light mb-6 text-slate-900">
+            <div class="fade-up d-3 relative rounded-[2rem] bg-white border border-slate-100 shadow-[0_10px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] hover:-translate-y-2 transition-all duration-500 overflow-hidden mb-24 group">
+                <div class="flex flex-col lg:flex-row items-stretch">
+                    <div class="w-full lg:w-1/2 p-6 md:p-10 relative z-10 flex flex-col justify-center">
+                        <span class="text-amber-600 text-[10px] md:text-xs font-bold tracking-widest uppercase mb-3 block">Master Collection</span>
+                        <h2 class="text-3xl md:text-4xl font-light mb-4 text-slate-900">
                             The Clinical <br><span class="italic font-serif text-slate-700">Renewal Bundle</span>
                         </h2>
-                        <p class="text-slate-500 leading-relaxed mb-4 max-w-md font-light">{{ $featuredHotDeal->name }}</p>
-                        <p class="text-slate-500 leading-relaxed mb-10 max-w-md font-light text-sm">
+                        <p class="text-slate-500 leading-relaxed mb-3 max-w-md font-light text-sm">{{ $featuredHotDeal->name }}</p>
+                        <p class="text-slate-500 leading-relaxed mb-6 max-w-md font-light text-sm line-clamp-3">
                             {{ $featuredHotDeal->description ?? 'A complete clinical protocol for unprecedented cellular rejuvenation.' }}
                         </p>
-                        <div class="flex items-end gap-6 mb-10">
+                        <div class="flex items-end gap-5 mb-6">
                             <div>
                                 @if($featuredCompare && $featuredCompare > $featuredSale)
-                                    <span class="text-slate-400 line-through text-sm block mb-1">Standard Price {!! \App\Helpers\CurrencyHelper::format($featuredCompare) !!}</span>
+                                    <span class="text-slate-400 line-through text-xs block mb-1">Standard Price {!! \App\Helpers\CurrencyHelper::format($featuredCompare) !!}</span>
                                 @endif
-                                <span class="text-5xl font-bold text-slate-900">{!! \App\Helpers\CurrencyHelper::format($featuredSale) !!}</span>
+                                <span class="text-3xl md:text-4xl font-bold text-slate-900">{!! \App\Helpers\CurrencyHelper::format($featuredSale) !!}</span>
                             </div>
                             @if($featuredSavings > 0)
                             <div class="bg-red-50 border border-red-100 px-4 py-2 rounded-lg">
@@ -78,21 +78,23 @@
                             </div>
                             @endif
                         </div>
-                        <a href="{{ route('product.detail', $featuredHotDeal->slug) }}"
-                           class="btn-shine inline-block bg-slate-900 text-white px-10 py-4 rounded-xl text-sm font-bold tracking-[0.2em] uppercase hover:scale-105 hover:shadow-xl transition-all duration-300">
-                            Claim Offer
-                        </a>
+                        <div class="mt-2">
+                            <a href="{{ route('product.detail', $featuredHotDeal->slug) }}"
+                               class="btn-shine inline-block bg-slate-900 text-white px-8 py-3 rounded-xl text-xs md:text-sm font-bold tracking-[0.2em] uppercase hover:scale-105 hover:shadow-xl transition-all duration-300">
+                                Claim Offer
+                            </a>
+                        </div>
                     </div>
-                    <div class="w-full lg:w-1/2 relative h-[400px] lg:h-[600px] flex items-center justify-center p-10 bg-slate-50/50">
-                        <div class="absolute w-[300px] h-[300px] bg-gradient-to-tr from-amber-200/40 to-red-100/40 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700"></div>
+                    <div class="w-full lg:w-1/2 relative h-[250px] lg:h-[300px] flex items-center justify-center p-6 bg-slate-50/50 overflow-hidden rounded-b-[2rem] lg:rounded-r-[2rem] lg:rounded-bl-none">
+                        <div class="absolute w-[250px] h-[250px] bg-gradient-to-tr from-amber-300/40 to-rose-200/40 rounded-full blur-3xl group-hover:scale-125 group-hover:rotate-12 transition-all duration-700"></div>
                         @if($featuredHotDeal->cover_image || $featuredHotDeal->image)
                             <img src="{{ asset('storage/' . ($featuredHotDeal->cover_image ?? $featuredHotDeal->image)) }}"
                                  alt="{{ $featuredHotDeal->name }}"
-                                 class="relative z-10 w-full max-w-[400px] object-contain float-smooth drop-shadow-2xl">
+                                 class="relative z-10 w-full max-w-[250px] object-contain float-smooth drop-shadow-2xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
                         @else
                             <img src="{{ asset('images/categories/hero-deal.jpg') }}"
                                  alt="{{ $featuredHotDeal->name }}"
-                                 class="relative z-10 w-full max-w-[400px] object-contain float-smooth drop-shadow-2xl">
+                                 class="relative z-10 w-full max-w-[250px] object-contain float-smooth drop-shadow-2xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
                         @endif
                     </div>
                 </div>
@@ -140,6 +142,10 @@
                 @endforeach
             </div>
             @endif
+            
+            <div class="mt-16 flex justify-center">
+                {{ $hotDealProducts->links() }}
+            </div>
         @endif
     </div>
 </div>

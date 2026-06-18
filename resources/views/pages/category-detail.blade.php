@@ -65,15 +65,36 @@
                 @else
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                     @foreach($products as $product)
-                    <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-all group">
-                        <a href="{{ route('product.detail', $product->slug) }}" class="block relative aspect-square overflow-hidden bg-gray-50">
+                    <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-all group flex flex-col">
+                        <a href="{{ route('product.detail', $product->slug) }}" class="block relative h-32 sm:h-40 md:h-48 overflow-hidden bg-gray-50">
                             @if($product->cover_image || $product->image)
                                 <img src="{{ asset('storage/' . ($product->cover_image ?? $product->image)) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             @endif
                         </a>
-                        <div class="p-4">
-                            <a href="{{ route('product.detail', $product->slug) }}" class="text-sm font-medium text-gray-900 hover:text-amber-600 line-clamp-2">{{ $product->name }}</a>
-                            <p class="text-lg font-bold text-amber-600 mt-2">{!! \App\Helpers\CurrencyHelper::format($product->price) !!}</p>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <a href="{{ route('product.detail', $product->slug) }}" class="text-sm font-bold text-gray-900 hover:text-amber-600 line-clamp-2 mb-1">{{ $product->name }}</a>
+                            
+                            <div class="flex items-center justify-between mb-2 mt-auto">
+                                <div class="flex items-center gap-1">
+                                    <div class="flex text-amber-400 text-[10px] sm:text-xs">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            @if($i <= floor((float)$product->rating))
+                                                ★
+                                            @elseif($i - 0.5 <= (float)$product->rating)
+                                                <span class="relative">★<span class="absolute inset-0 overflow-hidden w-1/2 text-amber-400">★</span></span>
+                                            @else
+                                                <span class="text-gray-300">★</span>
+                                            @endif
+                                        @endfor
+                                    </div>
+                                    <span class="text-[10px] sm:text-xs text-gray-500">({{ $product->reviews_count ?? 0 }})</span>
+                                </div>
+                                <div class="text-[10px] sm:text-xs font-medium text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+                                    {{ $product->purchased_count ?? 0 }}+ bought
+                                </div>
+                            </div>
+
+                            <p class="text-lg font-extrabold text-amber-600 mt-2">{!! \App\Helpers\CurrencyHelper::format($product->price) !!}</p>
                         </div>
                     </div>
                     @endforeach

@@ -41,6 +41,14 @@
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 3m0-3a2 2 0 110 3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     General details
                 </button>
+                <button type="button" onclick="switchSettingsTab('tab-homepage')" id="nav-tab-homepage" class="tab-btn w-full flex items-center px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-2xl text-sm font-medium text-left transition-colors">
+                    <svg class="w-5 h-5 mr-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    Homepage Settings
+                </button>
+                <button type="button" onclick="switchSettingsTab('tab-footer')" id="nav-tab-footer" class="tab-btn w-full flex items-center px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-2xl text-sm font-medium text-left transition-colors">
+                    <svg class="w-5 h-5 mr-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    Footer Settings
+                </button>
                 <button type="button" onclick="switchSettingsTab('tab-currencies')" id="nav-tab-currencies" class="tab-btn w-full flex items-center px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-2xl text-sm font-medium text-left transition-colors">
                     <svg class="w-5 h-5 mr-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     Currencies Settings
@@ -83,7 +91,124 @@
                 </form>
             </div>
 
-            <!-- Tab 2: Currencies Settings -->
+            <!-- Tab: Homepage Settings -->
+            <div id="tab-homepage" class="settings-tab-content hidden space-y-6">
+                <form action="{{ route('admin.settings.homepage') }}" method="POST">
+                    @csrf
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] p-8">
+                        <div class="flex items-center justify-between border-b dark:border-slate-800 pb-4 mb-6">
+                            <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">Homepage: Why Choose Us</h3>
+                            <button type="submit" class="px-5 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-md shadow-indigo-500/20 hover:bg-indigo-700 transition-colors">
+                                Save Details
+                            </button>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div class="col-span-2 md:col-span-1">
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Section Subtitle</label>
+                                <input type="text" name="why_choose_us_subtitle" value="{{ \App\Models\StoreSetting::getValue('why_choose_us_subtitle', 'Our Philosophy') }}" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                            </div>
+                            <div class="col-span-2 md:col-span-1">
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Section Title</label>
+                                <input type="text" name="why_choose_us_title" value="{{ \App\Models\StoreSetting::getValue('why_choose_us_title', 'Why Choose Us') }}" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                            </div>
+                        </div>
+
+                        <!-- Card 1 -->
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-4">Feature Card 1</h4>
+                        <div class="grid grid-cols-1 gap-6 mb-6">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Title</label>
+                                <input type="text" name="why_choose_us_card1_title" value="{{ \App\Models\StoreSetting::getValue('why_choose_us_card1_title', 'Advanced Tech') }}" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Description</label>
+                                <textarea name="why_choose_us_card1_desc" rows="2" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ \App\Models\StoreSetting::getValue('why_choose_us_card1_desc', 'FDA-cleared devices and premium formulations engineered for visible results.') }}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-4">Feature Card 2</h4>
+                        <div class="grid grid-cols-1 gap-6 mb-6">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Title</label>
+                                <input type="text" name="why_choose_us_card2_title" value="{{ \App\Models\StoreSetting::getValue('why_choose_us_card2_title', 'Expert Care') }}" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Description</label>
+                                <textarea name="why_choose_us_card2_desc" rows="2" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ \App\Models\StoreSetting::getValue('why_choose_us_card2_desc', 'Professional guidance and fully customized skincare routines for your unique needs.') }}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-4">Feature Card 3</h4>
+                        <div class="grid grid-cols-1 gap-6">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Title</label>
+                                <input type="text" name="why_choose_us_card3_title" value="{{ \App\Models\StoreSetting::getValue('why_choose_us_card3_title', 'Guaranteed Results') }}" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Description</label>
+                                <textarea name="why_choose_us_card3_desc" rows="2" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ \App\Models\StoreSetting::getValue('why_choose_us_card3_desc', 'Experience visible transformations driven by our proven, high-end beauty solutions.') }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tab: Footer Settings -->
+            <div id="tab-footer" class="settings-tab-content hidden space-y-6">
+                <form action="{{ route('admin.settings.footer') }}" method="POST">
+                    @csrf
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] p-8">
+                        <div class="flex items-center justify-between border-b dark:border-slate-800 pb-4 mb-6">
+                            <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">Footer & Social Settings</h3>
+                            <button type="submit" class="px-5 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-md shadow-indigo-500/20 hover:bg-indigo-700 transition-colors">
+                                Save Details
+                            </button>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div class="col-span-2">
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">About Us Text</label>
+                                <textarea name="footer_about_text" rows="3" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ \App\Models\StoreSetting::getValue('footer_about_text', 'Our mission is simple: to transform traditional approaches to skincare with science-backed solutions. We want to empower people from all communities to find confidence and joy through better beauty routines.') }}</textarea>
+                            </div>
+                            <div class="col-span-2 md:col-span-1">
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Contact Email</label>
+                                <input type="email" name="footer_contact_email" value="{{ \App\Models\StoreSetting::getValue('footer_contact_email') }}" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                            </div>
+                            <div class="col-span-2 md:col-span-1">
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Contact Phone</label>
+                                <input type="text" name="footer_contact_phone" value="{{ \App\Models\StoreSetting::getValue('footer_contact_phone') }}" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                            </div>
+                            <div class="col-span-2">
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Contact Address</label>
+                                <input type="text" name="footer_contact_address" value="{{ \App\Models\StoreSetting::getValue('footer_contact_address') }}" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                            </div>
+                        </div>
+
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-4">Social Media Links</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Facebook URL</label>
+                                <input type="url" name="footer_facebook" value="{{ \App\Models\StoreSetting::getValue('footer_facebook') }}" placeholder="https://facebook.com/..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Instagram URL</label>
+                                <input type="url" name="footer_instagram" value="{{ \App\Models\StoreSetting::getValue('footer_instagram') }}" placeholder="https://instagram.com/..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Twitter/X URL</label>
+                                <input type="url" name="footer_twitter" value="{{ \App\Models\StoreSetting::getValue('footer_twitter') }}" placeholder="https://twitter.com/..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">YouTube URL</label>
+                                <input type="url" name="footer_youtube" value="{{ \App\Models\StoreSetting::getValue('footer_youtube') }}" placeholder="https://youtube.com/..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3 font-medium focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
             <div id="tab-currencies" class="settings-tab-content hidden space-y-8">
                 <!-- Currencies List Table -->
                 <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] overflow-hidden">

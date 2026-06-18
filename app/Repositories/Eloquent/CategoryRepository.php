@@ -11,12 +11,13 @@ class CategoryRepository implements CategoryRepositoryInterface
         return Category::withCount('products')->latest()->get();
     }
 
-    public function active()
+    public function active($paginate = null)
     {
-        return Category::withCount('products')
+        $query = Category::withCount('products')
             ->where('status', true)
-            ->latest()
-            ->get();
+            ->latest();
+
+        return $paginate ? $query->paginate($paginate) : $query->get();
     }
 
     public function find($id)

@@ -40,7 +40,18 @@ Route::get('/', function (
 Route::get('/shop/all', [FrontendProductController::class, 'index'])->name('products.all');
 
 Route::get('/hot-deals', function (\App\Repositories\Contracts\HomepageHotDealProductRepositoryInterface $hotDealRepo) {
-    $hotDealProducts = $hotDealRepo->getHotDealProducts();
+    $ids = $hotDealRepo->getHotDealProductIds();
+    
+    if (empty($ids)) {
+        $hotDealProducts = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 20);
+    } else {
+        $orderedIds = implode(',', $ids);
+        $hotDealProducts = \App\Models\Product::whereIn('id', $ids)
+                            ->where('is_active', true)
+                            ->orderByRaw("FIELD(id, $orderedIds)")
+                            ->paginate(20);
+    }
+    
     return view('pages.hot-deals', compact('hotDealProducts'));
 })->name('hot-deals');
 
@@ -247,6 +258,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         ->name('product-management.toggle');
 
     // Categories (ADMIN)
+    Route::post('/categories/page-settings', [CategoryController::class, 'updatePageSettings'])->name('categories.page-settings');
     Route::resource('categories', CategoryController::class)->except(['show']);
 
     Route::get('/category-management', [HomepageFeaturedCategoryController::class, 'index'])
@@ -310,6 +322,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/reports', fn () => view('admin.reports'))->name('reports');
     Route::get('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings');
     Route::post('/settings/general', [App\Http\Controllers\Admin\SettingsController::class, 'updateGeneral'])->name('settings.general');
+    Route::post('/settings/homepage', [App\Http\Controllers\Admin\SettingsController::class, 'updateHomepage'])->name('settings.homepage');
+    Route::post('/settings/footer', [App\Http\Controllers\Admin\SettingsController::class, 'updateFooter'])->name('settings.footer');
     Route::post('/settings/currencies', [App\Http\Controllers\Admin\SettingsController::class, 'storeCurrency'])->name('settings.currencies.store');
     Route::put('/settings/currencies/{currency}', [App\Http\Controllers\Admin\SettingsController::class, 'updateCurrency'])->name('settings.currencies.update');
     Route::delete('/settings/currencies/{currency}', [App\Http\Controllers\Admin\SettingsController::class, 'destroyCurrency'])->name('settings.currencies.destroy');

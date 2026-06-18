@@ -17,8 +17,14 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = $this->categoryRepository->active();
-        return view('pages.categories', compact('categories'));
+        $categories = $this->categoryRepository->active(20);
+        $pageSettings = [
+            'title' => \App\Models\StoreSetting::where('key', 'categories_page_title')->value('value') ?? 'Elevate Your Skincare Ritual',
+            'subtitle' => \App\Models\StoreSetting::where('key', 'categories_page_subtitle')->value('value') ?? 'Curated Collections',
+            'description' => \App\Models\StoreSetting::where('key', 'categories_page_description')->value('value') ?? 'Explore our meticulously crafted categories of clinical-grade devices and potent formulations designed for transformative results.',
+            'image' => \App\Models\StoreSetting::where('key', 'categories_page_image')->value('value') ?? 'images/categories/header-collection.jpg',
+        ];
+        return view('pages.categories', compact('categories', 'pageSettings'));
     }
 
     public function show(string $slug)

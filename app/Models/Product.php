@@ -30,6 +30,9 @@ class Product extends Model
         'how_to_use',
         'ingredients',
         'faqs',
+        'rating',
+        'reviews_count',
+        'purchased_count',
     ];
 
     protected $casts = [

@@ -113,6 +113,9 @@ class StoreManageController extends Controller
             'why_choose_us_card2_desc' => 'nullable|string',
             'why_choose_us_card3_title' => 'nullable|string|max:255',
             'why_choose_us_card3_desc' => 'nullable|string',
+            'why_choose_us_card1_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'why_choose_us_card2_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'why_choose_us_card3_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
         ]);
 
         // Simple text fields saving
@@ -208,6 +211,37 @@ class StoreManageController extends Controller
             StoreSetting::setValue('routine_lifestyle_image_path', $path);
         }
 
+        // Why Choose Us Images Deletion
+        if ($request->input('delete_why_choose_us_card1_image') == '1') {
+            StoreSetting::setValue('why_choose_us_card1_image_path', null);
+        }
+        if ($request->input('delete_why_choose_us_card2_image') == '1') {
+            StoreSetting::setValue('why_choose_us_card2_image_path', null);
+        }
+        if ($request->input('delete_why_choose_us_card3_image') == '1') {
+            StoreSetting::setValue('why_choose_us_card3_image_path', null);
+        }
+
+        // Why Choose Us Images Upload
+        if ($request->hasFile('why_choose_us_card1_image')) {
+            $file = $request->file('why_choose_us_card1_image');
+            $fileName = 'why_choose_us_card1_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('why_choose_us', $fileName, 'public');
+            StoreSetting::setValue('why_choose_us_card1_image_path', $path);
+        }
+        if ($request->hasFile('why_choose_us_card2_image')) {
+            $file = $request->file('why_choose_us_card2_image');
+            $fileName = 'why_choose_us_card2_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('why_choose_us', $fileName, 'public');
+            StoreSetting::setValue('why_choose_us_card2_image_path', $path);
+        }
+        if ($request->hasFile('why_choose_us_card3_image')) {
+            $file = $request->file('why_choose_us_card3_image');
+            $fileName = 'why_choose_us_card3_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('why_choose_us', $fileName, 'public');
+            StoreSetting::setValue('why_choose_us_card3_image_path', $path);
+        }
+
         // Save Admin Gateway bank settings if present
         if ($request->has('admin_bank_name') || $request->has('admin_account_number')) {
             $this->gatewayRepo->saveAdminGatewaySettings([
@@ -234,9 +268,9 @@ class StoreManageController extends Controller
             'article_3_title', 'article_3_text', 'article_3_link', 'article_3_image_path',
             'routine_product_image_path', 'routine_lifestyle_image_path',
             'why_choose_us_subtitle', 'why_choose_us_title',
-            'why_choose_us_card1_title', 'why_choose_us_card1_desc',
-            'why_choose_us_card2_title', 'why_choose_us_card2_desc',
-            'why_choose_us_card3_title', 'why_choose_us_card3_desc'
+            'why_choose_us_card1_title', 'why_choose_us_card1_desc', 'why_choose_us_card1_image_path',
+            'why_choose_us_card2_title', 'why_choose_us_card2_desc', 'why_choose_us_card2_image_path',
+            'why_choose_us_card3_title', 'why_choose_us_card3_desc', 'why_choose_us_card3_image_path'
         ];
 
         foreach ($keys as $key) {

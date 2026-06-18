@@ -47,16 +47,16 @@
             {{-- Image Gallery (Left) --}}
             <div class="flex flex-col gap-4 lg:gap-6">
                 {{-- Main Image --}}
-                <div class="w-full relative bg-gray-50 rounded-lg overflow-hidden aspect-[4/5] sm:aspect-square flex items-center justify-center p-8">
+                <div class="w-11/12 sm:w-4/5 xl:w-3/4 mx-auto relative bg-gray-50 rounded-2xl overflow-hidden aspect-[4/5] sm:aspect-square flex items-center justify-center p-8">
                     @if($product->cover_image || $product->image)
-                        <img id="main-product-image" src="{{ asset('storage/' . ($product->cover_image ?? $product->image)) }}" alt="{{ $product->name }}" class="w-full h-full object-contain object-center">
+                        <img id="main-product-image" src="{{ asset('storage/' . ($product->cover_image ?? $product->image)) }}" alt="{{ $product->name }}" class="w-full h-full object-contain object-center transition-transform duration-500 hover:scale-125 cursor-zoom-in">
                     @else
                         <div class="text-gray-400">No Image Available</div>
                     @endif
                 </div>
 
                 {{-- Thumbnails --}}
-                <div class="flex gap-4 overflow-x-auto pb-2 hide-scrollbar" id="product-thumbnails">
+                <div class="flex justify-center gap-4 overflow-x-auto pb-2 hide-scrollbar" id="product-thumbnails">
                     @foreach(['image', 'image_1', 'image_2', 'image_3', 'image_4'] as $imgField)
                         @if($product->$imgField)
                         <button onclick="document.getElementById('main-product-image').src='{{ asset('storage/' . $product->$imgField) }}'" class="flex-shrink-0 w-20 h-20 rounded-lg border border-gray-200 hover:border-gray-800 focus:border-gray-800 overflow-hidden transition-all bg-gray-50 p-2">
@@ -408,6 +408,48 @@
                     <img src="{{ asset('storage/' . ($product->cover_image ?? $product->image)) }}" alt="Products" class="w-3/4 object-contain shadow-2xl rounded-lg z-10" onerror="this.src='https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80'">
                 </div>
             </div>
+        </div>
+    </div>
+    @endif
+
+    {{-- Related Products Section --}}
+    @if(isset($relatedProducts) && $relatedProducts->count() > 0)
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-gray-100 mt-8">
+        <h2 class="text-3xl font-serif text-gray-900 mb-8 text-center">You May Also Like</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            @foreach($relatedProducts as $relProduct)
+            <div class="product-card group cursor-pointer">
+                <div class="relative h-full rounded-2xl overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col">
+                    <a href="{{ route('product.detail', $relProduct->id) }}" class="block relative bg-gray-50 h-48 overflow-hidden flex items-center justify-center p-6 shrink-0">
+                        <img src="{{ asset('storage/' . ($relProduct->cover_image ?? $relProduct->image)) }}" 
+                             alt="{{ $relProduct->name }}" 
+                             class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out">
+                    </a>
+
+                    <div class="p-4 text-center flex-grow flex flex-col justify-between border-t border-gray-50">
+                        <div>
+                            <a href="{{ route('product.detail', $relProduct->id) }}">
+                                <h3 class="font-bold text-gray-900 text-sm line-clamp-2 mb-2 group-hover:text-amber-600 transition-colors">
+                                    {{ $relProduct->name }}
+                                </h3>
+                            </a>
+
+                            <div class="mb-4">
+                                <span class="text-lg font-bold text-gray-900">{{ \App\Helpers\CurrencyHelper::format($relProduct->price) }}</span>
+                                @if($relProduct->compare_price && $relProduct->compare_price > $relProduct->price)
+                                    <span class="text-xs text-gray-400 line-through ml-2">{{ \App\Helpers\CurrencyHelper::format($relProduct->compare_price) }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <button onclick="window.location.href='{{ route('product.detail', $relProduct->id) }}'" class="w-full border border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white rounded-full py-2 text-xs font-bold tracking-widest transition-colors mt-auto">
+                            VIEW DETAILS
+                        </button>
+                    </div>
+                </div>
+            </div>
+            @endforeach
         </div>
     </div>
     @endif

@@ -35,6 +35,40 @@
         </div>
     @endif
 
+    <div class="mb-8 bg-white rounded-3xl border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] overflow-hidden">
+        <div class="p-6 border-b border-slate-50 bg-slate-50/50 flex justify-between items-center cursor-pointer" onclick="document.getElementById('page-settings-body').classList.toggle('hidden')">
+            <h2 class="text-lg font-bold text-slate-800">Categories Page Settings (Frontend)</h2>
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </div>
+        <div id="page-settings-body" class="p-6 hidden">
+            <form action="{{ route('admin.categories.page-settings') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Page Title</label>
+                        <input type="text" name="title" value="{{ $pageSettings['title'] ?? 'Elevate Your Skincare Ritual' }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Page Subtitle / Kicker</label>
+                        <input type="text" name="subtitle" value="{{ $pageSettings['subtitle'] ?? 'Curated Collections' }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Page Description</label>
+                        <textarea name="description" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none">{{ $pageSettings['description'] ?? 'Explore our meticulously crafted categories of clinical-grade devices and potent formulations designed for transformative results.' }}</textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Header Background Image</label>
+                        @if(!empty($pageSettings['image']))
+                            <img src="{{ asset('storage/' . $pageSettings['image']) }}" alt="Header Image" class="w-48 h-24 object-cover rounded-xl mb-3 border border-slate-200">
+                        @endif
+                        <input type="file" name="image" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none">
+                    </div>
+                </div>
+                <button type="submit" class="px-6 py-3 bg-slate-800 text-white rounded-xl text-sm font-bold hover:bg-slate-900 transition-colors">Save Page Settings</button>
+            </form>
+        </div>
+    </div>
+
     <div class="bg-white rounded-3xl border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] overflow-hidden">
         <div class="p-5 border-b border-slate-50 bg-slate-50/50">
             <p class="text-sm text-slate-500 font-medium">{{ $categories->count() }} categories total</p>

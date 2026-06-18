@@ -60,6 +60,12 @@ class ProductController extends Controller
             'reviews' => function($q) { $q->where('is_approved', true)->latest(); }
         ]);
 
-        return view('pages.product-detail', compact('product'));
+        $relatedProducts = \App\Models\Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->where('is_active', true)
+            ->take(4)
+            ->get();
+
+        return view('pages.product-detail', compact('product', 'relatedProducts'));
     }
 }

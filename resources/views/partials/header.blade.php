@@ -243,32 +243,6 @@
     </div>
 </header>
 
-{{-- Cart Drawer HTML --}}
-<div id="cart-drawer-backdrop" class="fixed inset-0 bg-black/60 z-[60] hidden opacity-0 transition-opacity duration-300"></div>
-<div id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-96 {{ $isTheme2 ? 'theme-2-dark border-l border-white/5' : 'bg-white shadow-2xl' }} z-[70] transform translate-x-full transition-transform duration-300 flex flex-col">
-    <div class="px-6 py-4 {{ $isTheme2 ? 'border-b border-white/5' : 'border-b' }} flex items-center justify-between">
-        <h2 class="text-xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-800' }}">Your Cart</h2>
-        <button id="close-cart" class="{{ $isTheme2 ? 'text-slate-400 hover:text-amber-400' : 'text-gray-500 hover:text-red-500' }} transition transform hover:rotate-90 duration-300">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-    </div>
-    
-    <div id="cart-drawer-items" class="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
-        {{-- Items loaded dynamically --}}
-    </div>
-    
-    <div class="{{ $isTheme2 ? 'border-t border-white/5 bg-[#0a0a0c]' : 'border-t bg-gray-50' }} p-6">
-        <div class="flex items-center justify-between mb-4">
-            <span class="{{ $isTheme2 ? 'text-slate-400' : 'text-gray-600' }} font-medium">Subtotal</span>
-            <span id="cart-drawer-subtotal" class="text-xl font-bold {{ $isTheme2 ? 'text-amber-500' : 'text-gray-900' }}">{!! \App\Helpers\CurrencyHelper::format(0) !!}</span>
-        </div>
-        <p class="text-xs text-gray-500 mb-4 text-center">Shipping and taxes calculated at checkout.</p>
-        <div class="space-y-3">
-            <a href="{{ route('cart') }}" class="block w-full py-3 px-4 {{ $isTheme2 ? 'bg-slate-800 text-white hover:bg-slate-700' : 'bg-gray-900 text-white hover:bg-gray-800' }} text-center rounded-md font-semibold transition transform active:scale-95 duration-150">View Cart</a>
-            <a href="/checkout" class="block w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center rounded-md font-semibold hover:from-amber-600 hover:to-orange-600 transition shadow-md {{ $isTheme2 ? 'shadow-amber-500/10' : 'shadow-amber-200' }} transform active:scale-95 duration-150">Checkout</a>
-        </div>
-    </div>
-</div>
 
 {{-- Search Modal HTML --}}
 <div id="search-modal" class="fixed inset-0 {{ $isTheme2 ? 'bg-[#0c0c0e]/95 backdrop-blur-md text-[#f3e8ff]' : 'bg-white/95 backdrop-blur-sm' }} z-[80] hidden opacity-0 transition-opacity duration-300 flex-col">
@@ -342,116 +316,7 @@
             });
         }
 
-        // --- 3. Cart Drawer Logic ---
-        const cartIcon = document.getElementById('cart-icon');
-        const cartDrawer = document.getElementById('cart-drawer');
-        const cartBackdrop = document.getElementById('cart-drawer-backdrop');
-        const closeCartBtn = document.getElementById('close-cart');
 
-        window.openCart = function(e) {
-            if(e) e.preventDefault();
-            if(!cartBackdrop || !cartDrawer) return;
-            cartBackdrop.classList.remove('hidden');
-            setTimeout(() => {
-                cartBackdrop.classList.remove('opacity-0');
-                cartDrawer.classList.remove('translate-x-full');
-            }, 10);
-            document.body.classList.add('overflow-hidden');
-            window.updateCartDrawer();
-        };
-
-        window.closeCart = function() {
-            if(!cartBackdrop || !cartDrawer) return;
-            cartBackdrop.classList.add('opacity-0');
-            cartDrawer.classList.add('translate-x-full');
-            setTimeout(() => {
-                cartBackdrop.classList.add('hidden');
-            }, 300);
-            document.body.classList.remove('overflow-hidden');
-        };
-
-        if (cartIcon) cartIcon.addEventListener('click', window.openCart);
-        if (closeCartBtn) closeCartBtn.addEventListener('click', window.closeCart);
-        if (cartBackdrop) cartBackdrop.addEventListener('click', window.closeCart);
-
-        window.updateCartDrawer = function() {
-            fetch('/api/cart/summary', {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(res => res.json())
-            .then(data => {
-                const badges = document.querySelectorAll('#cart-badge-count');
-                badges.forEach(badge => {
-                    badge.innerText = data.cart_count;
-                    if (data.cart_count > 0) {
-                        badge.classList.remove('hidden');
-                    } else {
-                        badge.classList.add('hidden');
-                    }
-                });
-                
-                const itemsContainer = document.getElementById('cart-drawer-items');
-                if (!itemsContainer) return;
-                
-                if (data.items.length === 0) {
-                    itemsContainer.innerHTML = `
-                        <div class="flex flex-col items-center justify-center h-full text-gray-400 py-12">
-                            <p class="text-sm font-medium">Your cart is empty</p>
-                        </div>
-                    `;
-                    document.getElementById('cart-drawer-subtotal').innerText = data.formatted_subtotal || '{!! \App\Helpers\CurrencyHelper::format(0) !!}';
-                    return;
-                }
-                
-                const isTheme2 = document.getElementById('main-header').classList.contains('theme-2-header');
-                const borderClass = isTheme2 ? 'border-b border-white/5' : 'border-b';
-                const imgBgClass = isTheme2 ? 'bg-slate-900' : 'bg-gray-100';
-                const nameClass = isTheme2 ? 'text-slate-200' : 'text-gray-800';
-                const qtyClass = isTheme2 ? 'text-slate-500' : 'text-gray-500';
-                const priceClass = isTheme2 ? 'text-amber-450 font-bold' : 'text-amber-600';
-                const removeClass = isTheme2 ? 'text-rose-400 hover:text-rose-350' : 'text-red-500 hover:underline';
-
-                let html = '';
-                data.items.forEach(item => {
-                    html += `
-                    <div class="flex items-center gap-4 pb-4 ${borderClass}">
-                        <div class="w-20 h-20 ${imgBgClass} rounded-md overflow-hidden flex-shrink-0">
-                            <img src="${item.image_url}" alt="${item.name}" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="text-sm font-semibold ${nameClass} line-clamp-2">${item.name}</h3>
-                            <p class="text-xs ${qtyClass} mt-1">Quantity: ${item.quantity}</p>
-                            <div class="flex items-center justify-between mt-2">
-                                <span class="text-sm ${priceClass}">${item.formatted_price}</span>
-                                <button onclick="window.removeCartItem(${item.id})" class="text-xs ${removeClass}">Remove</button>
-                            </div>
-                        </div>
-                    </div>
-                    `;
-                });
-                itemsContainer.innerHTML = html;
-                document.getElementById('cart-drawer-subtotal').innerText = data.formatted_subtotal;
-            })
-            .catch(err => console.log('Cart fetch error:', err));
-        };
-
-        window.removeCartItem = function(id) {
-            fetch(`/cart/remove/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                window.updateCartDrawer();
-                if (window.location.pathname === '/cart') {
-                    window.location.reload();
-                }
-            });
-        };
 
         // --- 4. Search Modal Logic ---
         const searchIcon = document.getElementById('search-icon');
