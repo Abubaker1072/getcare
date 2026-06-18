@@ -145,7 +145,41 @@
                     <a href="{{ route('home') ?? '#' }}" class="dynamic-color text-white nav-link">Home</a>
                     <a href="{{ route('products.all') ?? '#' }}" class="dynamic-color text-white nav-link">Products</a>
                     <a href="{{ route('hot-deals') ?? '#' }}" class="dynamic-color text-white nav-link">Hot Deals</a>
-                    <a href="{{ route('categories') ?? '#' }}" class="dynamic-color text-white nav-link">Categories</a>
+                    
+                    {{-- Categories Dropdown --}}
+                    @php
+                        $headerCategories = \App\Models\Category::where('status', true)->take(10)->get();
+                    @endphp
+                    <div class="group/cat relative py-4">
+                        <a href="{{ route('categories') ?? '#' }}" class="dynamic-color text-white nav-link">
+                            Categories
+                        </a>
+                        
+                        {{-- Dropdown Menu --}}
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 invisible group-hover/cat:opacity-100 group-hover/cat:visible transition-all duration-300 z-50 transform translate-y-2 group-hover/cat:translate-y-0 w-[600px]">
+                            <div class="bg-white/80 backdrop-blur-2xl border border-white/40 shadow-[0_20px_40px_rgba(0,0,0,0.1)] rounded-3xl p-8">
+                                <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-200/50">
+                                    <h3 class="text-slate-800 font-bold text-sm tracking-widest uppercase">Explore Collections</h3>
+                                    <a href="{{ route('categories') }}" class="text-amber-600 hover:text-amber-700 text-xs font-bold tracking-wider uppercase flex items-center gap-1 group/link">
+                                        View All
+                                        <svg class="w-4 h-4 transform group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                    </a>
+                                </div>
+                                <div class="grid grid-cols-2 gap-x-8 gap-y-4">
+                                    @foreach($headerCategories as $cat)
+                                        <a href="{{ route('category.detail', $cat->slug) }}" class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/60 transition-colors group/item">
+                                            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0 group-hover/item:bg-amber-100 group-hover/item:text-amber-600 text-slate-400 transition-colors">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"></path></svg>
+                                            </div>
+                                            <div>
+                                                <div class="text-slate-800 font-bold text-xs tracking-wider uppercase group-hover/item:text-amber-600 transition-colors">{{ $cat->name }}</div>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {{-- <a href="{{ route('brands') ?? '#' }}" class="dynamic-color text-white nav-link">Shop</a> --}}
                     <a href="{{ route('blog') ?? '#' }}" class="dynamic-color text-white nav-link">Contact Us</a>
                 </nav>
@@ -220,7 +254,7 @@
                 </div>
 
                 {{-- Shopping Bag Cart Icon --}}
-                <a href="#" id="cart-icon" class="relative dynamic-color text-white hover:opacity-70 transition-opacity transform hover:scale-105 duration-200">
+                <a href="#" id="cart-icon" onclick="event.preventDefault(); window.openSideCart();" class="relative dynamic-color text-white hover:opacity-70 transition-opacity transform hover:scale-105 duration-200">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5h.008v.008h-.008v-.008zm5.625 0h.008v.008h-.008v-.008z"></path>
                     </svg>

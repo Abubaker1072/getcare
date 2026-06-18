@@ -1,32 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-gray-50 py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {{-- Breadcrumb & Title --}}
-        <div class="mb-8">
-            <nav class="flex text-sm text-gray-500 mb-2" aria-label="Breadcrumb">
-                <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                    <li class="inline-flex items-center"><a href="{{ route('home') }}" class="hover:text-amber-600">Home</a></li>
-                    <li>
-                        <div class="flex items-center">
-                            <svg class="w-4 h-4 text-gray-400 mx-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                            <a href="{{ route('categories') }}" class="hover:text-amber-600">Categories</a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="flex items-center">
-                            <svg class="w-4 h-4 text-gray-400 mx-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                            <span class="text-gray-700">{{ $category->name }}</span>
-                        </div>
-                    </li>
-                </ol>
-            </nav>
-            <h1 class="text-3xl font-bold text-gray-900">{{ $category->name }}</h1>
-            @if($category->description)
-                <p class="text-gray-500 mt-2 max-w-2xl">{{ $category->description }}</p>
-            @endif
+<div class="bg-slate-50 pt-32 pb-16 min-h-screen">
+    
+    {{-- Category Hero Banner --}}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+        <div class="relative bg-white rounded-[2rem] p-8 md:p-12 overflow-hidden shadow-sm border border-slate-200">
+            {{-- Abstract aesthetic background elements --}}
+            <div class="absolute top-0 right-0 w-96 h-96 bg-amber-50 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/3"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-slate-100 rounded-full blur-3xl opacity-50 translate-y-1/3 -translate-x-1/3"></div>
+            
+            <div class="relative z-10">
+                <nav class="flex text-[11px] font-bold tracking-widest uppercase text-slate-400 mb-6" aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center space-x-2">
+                        <li class="inline-flex items-center hover:text-amber-600 transition-colors"><a href="{{ route('home') }}">Home</a></li>
+                        <li><span class="text-slate-300">/</span></li>
+                        <li class="inline-flex items-center hover:text-amber-600 transition-colors"><a href="{{ route('categories') }}">Categories</a></li>
+                        <li><span class="text-slate-300">/</span></li>
+                        <li class="inline-flex items-center text-slate-800">{{ $category->name }}</li>
+                    </ol>
+                </nav>
+                
+                <h1 class="text-4xl md:text-5xl font-light text-slate-900 tracking-tight mb-4">{{ $category->name }}</h1>
+                @if($category->description)
+                    <p class="text-slate-500 font-light text-base md:text-lg max-w-3xl leading-relaxed">{{ $category->description }}</p>
+                @endif
+            </div>
         </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div class="flex flex-col lg:flex-row gap-8">
             {{-- Sidebar Filters (Left) --}}

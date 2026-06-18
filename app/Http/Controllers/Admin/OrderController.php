@@ -48,6 +48,7 @@ class OrderController extends Controller
         $request->validate([
             'status' => 'nullable|in:pending,processing,shipped,completed,cancelled',
             'payment_status' => 'nullable|in:pending,paid',
+            'tracking_note' => 'nullable|string'
         ]);
 
         $statusChanged = false;
@@ -61,6 +62,15 @@ class OrderController extends Controller
         }
 
         $order->save();
+
+        // Save tracking note if provided, or if status changed (even without a note)
+        if ($request->filled('tracking_note') || $statusChanged) {
+            \App\Models\OrderStatusUpdate::create([
+                'order_id' => $order->id,
+                'status' => $order->status,
+                'note' => $request->tracking_note,
+            ]);
+        }
 
         if ($statusChanged) {
             try {

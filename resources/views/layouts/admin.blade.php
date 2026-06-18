@@ -115,9 +115,9 @@
         <span class="font-medium text-sm">Customers</span>
     </a>
 
-    <a href="{{ route('admin.messages') }}" class="flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('admin.messages') ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' : 'hover:bg-white/5 hover:text-white text-slate-400' }}">
-        <svg class="w-5 h-5 mr-3 {{ request()->routeIs('admin.messages') ? 'opacity-100' : 'opacity-70 group-hover:opacity-100' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-        <span class="font-medium text-sm">Customer Messages</span>
+    <a href="{{ route('admin.messages.index') }}" class="flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('admin.messages.*') ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' : 'hover:bg-white/5 hover:text-white text-slate-400' }}">
+        <svg class="w-5 h-5 mr-3 {{ request()->routeIs('admin.messages.*') ? 'opacity-100' : 'opacity-70 group-hover:opacity-100' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+        <span class="font-medium text-sm">Customer Updates</span>
     </a>
 
     <a href="{{ route('admin.reviews') }}" class="flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('admin.reviews') ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' : 'hover:bg-white/5 hover:text-white text-slate-400' }}">
@@ -252,7 +252,7 @@
 
                             @if($pendingMessages->isNotEmpty())
                                 @foreach($pendingMessages as $msg)
-                                    <a href="{{ route('admin.messages') }}" class="block p-4 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+                                    <a href="{{ route('admin.messages.index') }}" class="block p-4 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
                                         <div class="flex gap-3">
                                             <span class="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 flex items-center justify-center text-sm font-bold flex-shrink-0">✉️</span>
                                             <div>

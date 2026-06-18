@@ -16,11 +16,21 @@ class CustomerActionController extends Controller
     {
         $request->validate([
             'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'last_name' => 'nullable|string|max:255',
             'email' => 'required|email|max:255',
             'inquiry_type' => 'required|string|max:255',
-            'message' => 'required|string',
+            'message' => 'nullable|string',
+            'phone_number' => 'nullable|string|max:255',
+            'order_number' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:1000',
+            'reason' => 'nullable|string|max:1000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('tickets', 'public');
+        }
 
         CustomerMessage::create([
             'user_id' => auth()->check() ? auth()->id() : null,
@@ -29,6 +39,11 @@ class CustomerActionController extends Controller
             'email' => $request->email,
             'inquiry_type' => $request->inquiry_type,
             'message' => $request->message,
+            'phone_number' => $request->phone_number,
+            'order_number' => $request->order_number,
+            'address' => $request->address,
+            'reason' => $request->reason,
+            'image_path' => $imagePath,
             'is_read' => false,
         ]);
 

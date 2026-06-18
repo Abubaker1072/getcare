@@ -89,20 +89,24 @@
                                 </form>
                             </td>
                             <td class="p-5">
-                                <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST">
+                                <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST" class="flex flex-col gap-1.5">
                                     @csrf
-                                    <select name="status" onchange="this.form.submit()" class="text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 px-2.5 py-1 outline-none cursor-pointer
-                                        @if($order->status === 'completed') bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-400 border-green-100 dark:border-green-900/40
-                                        @elseif($order->status === 'cancelled') bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 border-red-100 dark:border-red-900/40
-                                        @elseif($order->status === 'shipped') bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border-blue-100 dark:border-blue-900/40
-                                        @else bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-100 dark:border-amber-900/40
-                                        @endif">
-                                        <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Pending</option>
-                                        <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>Processing</option>
-                                        <option value="shipped" {{ $order->status === 'shipped' ? 'selected' : '' }}>Shipped</option>
-                                        <option value="completed" {{ $order->status === 'completed' ? 'selected' : '' }}>Completed</option>
-                                        <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                                    </select>
+                                    <div class="flex gap-1.5">
+                                        <select name="status" class="flex-1 text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 px-2.5 py-1 outline-none cursor-pointer
+                                            @if($order->status === 'completed') bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-400 border-green-100 dark:border-green-900/40
+                                            @elseif($order->status === 'cancelled') bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 border-red-100 dark:border-red-900/40
+                                            @elseif($order->status === 'shipped') bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border-blue-100 dark:border-blue-900/40
+                                            @else bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-100 dark:border-amber-900/40
+                                            @endif">
+                                            <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Pending</option>
+                                            <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>Processing</option>
+                                            <option value="shipped" {{ $order->status === 'shipped' ? 'selected' : '' }}>Shipped</option>
+                                            <option value="completed" {{ $order->status === 'completed' ? 'selected' : '' }}>Completed</option>
+                                            <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                        </select>
+                                        <button type="submit" class="bg-slate-800 hover:bg-slate-700 text-white dark:bg-slate-700 dark:hover:bg-slate-600 px-2 py-1 rounded-lg text-xs font-bold shadow-sm transition-colors">Save</button>
+                                    </div>
+                                    <input type="text" name="tracking_note" placeholder="Add tracking note/update..." class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg px-2.5 py-1.5 text-xs focus:ring-1 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all placeholder-slate-400">
                                 </form>
                             </td>
                             <td class="p-5">

@@ -11,11 +11,16 @@ class CustomerMessage extends Model
         'first_name',
         'last_name',
         'email',
+        'phone_number',
         'inquiry_type',
         'message',
-        'reply',
-        'replied_at',
+        'order_number',
+        'address',
+        'image_path',
+        'reason',
         'is_read',
+        'reply',
+        'replied_at'
     ];
 
     protected $casts = [

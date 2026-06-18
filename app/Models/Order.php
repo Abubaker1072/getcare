@@ -32,4 +32,20 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    public function statusUpdates()
+    {
+        return $this->hasMany(OrderStatusUpdate::class)->latest();
+    }
+
+    protected static function booted()
+    {
+        static::saved(function ($order) {
+            \App\Models\RevenueAnalytics::syncDate($order->created_at->format('Y-m-d'));
+        });
+
+        static::deleted(function ($order) {
+            \App\Models\RevenueAnalytics::syncDate($order->created_at->format('Y-m-d'));
+        });
+    }
 }

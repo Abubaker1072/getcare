@@ -85,7 +85,7 @@ Route::get('/dashboard', function () {
         return redirect()->route('admin.dashboard');
     }
     $orders = \App\Models\Order::where('user_id', auth()->id())
-        ->with('items.product')
+        ->with(['items.product', 'statusUpdates'])
         ->latest()
         ->get();
     $bankDetail = \App\Models\UserBankDetail::where('user_id', auth()->id())->first();
@@ -235,6 +235,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         ));
     })->name('dashboard');
 
+    // Analytics
+    Route::get('/analytics', [\App\Http\Controllers\Admin\RevenueAnalyticsController::class, 'index'])->name('analytics.index');
+    Route::post('/analytics/sync', [\App\Http\Controllers\Admin\RevenueAnalyticsController::class, 'sync'])->name('analytics.sync');
+
     // Products
     Route::resource('products', AdminProductController::class)->except(['show']);
     
@@ -249,6 +253,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Product Reviews
     Route::post('/products/{product}/reviews/{review}/approve', [AdminProductController::class, 'approveReview'])->name('products.reviews.approve');
     Route::delete('/products/{product}/reviews/{review}', [AdminProductController::class, 'destroyReview'])->name('products.reviews.destroy');
+
+    // Customer Box / Messages
+    Route::get('/messages', [\App\Http\Controllers\Admin\MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/{message}', [\App\Http\Controllers\Admin\MessageController::class, 'show'])->name('messages.show');
+    Route::post('/messages/{message}/reply', [\App\Http\Controllers\Admin\MessageController::class, 'reply'])->name('messages.reply');
 
     // Bestselling toggle
     Route::get('/product-management', [HomepageBestsellingController::class, 'index'])
@@ -328,11 +337,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/settings/currencies/{currency}', [App\Http\Controllers\Admin\SettingsController::class, 'updateCurrency'])->name('settings.currencies.update');
     Route::delete('/settings/currencies/{currency}', [App\Http\Controllers\Admin\SettingsController::class, 'destroyCurrency'])->name('settings.currencies.destroy');
 
-    // CRM Management
-    Route::get('/messages', [App\Http\Controllers\Admin\CRMController::class, 'messagesIndex'])->name('messages');
-    Route::post('/messages/{message}/read', [App\Http\Controllers\Admin\CRMController::class, 'toggleMessageRead'])->name('messages.read');
-    Route::post('/messages/{message}/reply', [App\Http\Controllers\Admin\CRMController::class, 'replyMessage'])->name('messages.reply');
-    Route::delete('/messages/{message}', [App\Http\Controllers\Admin\CRMController::class, 'destroyMessage'])->name('messages.destroy');
+    // CRM Management (Messages handled by Admin\MessageController)
 
     Route::get('/reviews', [App\Http\Controllers\Admin\CRMController::class, 'reviewsIndex'])->name('reviews');
     Route::post('/reviews/{review}/approve', [App\Http\Controllers\Admin\CRMController::class, 'toggleReviewApproval'])->name('reviews.approve');

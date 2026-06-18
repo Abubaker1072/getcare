@@ -234,7 +234,7 @@
                     <a href="{{ route('product.detail', 11) }}" class="block relative h-72 bg-gradient-to-br from-gray-200 to-gray-300 overflow-hidden group">
                         <img src="{{ \App\Helpers\ImageHelper::getProductImage($product['image']) }}" alt="{{ $product['name'] }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
                         <div class="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold">SALE</div>
-                        <button class="absolute bottom-4 left-4 right-4 bg-white text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-100 transition opacity-0 group-hover:opacity-100" onclick="event.preventDefault(); window.openCart(event)">
+                        <button class="absolute bottom-4 left-4 right-4 bg-white text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-100 transition opacity-0 group-hover:opacity-100" onclick="event.preventDefault(); window.addToCart(1, 1)">
                             ADD TO CART
                         </button>
                     </a>

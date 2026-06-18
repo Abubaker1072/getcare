@@ -18,7 +18,7 @@ class AdminMiddleware
         }
 
         if (!auth()->user()->is_admin) {
-            abort(403, 'Forbidden');
+            return redirect()->route('login');
         }
 
         return $next($request);
