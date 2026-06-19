@@ -167,7 +167,7 @@
                 </form>
 
                 {{-- Products Grid --}}
-                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 mb-12">
+                <div class="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6 md:gap-8 mb-12">
                     @forelse($products as $product)
                     <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-100 transition-all duration-300 flex flex-col group">
                         {{-- Product Image Area --}}
@@ -212,7 +212,7 @@
                                     <span class="text-[10px] sm:text-xs text-gray-500">({{ $product->reviews_count ?? 0 }})</span>
                                 </div>
                                 <div class="text-[10px] sm:text-xs font-medium text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                                    {{ $product->purchased_count ?? 0 }}+ bought
+                                    {{ $product->purchased_count ?? 0 }}+ sold
                                 </div>
                             </div>
                             @if($product->category)

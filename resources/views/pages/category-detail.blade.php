@@ -93,7 +93,7 @@
                                     <span class="text-[10px] sm:text-xs text-gray-500">({{ $product->reviews_count ?? 0 }})</span>
                                 </div>
                                 <div class="text-[10px] sm:text-xs font-medium text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                                    {{ $product->purchased_count ?? 0 }}+ bought
+                                    {{ $product->purchased_count ?? 0 }}+ sold
                                 </div>
                             </div>
 

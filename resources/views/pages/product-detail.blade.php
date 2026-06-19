@@ -45,7 +45,7 @@
         <div class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
             
             {{-- Image Gallery (Left) --}}
-            <div class="flex flex-col gap-4 lg:gap-6">
+            <div class="flex flex-col gap-4 lg:gap-6 lg:sticky lg:top-24 pb-8">
                 {{-- Main Image --}}
                 <div class="w-11/12 sm:w-4/5 xl:w-3/4 mx-auto relative bg-gray-50 rounded-2xl overflow-hidden aspect-[4/5] sm:aspect-square flex items-center justify-center p-8">
                     @if($product->cover_image || $product->image)
@@ -65,6 +65,61 @@
                         @endif
                     @endforeach
                 </div>
+
+                {{-- Trust Badges --}}
+                <div class="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-gray-100">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-gray-900">Guaranteed Quality</p>
+                            <p class="text-xs text-gray-500">Premium materials</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-gray-900">Fast Shipping</p>
+                            <p class="text-xs text-gray-500">2-4 business days</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-gray-900">Secure Checkout</p>
+                            <p class="text-xs text-gray-500">SSL Encrypted</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-gray-900">Money Back</p>
+                            <p class="text-xs text-gray-500">30-day returns</p>
+                        </div>
+                    </div>
+                </div>
+                {{-- Aesthetic Space Filler (Managed in Admin) --}}
+                @if($product->reference_image)
+                <div class="mt-8 rounded-2xl overflow-hidden relative group hidden lg:block border border-gray-100 shadow-sm">
+                    <img src="{{ asset('storage/' . $product->reference_image) }}" alt="Aesthetic" class="w-full h-[360px] object-cover transform group-hover:scale-105 transition duration-700 ease-in-out">
+                    <div class="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition duration-500"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                        @if($product->reference_title)
+                            <span class="text-white font-serif text-3xl mb-3 drop-shadow-md">{{ $product->reference_title }}</span>
+                        @endif
+                        @if($product->reference_text)
+                            <p class="text-white/95 text-sm max-w-xs drop-shadow-sm font-medium leading-relaxed">{{ $product->reference_text }}</p>
+                        @endif
+                    </div>
+                </div>
+                @endif
             </div>
 
             {{-- Product Info (Right) --}}
@@ -116,24 +171,24 @@
 
                 {{-- Add to Cart & Buy Now Actions (Preserved functionality, updated design) --}}
                 <div class="flex flex-col gap-3 mb-6 mt-6">
-                    <div class="flex flex-col sm:flex-row items-center gap-4">
-                        {{-- Quantity --}}
-                        <div class="flex items-center border border-gray-300 rounded-full bg-white h-12 px-2 w-full sm:w-32 justify-between">
-                            <button type="button" onclick="let input = document.getElementById('product-qty'); if(parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-black transition">−</button>
-                            <input type="number" id="product-qty" value="1" min="1" max="{{ $product->stock }}" class="w-10 text-center border-none focus:ring-0 text-gray-900 font-medium bg-transparent p-0 m-0 appearance-none">
-                            <button type="button" onclick="let input = document.getElementById('product-qty'); if(parseInt(input.value) < {{ $product->stock }}) input.value = parseInt(input.value) + 1;" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-black transition">+</button>
-                        </div>
-                        
-                        {{-- Add to Cart --}}
-                        <button class="flex-1 w-full bg-[#1a1a1a] text-white h-12 rounded-full font-semibold text-sm tracking-widest hover:bg-black transition flex items-center justify-center" onclick="window.addToCart({{ $product->id }}, parseInt(document.getElementById('product-qty').value))" {{ $product->stock <= 0 ? 'disabled' : '' }}>
-                            ADD TO CART
-                        </button>
+                    {{-- Quantity --}}
+                    <div class="flex items-center border border-gray-300 rounded-full bg-white h-12 px-2 w-full justify-between">
+                        <button type="button" onclick="let input = document.getElementById('product-qty'); if(parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-black transition">−</button>
+                        <input type="number" id="product-qty" value="1" min="1" max="{{ $product->stock }}" class="w-10 text-center border-none focus:ring-0 text-gray-900 font-medium bg-transparent p-0 m-0 appearance-none">
+                        <button type="button" onclick="let input = document.getElementById('product-qty'); if(parseInt(input.value) < {{ $product->stock }}) input.value = parseInt(input.value) + 1;" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-black transition">+</button>
                     </div>
 
-                    {{-- Buy Now (Kept as requested) --}}
-                    <button onclick="window.buyNow({{ $product->id }})" class="w-full border border-[#1a1a1a] text-[#1a1a1a] h-12 rounded-full font-semibold text-sm tracking-widest hover:bg-gray-50 transition flex items-center justify-center" {{ $product->stock <= 0 ? 'disabled' : '' }}>
-                        BUY IT NOW
-                    </button>
+                    <div class="flex flex-row items-center gap-2 sm:gap-4">
+                        {{-- Add to Cart --}}
+                        <button class="flex-1 w-full bg-[#1a1a1a] text-white h-12 rounded-full font-semibold text-[11px] sm:text-sm tracking-wider hover:bg-black transition flex items-center justify-center whitespace-nowrap" onclick="window.addToCart({{ $product->id }}, parseInt(document.getElementById('product-qty').value))" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                            ADD TO CART
+                        </button>
+
+                        {{-- Buy Now (Kept as requested) --}}
+                        <button onclick="window.buyNow({{ $product->id }})" class="flex-1 w-full border border-[#1a1a1a] text-[#1a1a1a] h-12 rounded-full font-semibold text-[11px] sm:text-sm tracking-wider hover:bg-gray-50 transition flex items-center justify-center whitespace-nowrap" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                            BUY IT NOW
+                        </button>
+                    </div>
                     
                     @if($product->stock <= 0)
                         <div class="text-red-500 font-bold mt-1 text-center">Out of Stock</div>
@@ -281,10 +336,10 @@
             <h2 class="text-3xl md:text-4xl font-light text-gray-800">Used by the professionals</h2>
             <p class="text-sm md:text-base text-gray-500 mt-3">See our product in action</p>
         </div>
-        @if($product->reviewVideos->count() < 3)
-            <div class="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto px-4 relative">
+        <div class="swiper reel-swiper w-full max-w-7xl mx-auto relative">
+            <div class="swiper-wrapper">
                 @foreach($product->reviewVideos as $video)
-                <div class="w-64 sm:w-72 md:w-80 flex flex-col items-center group/slide">
+                <div class="swiper-slide w-64 sm:w-72 md:w-80 flex flex-col items-center group/slide">
                     <div class="relative w-full h-[360px] sm:h-[450px] rounded-2xl overflow-hidden bg-gray-900 shadow-lg cursor-pointer">
                         <video src="{{ asset('storage/' . $video->video_path) }}" 
                                class="reel-video object-cover w-full h-full opacity-80" 
@@ -309,39 +364,9 @@
                 </div>
                 @endforeach
             </div>
-        @else
-            <div class="swiper reel-swiper w-full max-w-7xl mx-auto relative">
-                <div class="swiper-wrapper">
-                    @foreach($product->reviewVideos as $video)
-                    <div class="swiper-slide w-64 sm:w-72 md:w-80 flex flex-col items-center group/slide">
-                        <div class="relative w-full h-[360px] sm:h-[450px] rounded-2xl overflow-hidden bg-gray-900 shadow-lg cursor-pointer">
-                            <video src="{{ asset('storage/' . $video->video_path) }}" 
-                                   class="reel-video object-cover w-full h-full opacity-80" 
-                                   loop muted playsinline>
-                            </video>
-                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div class="play-btn bg-black/50 p-4 rounded-full text-white opacity-0 group-hover/slide:opacity-100 transition duration-300">
-                                    <svg class="w-8 h-8 play-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                                    <svg class="w-8 h-8 pause-icon hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                                </div>
-                            </div>
-                            <div class="absolute top-4 right-4 flex flex-col gap-2 text-white z-20">
-                                <button class="mute-btn bg-black/40 p-2 rounded-full backdrop-blur-sm hover:bg-black/60 transition pointer-events-auto">
-                                    <svg class="w-4 h-4 mute-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                                    <svg class="w-4 h-4 sound-icon hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd"></path></svg>
-                                </button>
-                            </div>
-                        </div>
-                        @if($video->caption)
-                        <p class="mt-4 text-sm font-medium text-gray-800">{{ $video->caption }}</p>
-                        @endif
-                    </div>
-                    @endforeach
-                </div>
-                <div class="swiper-button-prev !left-4 lg:!left-10"></div>
-                <div class="swiper-button-next !right-4 lg:!right-10"></div>
-            </div>
-        @endif
+            <div class="swiper-button-prev !left-4 lg:!left-10"></div>
+            <div class="swiper-button-next !right-4 lg:!right-10"></div>
+        </div>
     </section>
     @endif
 
@@ -416,8 +441,7 @@
     @if(isset($relatedProducts) && $relatedProducts->count() > 0)
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-gray-100 mt-8">
         <h2 class="text-3xl font-serif text-gray-900 mb-8 text-center">You May Also Like</h2>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 md:gap-8">
             @foreach($relatedProducts as $relProduct)
             <div class="product-card group cursor-pointer">
                 <div class="relative h-full rounded-2xl overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col">

@@ -17,7 +17,7 @@
 
             {{-- Category Cards Carousel --}}
             <div class="relative">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 overflow-x-auto pb-4">
+                <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 overflow-x-auto pb-4">
                     {{-- LED Light Therapy --}}
                     <div class="relative min-w-full md:min-w-auto rounded-2xl overflow-hidden group cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
                         <div class="relative h-60 sm:h-72 md:h-80 bg-gradient-to-br from-pink-200 to-red-300 flex items-center justify-center">
@@ -87,7 +87,7 @@
             </div>
 
             {{-- Testimonials Grid --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 mb-12">
+            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-12">
                 {{-- Fine Lines & Dullness --}}
                 <div class="group">
                     <div class="relative rounded-2xl overflow-hidden mb-3 md:mb-4 bg-gray-100 h-48 sm:h-56 md:h-64">
@@ -214,7 +214,7 @@
             </div>
 
             {{-- Products Grid --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8">
                 @php
                     $products = [
                         ['name' => 'Premium LED Mask', 'category' => 'Light Therapy', 'price' => 199.99, 'image' => 'product-1.jpg', 'rating' => 4.8],

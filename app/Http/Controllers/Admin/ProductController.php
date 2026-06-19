@@ -154,9 +154,12 @@ class ProductController extends Controller
             'faqs' => 'nullable|array',
             'faqs.*.question' => 'nullable|string',
             'faqs.*.answer' => 'nullable|string',
+            'reference_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'reference_title' => 'nullable|string|max:255',
+            'reference_text' => 'nullable|string',
         ]);
 
-        foreach (['image', 'image_1', 'image_2', 'image_3', 'image_4', 'banner_image'] as $imgField) {
+        foreach (['image', 'image_1', 'image_2', 'image_3', 'image_4', 'banner_image', 'reference_image'] as $imgField) {
             if ($request->hasFile($imgField)) {
                 $validatedData[$imgField] = $request->file($imgField)->store('products', 'public');
             }

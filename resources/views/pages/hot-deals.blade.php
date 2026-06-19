@@ -55,53 +55,60 @@
 
             {{-- Featured: Clinical Renewal Bundle --}}
             <div class="fade-up d-3 relative rounded-[2rem] bg-white border border-slate-100 shadow-[0_10px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] hover:-translate-y-2 transition-all duration-500 overflow-hidden mb-24 group">
-                <div class="flex flex-col lg:flex-row items-stretch">
-                    <div class="w-full lg:w-1/2 p-6 md:p-10 relative z-10 flex flex-col justify-center">
-                        <span class="text-amber-600 text-[10px] md:text-xs font-bold tracking-widest uppercase mb-3 block">Master Collection</span>
-                        <h2 class="text-3xl md:text-4xl font-light mb-4 text-slate-900">
-                            The Clinical <br><span class="italic font-serif text-slate-700">Renewal Bundle</span>
+                <div class="flex flex-row items-stretch p-4 sm:p-0">
+                    <div class="w-1/2 sm:p-6 md:p-10 relative z-10 flex flex-col justify-center">
+                        <span class="text-amber-600 text-[8px] sm:text-[10px] md:text-xs font-bold tracking-widest uppercase mb-1 sm:mb-3 block">Master Collection</span>
+                        <h2 class="text-xl sm:text-3xl md:text-4xl font-light mb-2 sm:mb-4 text-slate-900">
+                            {{ $featuredHotDeal->name }}
                         </h2>
-                        <p class="text-slate-500 leading-relaxed mb-3 max-w-md font-light text-sm">{{ $featuredHotDeal->name }}</p>
-                        <p class="text-slate-500 leading-relaxed mb-6 max-w-md font-light text-sm line-clamp-3">
-                            {{ $featuredHotDeal->description ?? 'A complete clinical protocol for unprecedented cellular rejuvenation.' }}
+                        <p class="text-slate-500 text-[10px] sm:text-sm leading-relaxed mb-4 sm:mb-6 max-w-md font-light line-clamp-2 sm:line-clamp-3 pr-2 sm:pr-0">
+                            {{ $featuredHotDeal->description ?? 'Premium selection of our top-rated products.' }}
                         </p>
-                        <div class="flex items-end gap-5 mb-6">
+                        <div class="flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-5 mb-0 sm:mb-6">
                             <div>
                                 @if($featuredCompare && $featuredCompare > $featuredSale)
-                                    <span class="text-slate-400 line-through text-xs block mb-1">Standard Price {!! \App\Helpers\CurrencyHelper::format($featuredCompare) !!}</span>
+                                    <span class="text-slate-400 line-through text-[10px] sm:text-xs block mb-0.5 sm:mb-1">Standard Price {!! \App\Helpers\CurrencyHelper::format($featuredCompare) !!}</span>
                                 @endif
-                                <span class="text-3xl md:text-4xl font-bold text-slate-900">{!! \App\Helpers\CurrencyHelper::format($featuredSale) !!}</span>
+                                <span class="text-lg sm:text-3xl md:text-4xl font-bold text-slate-900">{!! \App\Helpers\CurrencyHelper::format($featuredSale) !!}</span>
                             </div>
                             @if($featuredSavings > 0)
-                            <div class="bg-red-50 border border-red-100 px-4 py-2 rounded-lg">
-                                <span class="text-red-600 font-bold tracking-wider uppercase text-xs">You Save {!! \App\Helpers\CurrencyHelper::format($featuredSavings) !!}</span>
+                            <div class="bg-red-50 border border-red-100 px-2 sm:px-4 py-1 sm:py-2 rounded-md sm:rounded-lg w-fit mt-1 sm:mt-0">
+                                <span class="text-red-600 font-bold tracking-wider uppercase text-[8px] sm:text-xs">You Save {!! \App\Helpers\CurrencyHelper::format($featuredSavings) !!}</span>
                             </div>
                             @endif
                         </div>
-                        <div class="mt-2">
-                            <a href="{{ route('product.detail', $featuredHotDeal->slug) }}"
-                               class="btn-shine inline-block bg-slate-900 text-white px-8 py-3 rounded-xl text-xs md:text-sm font-bold tracking-[0.2em] uppercase hover:scale-105 hover:shadow-xl transition-all duration-300">
+                        <div class="hidden sm:block mt-2">
+                            <a href="{{ route('product.detail', $featuredHotDeal->slug ?? $featuredHotDeal->id) }}"
+                               class="inline-block bg-slate-900 text-white px-4 py-2 sm:px-8 sm:py-3 rounded-lg sm:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold tracking-[0.1em] sm:tracking-[0.2em] uppercase hover:scale-105 hover:shadow-xl transition-all duration-300">
                                 Claim Offer
                             </a>
                         </div>
                     </div>
-                    <div class="w-full lg:w-1/2 relative h-[250px] lg:h-[300px] flex items-center justify-center p-6 bg-slate-50/50 overflow-hidden rounded-b-[2rem] lg:rounded-r-[2rem] lg:rounded-bl-none">
-                        <div class="absolute w-[250px] h-[250px] bg-gradient-to-tr from-amber-300/40 to-rose-200/40 rounded-full blur-3xl group-hover:scale-125 group-hover:rotate-12 transition-all duration-700"></div>
-                        @if($featuredHotDeal->cover_image || $featuredHotDeal->image)
-                            <img src="{{ asset('storage/' . ($featuredHotDeal->cover_image ?? $featuredHotDeal->image)) }}"
-                                 alt="{{ $featuredHotDeal->name }}"
-                                 class="relative z-10 w-full max-w-[250px] object-contain float-smooth drop-shadow-2xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
-                        @else
-                            <img src="{{ asset('images/categories/hero-deal.jpg') }}"
-                                 alt="{{ $featuredHotDeal->name }}"
-                                 class="relative z-10 w-full max-w-[250px] object-contain float-smooth drop-shadow-2xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
-                        @endif
+                    <div class="w-1/2 relative flex flex-col justify-between sm:justify-center sm:p-6 bg-slate-50/50 sm:bg-transparent overflow-hidden rounded-r-[2rem] sm:rounded-none">
+                        <div class="absolute w-[150px] sm:w-[250px] h-[150px] sm:h-[250px] bg-gradient-to-tr from-amber-300/40 to-rose-200/40 rounded-full blur-2xl group-hover:scale-125 group-hover:rotate-12 transition-all duration-700"></div>
+                        <div class="h-[140px] sm:h-[250px] lg:h-[300px] flex items-center justify-center p-2 sm:p-0">
+                            @if($featuredHotDeal->cover_image || $featuredHotDeal->image)
+                                <img src="{{ asset('storage/' . ($featuredHotDeal->cover_image ?? $featuredHotDeal->image)) }}"
+                                     alt="{{ $featuredHotDeal->name }}"
+                                     class="relative z-10 w-full max-w-[250px] h-full object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
+                            @else
+                                <img src="{{ asset('images/categories/hero-deal.jpg') }}"
+                                     alt="{{ $featuredHotDeal->name }}"
+                                     class="relative z-10 w-full max-w-[250px] h-full object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
+                            @endif
+                        </div>
+                        <div class="sm:hidden w-full flex justify-end pr-2 pb-2">
+                            <a href="{{ route('product.detail', $featuredHotDeal->slug ?? $featuredHotDeal->id) }}"
+                               class="inline-block bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold tracking-[0.1em] uppercase shadow-lg">
+                                Claim Offer
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
 
             @if($gridHotDeals->isNotEmpty())
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
                 @foreach($gridHotDeals as $index => $product)
                 @php
                     $salePrice = $product->price;
@@ -109,32 +116,31 @@
                     $savings = ($comparePrice && $comparePrice > $salePrice) ? ($product->discount_price && (float)$product->discount_price > 0 ? (float)$product->discount_price : $comparePrice - $salePrice) : 0;
                 @endphp
                 <div class="fade-up relative bg-white border border-slate-100 rounded-2xl overflow-hidden group hover:border-amber-200 hover:shadow-[0_10px_40px_rgba(0,0,0,0.06)] transition-all duration-500 flex flex-col" style="animation-delay: {{ ($index * 150) + 600 }}ms;">
-                    <a href="{{ route('product.detail', $product->slug) }}" class="block relative h-64 overflow-hidden bg-[#F8F9FA]">
+                    <a href="{{ route('product.detail', $product->slug) }}" class="block relative h-32 sm:h-40 md:h-48 overflow-hidden bg-[#F8F9FA]">
                         @if($product->cover_image || $product->image)
                             <img src="{{ asset('storage/' . ($product->cover_image ?? $product->image)) }}" alt="{{ $product->name }}" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-all duration-700 ease-in-out">
                         @else
                             <div class="w-full h-full flex items-center justify-center text-slate-400">No Image</div>
                         @endif
                         @if($savings > 0)
-                        <div class="absolute top-4 left-4 bg-[#831b1b] text-white px-3 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-md">
+                        <div class="absolute top-2 sm:top-4 left-2 sm:left-4 bg-[#831b1b] text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-[8px] sm:text-[10px] font-bold tracking-widest uppercase shadow-md">
                             Save {!! \App\Helpers\CurrencyHelper::format($savings) !!}
                         </div>
                         @endif
-                        <div class="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-20">
-                            <button class="w-full bg-white/95 backdrop-blur-sm border border-slate-200 text-slate-900 font-bold tracking-widest uppercase text-xs py-3.5 rounded-xl hover:bg-slate-900 hover:text-white transition-colors duration-300 shadow-lg" onclick="event.preventDefault(); window.addToCart({{ $product->id }}, 1)">
+                        <div class="absolute inset-x-0 bottom-0 p-2 sm:p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-20">
+                            <button class="w-full bg-white/95 backdrop-blur-sm border border-slate-200 text-slate-900 font-bold tracking-widest uppercase text-[10px] sm:text-xs py-2 sm:py-3.5 rounded-lg sm:rounded-xl hover:bg-slate-900 hover:text-white transition-colors duration-300 shadow-lg" onclick="event.preventDefault(); window.addToCart({{ $product->id }}, 1)">
                                 Quick Add
                             </button>
                         </div>
                     </a>
-                    <div class="p-6 relative z-20 flex-grow flex flex-col bg-white">
+                    <div class="p-3 sm:p-6 relative z-20 flex-grow flex flex-col bg-white">
                         <a href="{{ route('product.detail', $product->slug) }}">
-                            <h4 class="font-bold text-slate-900 mb-2 group-hover:text-amber-600 transition-colors line-clamp-1">{{ $product->name }}</h4>
+                            <h4 class="font-bold text-slate-900 text-[11px] sm:text-base mb-1 sm:mb-2 group-hover:text-amber-600 transition-colors line-clamp-2 leading-tight sm:line-clamp-1">{{ $product->name }}</h4>
                         </a>
-                        <p class="text-slate-500 text-xs font-light mb-6 flex-grow line-clamp-2">{{ $product->description }}</p>
                         <div class="flex items-center justify-between mt-auto">
-                            <span class="text-2xl font-bold text-slate-900">{!! \App\Helpers\CurrencyHelper::format($salePrice) !!}</span>
+                            <span class="text-sm sm:text-2xl font-bold text-slate-900">{!! \App\Helpers\CurrencyHelper::format($salePrice) !!}</span>
                             @if($comparePrice && $comparePrice > $salePrice)
-                                <span class="text-sm text-slate-400 line-through">{!! \App\Helpers\CurrencyHelper::format($comparePrice) !!}</span>
+                                <span class="text-[10px] sm:text-sm text-slate-400 line-through">{!! \App\Helpers\CurrencyHelper::format($comparePrice) !!}</span>
                             @endif
                         </div>
                     </div>

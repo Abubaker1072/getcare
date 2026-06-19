@@ -227,6 +227,26 @@
                         <label class="block text-sm font-bold text-slate-700 mb-2">Banner Image ("Created In Harmony with Nature")</label>
                         <input type="file" name="banner_image" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none">
                     </div>
+
+                    <div class="md:col-span-2 border-t border-slate-200 mt-2 pt-6">
+                        <h4 class="text-md font-bold text-slate-800 mb-4">Aesthetic Reference Filler (Left Column)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">Reference Image</label>
+                                <input type="file" name="reference_image" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none">
+                            </div>
+                            <div class="flex flex-col gap-4">
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">Reference Title</label>
+                                    <input type="text" name="reference_title" value="{{ old('reference_title') }}" placeholder="e.g. Pure & Natural" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">Reference Text</label>
+                                    <textarea name="reference_text" rows="2" placeholder="e.g. Elevate your daily routine with our premium collection." class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none">{{ old('reference_text') }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="mt-6">

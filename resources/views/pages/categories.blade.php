@@ -66,7 +66,7 @@
                 <p class="text-slate-500 text-lg font-light">No categories available yet. Check back soon!</p>
             </div>
         @else
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 md:gap-8">
             @foreach($categories as $index => $category)
             
             {{-- Category Card --}}

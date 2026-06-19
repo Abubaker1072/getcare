@@ -33,6 +33,9 @@ class Product extends Model
         'rating',
         'reviews_count',
         'purchased_count',
+        'reference_image',
+        'reference_title',
+        'reference_text',
     ];
 
     protected $casts = [

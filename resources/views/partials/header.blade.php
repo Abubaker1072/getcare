@@ -193,15 +193,15 @@
             </div>
 
             {{-- Right Side: Currency + Account + Search + Cart --}}
-            <div class="flex-1 flex items-center justify-end gap-5 md:gap-7">
+            <div class="flex-1 flex items-center justify-end gap-3 sm:gap-4 md:gap-7 relative">
                 
                 {{-- Currency Selector --}}
                 @php
                     $activeCurrencies = \App\Models\Currency::where('is_active', true)->get();
                     $currentCurrency = \App\Helpers\CurrencyHelper::getCurrent();
                 @endphp
-                <div class="hidden md:flex items-center gap-2 dynamic-color text-white">
-                    <span class="text-lg leading-none" id="currency-active-flag">{{ \App\Helpers\CurrencyHelper::getFlag($currentCurrency->code) }}</span>
+                <div id="currency-selector-container" class="absolute right-0 top-full mt-4 md:static md:mt-0 flex items-center gap-1 md:gap-2 dynamic-color text-white transition-opacity duration-300">
+                    <span class="text-lg leading-none hidden md:inline-block" id="currency-active-flag">{{ \App\Helpers\CurrencyHelper::getFlag($currentCurrency->code) }}</span>
                     <div class="relative flex items-center">
                         <select onchange="window.location.href='/currency/switch/' + this.value" class="bg-transparent border-none outline-none text-sm font-semibold cursor-pointer focus:ring-0 py-1 pl-1 pr-5 appearance-none z-10 dynamic-color text-white">
                             @foreach($activeCurrencies as $curr)
@@ -217,7 +217,7 @@
                 </div>
 
                 {{-- Search Icon --}}
-                <a href="#" id="search-icon" class="dynamic-color text-white hover:opacity-70 transition-opacity transform hover:scale-105 duration-200">
+                <a href="#" id="search-icon" class="dynamic-color text-white hover:opacity-70 transition-opacity transform hover:scale-105 duration-200 ml-2 sm:ml-0">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path>
                     </svg>
@@ -308,11 +308,20 @@
         
         // --- 0. Scroll Animation Logic ---
         const mainHeader = document.getElementById('main-header');
+        const currencyContainer = document.getElementById('currency-selector-container');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
                 mainHeader.classList.add('is-scrolled');
+                if (currencyContainer && window.innerWidth < 768) {
+                    currencyContainer.style.opacity = '0';
+                    currencyContainer.style.pointerEvents = 'none';
+                }
             } else {
                 mainHeader.classList.remove('is-scrolled');
+                if (currencyContainer) {
+                    currencyContainer.style.opacity = '1';
+                    currencyContainer.style.pointerEvents = 'auto';
+                }
             }
         });
 
