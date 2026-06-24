@@ -19,10 +19,10 @@
 <div class="w-full pb-24 font-sans text-gray-800">
     
     {{-- Main Product Section --}}
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         
         {{-- Breadcrumb (Preserved) --}}
-        <nav class="flex text-sm text-gray-500 mb-8" aria-label="Breadcrumb">
+        <nav class="flex text-sm text-gray-500 mb-4 sm:mb-6" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                 <li class="inline-flex items-center">
                     <a href="{{ route('home') }}" class="hover:text-amber-600 transition">Home</a>
@@ -45,7 +45,7 @@
         <div class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
             
             {{-- Image Gallery (Left) --}}
-            <div class="flex flex-col gap-4 lg:gap-6 lg:sticky lg:top-24 pb-8">
+            <div class="flex flex-col gap-4 lg:gap-6 lg:sticky lg:top-24 pb-4">
                 {{-- Main Image --}}
                 <div class="w-11/12 sm:w-4/5 xl:w-3/4 mx-auto relative bg-gray-50 rounded-2xl overflow-hidden aspect-[4/5] sm:aspect-square flex items-center justify-center p-8">
                     @if($product->cover_image || $product->image)
@@ -67,7 +67,7 @@
                 </div>
 
                 {{-- Trust Badges --}}
-                <div class="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-gray-100">
+                <div class="grid grid-cols-2 gap-3 sm:gap-4 mt-4 pt-4 border-t border-gray-100">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 shrink-0">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -123,7 +123,7 @@
             </div>
 
             {{-- Product Info (Right) --}}
-            <div class="mt-10 lg:mt-0">
+            <div class="mt-6 lg:mt-0">
                 
                 {{-- Tags (Dynamic) --}}
                 @if($product->tags)
@@ -139,7 +139,7 @@
                 <h1 class="text-3xl sm:text-4xl font-serif text-gray-900 tracking-tight mb-3">{{ $product->name }}</h1>
                 
                 {{-- Ratings & Stock (Preserved) --}}
-                <div class="flex flex-wrap items-center gap-3 mb-6 text-sm">
+                <div class="flex flex-wrap items-center gap-3 mb-4 text-sm">
                     <div class="flex items-center">
                         <div class="flex text-amber-400">
                             @for($i=0; $i<5; $i++)
@@ -153,24 +153,26 @@
                 </div>
 
                 {{-- Price Logic (Preserved) --}}
-                <div class="mb-6">
+                <div class="mb-4">
                     <div class="flex flex-wrap items-center gap-3">
-                        <span class="text-2xl font-serif text-gray-900">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
-                        @if($product->compare_price)
-                            <span class="text-lg text-gray-400 line-through">{{ \App\Helpers\CurrencyHelper::format($product->compare_price) }}</span>
+                        <span class="text-2xl font-sans font-bold text-gray-900">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
+                        @if($product->is_on_sale && $product->compare_price)
+                            <span class="text-lg font-sans text-gray-400 line-through">{{ \App\Helpers\CurrencyHelper::format($product->compare_price) }}</span>
                         @endif
                         
-                        @if($product->discount_price && (float)$product->discount_price > 0)
-                            <span class="text-xs font-bold text-[#c45a49] bg-[#f8f0ec] px-2 py-1 rounded">Save {{ \App\Helpers\CurrencyHelper::format($product->discount_price) }}</span>
-                        @elseif($product->compare_price && $product->compare_price > $product->price)
-                            <span class="text-xs font-bold text-[#c45a49] bg-[#f8f0ec] px-2 py-1 rounded">{{ round((1 - $product->price / $product->compare_price) * 100) }}% OFF</span>
+                        @if($product->is_on_sale)
+                            @if($product->discount_price && (float)$product->discount_price > 0)
+                                <span class="text-xs font-bold text-[#c45a49] bg-[#f8f0ec] px-2 py-1 rounded">Save {{ \App\Helpers\CurrencyHelper::format($product->discount_price) }}</span>
+                            @elseif($product->compare_price && $product->compare_price > $product->price)
+                                <span class="text-xs font-bold text-[#c45a49] bg-[#f8f0ec] px-2 py-1 rounded">{{ round((1 - $product->price / $product->compare_price) * 100) }}% OFF</span>
+                            @endif
                         @endif
                     </div>
                     <p class="text-xs text-gray-500 mt-1">Tax included.</p>
                 </div>
 
                 {{-- Add to Cart & Buy Now Actions (Preserved functionality, updated design) --}}
-                <div class="flex flex-col gap-3 mb-6 mt-6">
+                <div class="flex flex-col gap-3 mb-4 mt-4">
                     {{-- Quantity --}}
                     <div class="flex items-center border border-gray-300 rounded-full bg-white h-12 px-2 w-full justify-between">
                         <button type="button" onclick="let input = document.getElementById('product-qty'); if(parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-black transition">−</button>
@@ -180,42 +182,66 @@
 
                     <div class="flex flex-row items-center gap-2 sm:gap-4">
                         {{-- Add to Cart --}}
-                        <button class="flex-1 w-full bg-[#1a1a1a] text-white h-12 rounded-full font-semibold text-[11px] sm:text-sm tracking-wider hover:bg-black transition flex items-center justify-center whitespace-nowrap" onclick="window.addToCart({{ $product->id }}, parseInt(document.getElementById('product-qty').value))" {{ $product->stock <= 0 ? 'disabled' : '' }}>
-                            ADD TO CART
+                        <button class="flex-1 w-full bg-[#1a1a1a] text-white h-12 rounded-full font-semibold text-[11px] sm:text-sm tracking-wider hover:bg-black transition flex items-center justify-center whitespace-nowrap {{ $product->stock <= 0 ? 'opacity-60 cursor-not-allowed' : '' }}" onclick="window.addToCart({{ $product->id }}, parseInt(document.getElementById('product-qty').value))" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                            {{ $product->stock <= 0 ? 'SOLD OUT' : 'ADD TO CART' }}
                         </button>
 
                         {{-- Buy Now (Kept as requested) --}}
-                        <button onclick="window.buyNow({{ $product->id }})" class="flex-1 w-full border border-[#1a1a1a] text-[#1a1a1a] h-12 rounded-full font-semibold text-[11px] sm:text-sm tracking-wider hover:bg-gray-50 transition flex items-center justify-center whitespace-nowrap" {{ $product->stock <= 0 ? 'disabled' : '' }}>
-                            BUY IT NOW
+                        <button onclick="window.buyNow({{ $product->id }})" class="flex-1 w-full border border-[#1a1a1a] text-[#1a1a1a] h-12 rounded-full font-semibold text-[11px] sm:text-sm tracking-wider hover:bg-gray-50 transition flex items-center justify-center whitespace-nowrap {{ $product->stock <= 0 ? 'opacity-60 cursor-not-allowed' : '' }}" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                            {{ $product->stock <= 0 ? 'SOLD OUT' : 'BUY IT NOW' }}
                         </button>
                     </div>
                     
                     @if($product->stock <= 0)
-                        <div class="text-red-500 font-bold mt-1 text-center">Out of Stock</div>
+                        <div class="text-red-600 font-sans font-bold mt-1 text-center tracking-wide uppercase">SOLD OUT</div>
                     @endif
                 </div>
 
-                {{-- Promo Banner (Dynamic) --}}
-                @if($product->promo_text)
-                <div class="bg-[#fcf5f3] text-[#b35e53] text-sm text-center py-3 rounded-md mb-8 font-medium">
-                    {{ $product->promo_text }}
-                </div>
-                @endif
+                {{-- Promo & Highlights Box (Dynamic) --}}
+                @if($product->promo_text || ($product->bullet_points && is_array($product->bullet_points) && count(array_filter($product->bullet_points)) > 0))
+                <div class="bg-white border border-gray-200/60 shadow-sm rounded-2xl p-5 sm:p-6 mb-6">
+                    @if($product->promo_text)
+                        <div class="text-[#b35e53] text-sm text-center font-semibold mb-4 leading-relaxed">
+                            {{ $product->promo_text }}
+                        </div>
+                    @endif
 
-                {{-- Bullet Points (Dynamic) --}}
-                @if($product->bullet_points && is_array($product->bullet_points) && count(array_filter($product->bullet_points)) > 0)
-                <ul class="text-gray-700 space-y-2 mb-8 text-sm">
-                    @foreach($product->bullet_points as $point)
-                        @if(trim($point) !== '')
-                            <li class="flex items-start"><span class="mr-2">•</span> {{ $point }}</li>
-                        @endif
-                    @endforeach
-                </ul>
+                    @if($product->bullet_points && is_array($product->bullet_points) && count(array_filter($product->bullet_points)) > 0)
+                        <ul class="text-gray-700 space-y-3 text-sm">
+                            @foreach($product->bullet_points as $point)
+                                @php
+                                    $trimmedPoint = trim($point);
+                                @endphp
+                                @if($trimmedPoint !== '')
+                                    @php
+                                        // Clean up starting bullet points or list markers
+                                        $displayPoint = $trimmedPoint;
+                                        if (str_starts_with($displayPoint, '* ')) {
+                                            $displayPoint = substr($displayPoint, 2);
+                                        } elseif (str_starts_with($displayPoint, '- ')) {
+                                            $displayPoint = substr($displayPoint, 2);
+                                        }
+                                        
+                                        // Format markdown bold: **text** to strong tags
+                                        if (str_contains($displayPoint, '**')) {
+                                            $displayPoint = preg_replace('/\*\*(.*?)\*\*/', '<strong class="font-bold text-gray-900">$1</strong>', $displayPoint);
+                                        }
+                                        $displayPoint = str_replace('**', '', $displayPoint);
+                                    @endphp
+                                    <li class="text-center leading-relaxed">
+                                        <span class="text-gray-400 mr-1.5">•</span>
+                                        {!! $displayPoint !!}
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    @endif
+                </div>
                 @endif
 
                 {{-- Feature Icons (Dynamic) --}}
                 @if($product->features && is_array($product->features) && count($product->features) > 0)
-                <div class="flex flex-wrap gap-6 py-6 border-y border-gray-200 mb-8">
+                <div class="flex flex-wrap gap-4 py-4 border-y border-gray-200 mb-4">
                     @foreach($product->features as $feature)
                         @if($feature === 'Cruelty-free')
                         <div class="flex flex-col items-center text-center">
@@ -293,7 +319,7 @@
     </div>
 
     {{-- Banner Section: Created in Harmony --}}
-    <div class="w-full h-96 relative mt-16 flex items-center justify-center text-center">
+    <div class="w-full h-72 sm:h-96 relative mt-4 sm:mt-6 flex items-center justify-center text-center">
         @if($product->banner_image)
             <img src="{{ asset('storage/' . $product->banner_image) }}" alt="Natural Ingredients" class="absolute inset-0 w-full h-full object-cover">
         @else
@@ -308,7 +334,7 @@
 
     {{-- Daily Routine / Testimonials Section --}}
     @if($product->testimonials && $product->testimonials->count() > 0)
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 text-center">
         <h2 class="text-3xl sm:text-4xl font-serif text-gray-900 mb-8">Your Daily Routine</h2>
         
         <div class="flex overflow-x-auto gap-6 hide-scrollbar snap-x pb-8 justify-center">
@@ -331,15 +357,15 @@
 
     {{-- PROFESSIONAL REELS SECTION --}}
     @if($product->reviewVideos && $product->reviewVideos->count() > 0)
-    <section class="py-16 bg-white overflow-hidden mt-12">
+    <section class="py-4 sm:py-6 bg-white overflow-hidden mt-3">
         <div class="text-center mb-10 px-4">
             <h2 class="text-3xl md:text-4xl font-light text-gray-800">Used by the professionals</h2>
             <p class="text-sm md:text-base text-gray-500 mt-3">See our product in action</p>
         </div>
-        <div class="swiper reel-swiper w-full max-w-7xl mx-auto relative">
+        <div class="swiper reel-swiper w-64 sm:w-72 md:w-80 mx-auto relative !overflow-visible">
             <div class="swiper-wrapper">
                 @foreach($product->reviewVideos as $video)
-                <div class="swiper-slide w-64 sm:w-72 md:w-80 flex flex-col items-center group/slide">
+                <div class="swiper-slide w-full flex flex-col items-center group/slide">
                     <div class="relative w-full h-[360px] sm:h-[450px] rounded-2xl overflow-hidden bg-gray-900 shadow-lg cursor-pointer">
                         <video src="{{ asset('storage/' . $video->video_path) }}" 
                                class="reel-video object-cover w-full h-full opacity-80" 
@@ -364,8 +390,8 @@
                 </div>
                 @endforeach
             </div>
-            <div class="swiper-button-prev !left-4 lg:!left-10"></div>
-            <div class="swiper-button-next !right-4 lg:!right-10"></div>
+            <div class="swiper-button-prev !-left-10 sm:!-left-16 lg:!-left-24 text-gray-800"></div>
+            <div class="swiper-button-next !-right-10 sm:!-right-16 lg:!-right-24 text-gray-800"></div>
         </div>
     </section>
     @endif
@@ -374,7 +400,7 @@
 
     {{-- TEXT REVIEWS SECTION --}}
     @if($product->reviews && $product->reviews->count() > 0)
-    <section class="py-16 bg-white overflow-hidden" id="reviews">
+    <section class="py-4 sm:py-6 bg-white overflow-hidden" id="reviews">
         <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl sm:text-4xl font-light text-gray-900 mb-4">Customer Reviews</h2>
@@ -408,7 +434,7 @@
 
     {{-- FAQ Section (Dynamic) --}}
     @if($product->faqs && is_array($product->faqs) && count($product->faqs) > 0)
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         <h2 class="text-3xl sm:text-4xl font-serif text-gray-900 text-center mb-12">Got questions? We've got answers</h2>
         
         <div class="lg:grid lg:grid-cols-2 gap-12 items-center">
@@ -439,7 +465,7 @@
 
     {{-- Related Products Section --}}
     @if(isset($relatedProducts) && $relatedProducts->count() > 0)
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-gray-100 mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 border-t border-gray-100 mt-2 sm:mt-3">
         <h2 class="text-3xl font-serif text-gray-900 mb-8 text-center">You May Also Like</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 md:gap-8">
             @foreach($relatedProducts as $relProduct)
@@ -461,7 +487,7 @@
 
                             <div class="mb-4">
                                 <span class="text-lg font-bold text-gray-900">{{ \App\Helpers\CurrencyHelper::format($relProduct->price) }}</span>
-                                @if($relProduct->compare_price && $relProduct->compare_price > $relProduct->price)
+                                @if($relProduct->is_on_sale && $relProduct->compare_price && $relProduct->compare_price > $relProduct->price)
                                     <span class="text-xs text-gray-400 line-through ml-2">{{ \App\Helpers\CurrencyHelper::format($relProduct->compare_price) }}</span>
                                 @endif
                             </div>
@@ -494,8 +520,8 @@
         </div>
         
         <div>
-            <button onclick="window.addToCart({{ $product->id }}, 1)" class="bg-[#1a1a1a] text-white px-6 sm:px-8 py-2.5 rounded-full font-semibold text-xs sm:text-sm tracking-widest hover:bg-black transition whitespace-nowrap" {{ $product->stock <= 0 ? 'disabled' : '' }}>
-                ADD TO CART
+            <button onclick="window.addToCart({{ $product->id }}, 1)" class="bg-[#1a1a1a] text-white px-6 sm:px-8 py-2.5 rounded-full font-semibold text-xs sm:text-sm tracking-widest hover:bg-black transition whitespace-nowrap {{ $product->stock <= 0 ? 'opacity-60 cursor-not-allowed' : '' }}" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                {{ $product->stock <= 0 ? 'SOLD OUT' : 'ADD TO CART' }}
             </button>
         </div>
     </div>
@@ -563,20 +589,13 @@
     document.addEventListener('DOMContentLoaded', function() {
         if(document.querySelector('.reel-swiper')) {
             new Swiper('.reel-swiper', {
-                slidesPerView: 'auto',
-                centeredSlides: true,
-                centerInsufficientSlides: true,
-                spaceBetween: 20,
+                effect: 'cards',
+                grabCursor: true,
                 loop: false,
                 navigation: {
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',
                 },
-                breakpoints: {
-                    320: { slidesPerView: 1.2, spaceBetween: 10 },
-                    640: { slidesPerView: 2, spaceBetween: 20 },
-                    1024: { slidesPerView: 3, spaceBetween: 30 }
-                }
             });
 
             // Video Controls

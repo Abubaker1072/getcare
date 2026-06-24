@@ -23,6 +23,7 @@ class Product extends Model
         'cover_image',
         'banner_image',
         'is_active',
+        'is_on_sale',
         'tags',
         'promo_text',
         'bullet_points',

@@ -44,7 +44,7 @@ class CurrencyHelper
 
         return (object)[
             'code' => 'PKR',
-            'symbol' => '₨',
+            'symbol' => 'Rs.',
             'exchange_rate' => 1.000000
         ];
     }
@@ -88,7 +88,7 @@ class CurrencyHelper
         $rate = (float) ($order->exchange_rate ?? 1.000000);
         
         $currency = Currency::where('code', $code)->first();
-        $symbol = $currency ? $currency->symbol : ($code === 'PKR' ? '₨' : '$');
+        $symbol = $currency ? $currency->symbol : ($code === 'PKR' ? 'Rs.' : '$');
         if ($code === 'USDT' || $code === 'USD') {
             $symbol = '$';
         }

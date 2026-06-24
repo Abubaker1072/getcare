@@ -643,116 +643,99 @@
                             <span class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center mr-3">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </span>
-                            "Why Choose Us" Section Customizer
+                            "Why Choose Us" Customizer
                         </h3>
-                        <p class="text-sm text-slate-500 mb-6 font-medium pl-11">Customize the section title, subtitle, and the details for each of the three philosophy cards.</p>
+                        <p class="text-sm text-slate-500 mb-6 font-medium pl-11">Customize the text, stats, and image for the Why Choose Us section.</p>
                         
                         <div class="space-y-6 pl-11">
-                            <!-- Section Heading Details -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 border border-slate-200 rounded-2xl bg-slate-50">
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Section Subtitle</label>
-                                    <input type="text" name="why_choose_us_subtitle" value="{{ \App\Models\StoreSetting::getValue('why_choose_us_subtitle', 'Our Philosophy') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Main Title</label>
+                                    <input type="text" name="wcu_main_title" value="{{ \App\Models\StoreSetting::getValue('wcu_main_title', 'WHY CHOOSE US') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Main Description</label>
+                                    <textarea name="wcu_main_desc" rows="3" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ \App\Models\StoreSetting::getValue('wcu_main_desc', 'Experience the perfect blend of luxury and science. Our curated collection of premium beauty essentials is designed to elevate your daily routine.') }}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 border border-slate-200 rounded-2xl bg-slate-50">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Stat 1 Title</label>
+                                    <input type="text" name="wcu_stat1_title" value="{{ \App\Models\StoreSetting::getValue('wcu_stat1_title', '95%') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mt-3 mb-1.5">Stat 1 Description</label>
+                                    <input type="text" name="wcu_stat1_desc" value="{{ \App\Models\StoreSetting::getValue('wcu_stat1_desc', 'Customer satisfaction rate') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Section Title</label>
-                                    <input type="text" name="why_choose_us_title" value="{{ \App\Models\StoreSetting::getValue('why_choose_us_title', 'Why Choose Us') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Stat 2 Title</label>
+                                    <input type="text" name="wcu_stat2_title" value="{{ \App\Models\StoreSetting::getValue('wcu_stat2_title', '$109+') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mt-3 mb-1.5">Stat 2 Description</label>
+                                    <input type="text" name="wcu_stat2_desc" value="{{ \App\Models\StoreSetting::getValue('wcu_stat2_desc', 'Average order value') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <!-- Card 1 -->
+                                <!-- Box 1 -->
                                 <div class="border border-slate-200 rounded-2xl p-6 bg-slate-50">
-                                    <h4 class="text-sm font-extrabold text-slate-800 mb-4 pb-1.5 border-b border-slate-200/60 flex items-center">
-                                        <span class="w-2 h-2 rounded-full bg-pink-500 mr-2"></span> Card 1 (Advanced Tech)
-                                    </h4>
+                                    <h4 class="text-sm font-extrabold text-slate-800 mb-4 pb-1.5 border-b border-slate-200/60">Box 1</h4>
                                     <div class="space-y-4">
                                         <div>
-                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card Title</label>
-                                            <input type="text" name="why_choose_us_card1_title" value="{{ \App\Models\StoreSetting::getValue('why_choose_us_card1_title', 'Advanced Tech') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Box 1 Title</label>
+                                            <input type="text" name="wcu_box1_title" value="{{ \App\Models\StoreSetting::getValue('wcu_box1_title', 'Expertly Curated') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card Description</label>
-                                            <textarea name="why_choose_us_card1_desc" rows="3" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ \App\Models\StoreSetting::getValue('why_choose_us_card1_desc', 'FDA-cleared devices and premium formulations engineered for visible results.') }}</textarea>
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card Image</label>
-                                            @if(\App\Models\StoreSetting::getValue('why_choose_us_card1_image_path'))
-                                                <div class="relative w-full max-w-sm h-32 mb-2 rounded-xl overflow-hidden bg-slate-100 border border-slate-200" id="preview_why_choose_us_card1">
-                                                    <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('why_choose_us_card1_image_path')) }}" class="w-full h-full object-cover">
-                                                    <button type="button" onclick="document.getElementById('preview_why_choose_us_card1').style.display='none'; document.getElementById('delete_why_choose_us_card1').value='1';" class="absolute top-1.5 right-1.5 bg-rose-500 text-white rounded-full p-1 hover:bg-rose-600 shadow-sm transition-colors">
-                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                    </button>
-                                                </div>
-                                                <input type="hidden" name="delete_why_choose_us_card1_image" id="delete_why_choose_us_card1" value="0">
-                                            @endif
-                                            <input type="file" name="why_choose_us_card1_image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-600 cursor-pointer">
+                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Box 1 Description</label>
+                                            <textarea name="wcu_box1_desc" rows="3" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ \App\Models\StoreSetting::getValue('wcu_box1_desc', 'Every product in our collection is meticulously selected by beauty experts.') }}</textarea>
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Card 2 -->
+                                <!-- Box 2 -->
                                 <div class="border border-slate-200 rounded-2xl p-6 bg-slate-50">
-                                    <h4 class="text-sm font-extrabold text-slate-800 mb-4 pb-1.5 border-b border-slate-200/60 flex items-center">
-                                        <span class="w-2 h-2 rounded-full bg-amber-500 mr-2"></span> Card 2 (Expert Care)
-                                    </h4>
+                                    <h4 class="text-sm font-extrabold text-slate-800 mb-4 pb-1.5 border-b border-slate-200/60">Box 2</h4>
                                     <div class="space-y-4">
                                         <div>
-                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card Title</label>
-                                            <input type="text" name="why_choose_us_card2_title" value="{{ \App\Models\StoreSetting::getValue('why_choose_us_card2_title', 'Expert Care') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Box 2 Title</label>
+                                            <input type="text" name="wcu_box2_title" value="{{ \App\Models\StoreSetting::getValue('wcu_box2_title', 'Proven Results') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card Description</label>
-                                            <textarea name="why_choose_us_card2_desc" rows="3" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ \App\Models\StoreSetting::getValue('why_choose_us_card2_desc', 'Professional guidance and fully customized skincare routines for your unique needs.') }}</textarea>
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card Image</label>
-                                            @if(\App\Models\StoreSetting::getValue('why_choose_us_card2_image_path'))
-                                                <div class="relative w-full max-w-sm h-32 mb-2 rounded-xl overflow-hidden bg-slate-100 border border-slate-200" id="preview_why_choose_us_card2">
-                                                    <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('why_choose_us_card2_image_path')) }}" class="w-full h-full object-cover">
-                                                    <button type="button" onclick="document.getElementById('preview_why_choose_us_card2').style.display='none'; document.getElementById('delete_why_choose_us_card2').value='1';" class="absolute top-1.5 right-1.5 bg-rose-500 text-white rounded-full p-1 hover:bg-rose-600 shadow-sm transition-colors">
-                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                    </button>
-                                                </div>
-                                                <input type="hidden" name="delete_why_choose_us_card2_image" id="delete_why_choose_us_card2" value="0">
-                                            @endif
-                                            <input type="file" name="why_choose_us_card2_image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-600 cursor-pointer">
+                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Box 2 Description</label>
+                                            <textarea name="wcu_box2_desc" rows="3" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ \App\Models\StoreSetting::getValue('wcu_box2_desc', 'Our treatments and formulations are clinically backed for maximum efficacy.') }}</textarea>
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Card 3 -->
+                                <!-- Box 3 -->
                                 <div class="border border-slate-200 rounded-2xl p-6 bg-slate-50">
-                                    <h4 class="text-sm font-extrabold text-slate-800 mb-4 pb-1.5 border-b border-slate-200/60 flex items-center">
-                                        <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span> Card 3 (Guaranteed Results)
-                                    </h4>
+                                    <h4 class="text-sm font-extrabold text-slate-800 mb-4 pb-1.5 border-b border-slate-200/60">Box 3</h4>
                                     <div class="space-y-4">
                                         <div>
-                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card Title</label>
-                                            <input type="text" name="why_choose_us_card3_title" value="{{ \App\Models\StoreSetting::getValue('why_choose_us_card3_title', 'Guaranteed Results') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Box 3 Title</label>
+                                            <input type="text" name="wcu_box3_title" value="{{ \App\Models\StoreSetting::getValue('wcu_box3_title', 'Premium Quality') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card Description</label>
-                                            <textarea name="why_choose_us_card3_desc" rows="3" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ \App\Models\StoreSetting::getValue('why_choose_us_card3_desc', 'Experience visible transformations driven by our proven, high-end beauty solutions.') }}</textarea>
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Card Image</label>
-                                            @if(\App\Models\StoreSetting::getValue('why_choose_us_card3_image_path'))
-                                                <div class="relative w-full max-w-sm h-32 mb-2 rounded-xl overflow-hidden bg-slate-100 border border-slate-200" id="preview_why_choose_us_card3">
-                                                    <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('why_choose_us_card3_image_path')) }}" class="w-full h-full object-cover">
-                                                    <button type="button" onclick="document.getElementById('preview_why_choose_us_card3').style.display='none'; document.getElementById('delete_why_choose_us_card3').value='1';" class="absolute top-1.5 right-1.5 bg-rose-500 text-white rounded-full p-1 hover:bg-rose-600 shadow-sm transition-colors">
-                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                    </button>
-                                                </div>
-                                                <input type="hidden" name="delete_why_choose_us_card3_image" id="delete_why_choose_us_card3" value="0">
-                                            @endif
-                                            <input type="file" name="why_choose_us_card3_image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-600 cursor-pointer">
+                                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Box 3 Description</label>
+                                            <textarea name="wcu_box3_desc" rows="3" class="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">{{ \App\Models\StoreSetting::getValue('wcu_box3_desc', 'We source only the finest ingredients to ensure a luxurious experience.') }}</textarea>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- Image -->
+                            <div class="p-6 border border-slate-200 rounded-2xl bg-slate-50">
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Main Image (Optional)</label>
+                                <input type="file" name="wcu_image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-600 cursor-pointer">
+                                @if(\App\Models\StoreSetting::getValue('wcu_image_path'))
+                                    <div class="mt-3 relative w-48 h-48 rounded-xl overflow-hidden bg-slate-100 border border-slate-200" id="preview_wcu_image">
+                                        <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('wcu_image_path')) }}" class="w-full h-full object-cover">
+                                        <button type="button" onclick="document.getElementById('preview_wcu_image').style.display='none'; document.getElementById('delete_wcu_image').value='1';" class="absolute top-2 right-2 bg-rose-500 text-white rounded-full p-1.5 hover:bg-rose-600 shadow-md transition-colors z-10">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                        </button>
+                                    </div>
+                                    <input type="hidden" name="delete_wcu_image" id="delete_wcu_image" value="0">
+                                @endif
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

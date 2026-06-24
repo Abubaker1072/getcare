@@ -4,6 +4,49 @@
 <div class="bg-gray-50 min-h-screen pt-32 pb-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
+        {{-- Registration Success Celebration --}}
+        @if(session('registered_success'))
+            <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Confetti Cannon Animation
+                    var duration = 3.5 * 1000;
+                    var animationEnd = Date.now() + duration;
+                    var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10000, colors: ['#f59e0b', '#10b981', '#3b82f6', '#ef4444', '#8b5cf6'] };
+
+                    function randomInRange(min, max) {
+                      return Math.random() * (max - min) + min;
+                    }
+
+                    var interval = setInterval(function() {
+                      var timeLeft = animationEnd - Date.now();
+                      if (timeLeft <= 0) {
+                        return clearInterval(interval);
+                      }
+                      var particleCount = 50 * (timeLeft / duration);
+                      // Fire from left side
+                      confetti(Object.assign({}, defaults, { particleCount,
+                        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+                      }));
+                      // Fire from right side
+                      confetti(Object.assign({}, defaults, { particleCount,
+                        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+                      }));
+                    }, 250);
+                });
+            </script>
+            
+            <div class="mb-8 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 text-amber-800 px-6 py-4 rounded-2xl text-base font-bold shadow-lg shadow-amber-500/10 flex items-center gap-3 animate-[bounce_1s_ease-in-out_2]">
+                <div class="bg-amber-100 p-2 rounded-full">
+                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                </div>
+                <div>
+                    <h3 class="text-lg">Welcome to GetCare!</h3>
+                    <p class="text-sm font-medium text-amber-700/80">Your account has been successfully created. We're thrilled to have you here!</p>
+                </div>
+            </div>
+        @endif
+
         {{-- Success message --}}
         @if(session('success'))
             <div class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm font-semibold shadow-sm flex items-center gap-2">

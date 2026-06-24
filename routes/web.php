@@ -14,6 +14,8 @@ use App\Http\Controllers\Frontend\CategoryController as FrontendCategoryControll
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\Admin\HotDealPromoController;
+use App\Http\Controllers\Admin\MarqueeImageController;
 
 
 /*
@@ -34,7 +36,8 @@ Route::get('/', function (
     $productReels = \App\Models\ProductReviewVideo::with('product')->where('is_active', true)->where('show_on_homepage', true)->latest()->get();
     $reels = $regularReels->concat($productReels)->sortByDesc('created_at')->values();
     $homepageReviews = \App\Models\Review::where('is_approved', true)->where('show_on_homepage', true)->latest()->get();
-    return view('pages.home', compact('bestsellingProducts', 'featuredCategories', 'hotDealProducts', 'reels', 'homepageReviews'));
+    $marqueeImages = \App\Models\MarqueeImage::where('is_active', true)->orderBy('sort_order')->get();
+    return view('pages.home', compact('bestsellingProducts', 'featuredCategories', 'hotDealProducts', 'reels', 'homepageReviews', 'marqueeImages'));
 })->name('home');
 
 Route::get('/shop/all', [FrontendProductController::class, 'index'])->name('products.all');
@@ -52,7 +55,9 @@ Route::get('/hot-deals', function (\App\Repositories\Contracts\HomepageHotDealPr
                             ->paginate(20);
     }
     
-    return view('pages.hot-deals', compact('hotDealProducts'));
+    $hotDealPromos = \App\Models\HotDealPromo::with('product')->where('is_active', true)->latest()->get();
+    
+    return view('pages.hot-deals', compact('hotDealProducts', 'hotDealPromos'));
 })->name('hot-deals');
 
 
@@ -241,6 +246,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Products
     Route::resource('products', AdminProductController::class)->except(['show']);
+    Route::post('/products/{product}/toggle-sale', [AdminProductController::class, 'toggleSale'])->name('products.toggle-sale');
     
     // Product Testimonials
     Route::post('/products/{product}/testimonials', [AdminProductController::class, 'storeTestimonial'])->name('products.testimonials.store');
@@ -346,4 +352,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Reels CRUD
     Route::resource('reels', \App\Http\Controllers\Admin\ReelController::class)->except(['show']);
+
+    // Hot Deal Promos CRUD
+    Route::resource('hot-deal-promos', HotDealPromoController::class)->except(['show']);
+
+    // Marquee Images CRUD
+    Route::resource('marquee-images', MarqueeImageController::class)->except(['show']);
+
+    // Popular Searches CRUD
+    Route::resource('popular-searches', \App\Http\Controllers\Admin\PopularSearchController::class)->except(['show']);
 });

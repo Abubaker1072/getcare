@@ -105,17 +105,19 @@ class StoreManageController extends Controller
             'admin_expiry_date' => 'nullable|string|max:10',
 
             // Why Choose Us fields
-            'why_choose_us_subtitle' => 'nullable|string|max:255',
-            'why_choose_us_title' => 'nullable|string|max:255',
-            'why_choose_us_card1_title' => 'nullable|string|max:255',
-            'why_choose_us_card1_desc' => 'nullable|string',
-            'why_choose_us_card2_title' => 'nullable|string|max:255',
-            'why_choose_us_card2_desc' => 'nullable|string',
-            'why_choose_us_card3_title' => 'nullable|string|max:255',
-            'why_choose_us_card3_desc' => 'nullable|string',
-            'why_choose_us_card1_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
-            'why_choose_us_card2_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
-            'why_choose_us_card3_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'wcu_main_title' => 'nullable|string|max:255',
+            'wcu_main_desc' => 'nullable|string',
+            'wcu_stat1_title' => 'nullable|string|max:255',
+            'wcu_stat1_desc' => 'nullable|string|max:255',
+            'wcu_stat2_title' => 'nullable|string|max:255',
+            'wcu_stat2_desc' => 'nullable|string|max:255',
+            'wcu_box1_title' => 'nullable|string|max:255',
+            'wcu_box1_desc' => 'nullable|string',
+            'wcu_box2_title' => 'nullable|string|max:255',
+            'wcu_box2_desc' => 'nullable|string',
+            'wcu_box3_title' => 'nullable|string|max:255',
+            'wcu_box3_desc' => 'nullable|string',
+            'wcu_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
         ]);
 
         // Simple text fields saving
@@ -129,10 +131,9 @@ class StoreManageController extends Controller
             'article_1_title', 'article_1_text', 'article_1_link',
             'article_2_title', 'article_2_text', 'article_2_link',
             'article_3_title', 'article_3_text', 'article_3_link',
-            'why_choose_us_subtitle', 'why_choose_us_title',
-            'why_choose_us_card1_title', 'why_choose_us_card1_desc',
-            'why_choose_us_card2_title', 'why_choose_us_card2_desc',
-            'why_choose_us_card3_title', 'why_choose_us_card3_desc'
+            'wcu_main_title', 'wcu_main_desc', 'wcu_stat1_title', 'wcu_stat1_desc',
+            'wcu_stat2_title', 'wcu_stat2_desc', 'wcu_box1_title', 'wcu_box1_desc',
+            'wcu_box2_title', 'wcu_box2_desc', 'wcu_box3_title', 'wcu_box3_desc'
         ];
 
         foreach ($keys as $key) {
@@ -211,35 +212,17 @@ class StoreManageController extends Controller
             StoreSetting::setValue('routine_lifestyle_image_path', $path);
         }
 
-        // Why Choose Us Images Deletion
-        if ($request->input('delete_why_choose_us_card1_image') == '1') {
-            StoreSetting::setValue('why_choose_us_card1_image_path', null);
-        }
-        if ($request->input('delete_why_choose_us_card2_image') == '1') {
-            StoreSetting::setValue('why_choose_us_card2_image_path', null);
-        }
-        if ($request->input('delete_why_choose_us_card3_image') == '1') {
-            StoreSetting::setValue('why_choose_us_card3_image_path', null);
+        // WCU Image Deletion
+        if ($request->input('delete_wcu_image') == '1') {
+            StoreSetting::setValue('wcu_image_path', null);
         }
 
-        // Why Choose Us Images Upload
-        if ($request->hasFile('why_choose_us_card1_image')) {
-            $file = $request->file('why_choose_us_card1_image');
-            $fileName = 'why_choose_us_card1_' . time() . '.' . $file->getClientOriginalExtension();
+        // WCU Image Upload
+        if ($request->hasFile('wcu_image')) {
+            $file = $request->file('wcu_image');
+            $fileName = 'wcu_image_' . time() . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs('why_choose_us', $fileName, 'public');
-            StoreSetting::setValue('why_choose_us_card1_image_path', $path);
-        }
-        if ($request->hasFile('why_choose_us_card2_image')) {
-            $file = $request->file('why_choose_us_card2_image');
-            $fileName = 'why_choose_us_card2_' . time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('why_choose_us', $fileName, 'public');
-            StoreSetting::setValue('why_choose_us_card2_image_path', $path);
-        }
-        if ($request->hasFile('why_choose_us_card3_image')) {
-            $file = $request->file('why_choose_us_card3_image');
-            $fileName = 'why_choose_us_card3_' . time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('why_choose_us', $fileName, 'public');
-            StoreSetting::setValue('why_choose_us_card3_image_path', $path);
+            StoreSetting::setValue('wcu_image_path', $path);
         }
 
         // Save Admin Gateway bank settings if present
@@ -267,10 +250,10 @@ class StoreManageController extends Controller
             'article_2_title', 'article_2_text', 'article_2_link', 'article_2_image_path',
             'article_3_title', 'article_3_text', 'article_3_link', 'article_3_image_path',
             'routine_product_image_path', 'routine_lifestyle_image_path',
-            'why_choose_us_subtitle', 'why_choose_us_title',
-            'why_choose_us_card1_title', 'why_choose_us_card1_desc', 'why_choose_us_card1_image_path',
-            'why_choose_us_card2_title', 'why_choose_us_card2_desc', 'why_choose_us_card2_image_path',
-            'why_choose_us_card3_title', 'why_choose_us_card3_desc', 'why_choose_us_card3_image_path'
+            'wcu_main_title', 'wcu_main_desc', 'wcu_stat1_title', 'wcu_stat1_desc',
+            'wcu_stat2_title', 'wcu_stat2_desc', 'wcu_box1_title', 'wcu_box1_desc',
+            'wcu_box2_title', 'wcu_box2_desc', 'wcu_box3_title', 'wcu_box3_desc',
+            'wcu_image_path'
         ];
 
         foreach ($keys as $key) {

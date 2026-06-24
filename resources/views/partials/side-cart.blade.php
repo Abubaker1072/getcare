@@ -26,7 +26,7 @@
     <div class="border-t border-gray-100 p-6 bg-gray-50/50">
         <div class="flex justify-between items-center mb-4 text-gray-900 font-medium">
             <span>Subtotal</span>
-            <span id="side-cart-total" class="font-bold text-lg font-serif">...</span>
+            <span id="side-cart-total" class="font-sans font-bold text-lg text-slate-900">...</span>
         </div>
         <p class="text-xs text-gray-500 mb-6 text-center">Shipping, taxes, and discount codes calculated at checkout.</p>
         <a href="{{ route('checkout.index') }}" class="block w-full bg-black text-white text-center py-4 rounded-full font-bold text-sm tracking-widest hover:bg-gray-900 transition-colors shadow-lg">

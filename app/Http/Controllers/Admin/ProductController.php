@@ -70,6 +70,7 @@ class ProductController extends Controller
             'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
             'cover_image_selection' => 'nullable|string|in:image,image_1,image_2,image_3,image_4',
             'is_active' => 'boolean',
+            'is_on_sale' => 'boolean',
             'tags' => 'nullable|string|max:255',
             'promo_text' => 'nullable|string|max:255',
             'bullet_points' => 'nullable|array',
@@ -99,6 +100,7 @@ class ProductController extends Controller
         }
 
         $validatedData['is_active'] = $request->has('is_active');
+        $validatedData['is_on_sale'] = $request->has('is_on_sale');
         $validatedData['category_id'] = $request->input('category_id') ?: null;
 
         $validatedData['bullet_points'] = array_values(array_filter($request->input('bullet_points', [])));
@@ -143,6 +145,7 @@ class ProductController extends Controller
             'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
             'cover_image_selection' => 'nullable|string|in:image,image_1,image_2,image_3,image_4',
             'is_active' => 'boolean',
+            'is_on_sale' => 'boolean',
             'tags' => 'nullable|string|max:255',
             'promo_text' => 'nullable|string|max:255',
             'bullet_points' => 'nullable|array',
@@ -175,6 +178,7 @@ class ProductController extends Controller
         }
 
         $validatedData['is_active'] = $request->has('is_active');
+        $validatedData['is_on_sale'] = $request->has('is_on_sale');
         $validatedData['category_id'] = $request->input('category_id') ?: null;
 
         $validatedData['bullet_points'] = array_values(array_filter($request->input('bullet_points', [])));
@@ -201,6 +205,12 @@ class ProductController extends Controller
         ]);
 
         return back()->with('success', 'Product category updated successfully.');
+    }
+
+    public function toggleSale(Product $product)
+    {
+        $product->update(['is_on_sale' => !$product->is_on_sale]);
+        return back()->with('success', 'Product sale status updated successfully.');
     }
 
     public function destroy(Product $product)

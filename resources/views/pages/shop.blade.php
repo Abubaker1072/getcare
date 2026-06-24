@@ -9,20 +9,20 @@
 
 
 {{-- Premium Products Header --}}
-<section class="bg-[#FDFBF6] py-10 md:py-16 border-b border-gray-100">
+<section class="bg-[#FDFBF6] py-6 md:py-10 border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-        <h1 class="text-3xl md:text-5xl font-extrabold text-[#0B132B] mb-3 tracking-tight">All Products</h1>
+        <h1 class="text-3xl md:text-5xl font-extrabold text-[#0B132B] mb-2 tracking-tight">All Products</h1>
         <p class="text-base md:text-lg text-slate-500 font-medium">Discover our complete collection of premium beauty & skincare devices</p>
     </div>
 </section>
 
 {{-- Main Content Area with Sidebar --}}
-<section class="py-8 md:py-12 bg-white">
+<section class="py-4 md:py-6 bg-white">
     <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-        <div class="flex flex-col lg:flex-row gap-8 lg:gap-10">
+        <div class="flex flex-col lg:flex-row gap-4 lg:gap-10">
             
             {{-- Left Sidebar Filters --}}
-            <aside class="w-full lg:w-[280px] flex-shrink-0">
+            <aside id="shop-filter-aside" class="hidden lg:block w-full lg:w-[280px] flex-shrink-0 mb-4 lg:mb-0">
                 <form id="shop-filters" action="{{ route('products.all') }}" method="GET" class="bg-white rounded-xl shadow-[0_2px_15px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 overflow-hidden sticky top-6 transition-all duration-500 transform hover:-translate-y-1">
                     @if(request('sort'))
                         <input type="hidden" name="sort" value="{{ request('sort') }}">
@@ -44,7 +44,10 @@
                             </svg>
                             FILTERS
                         </div>
-                        <a href="{{ route('products.all') }}" class="text-[11px] text-slate-300 hover:text-white transition-colors font-medium">Clear all</a>
+                        <div class="flex items-center gap-3">
+                            <a href="{{ route('products.all') }}" class="text-[11px] text-slate-300 hover:text-white transition-colors font-medium">Clear all</a>
+                            <button type="button" onclick="toggleMobileFilters()" class="lg:hidden text-slate-300 hover:text-white text-xs font-bold font-sans">✕</button>
+                        </div>
                     </div>
 
                     <div class="p-4">
@@ -113,7 +116,7 @@
             {{-- Right Main Content --}}
             <div class="flex-1">
                 {{-- Filter Bar --}}
-                <form action="{{ route('products.all') }}" method="GET" class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 pb-6 border-b border-slate-100">
+                <form action="{{ route('products.all') }}" method="GET" class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 pb-4 border-b border-slate-100">
                     @foreach($selectedCategories as $catId)
                         <input type="hidden" name="categories[]" value="{{ $catId }}">
                     @endforeach
@@ -140,8 +143,9 @@
                         @endif
                     </div>
                     
-                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                        <div class="relative">
+                    {{-- Desktop Filter selectors (hidden on mobile) --}}
+                    <div class="hidden lg:flex flex-row gap-3 sm:gap-4 items-center w-full sm:w-auto">
+                        <div class="relative w-full sm:w-auto">
                             <select name="sort" onchange="this.form.submit()"
                                 class="w-full sm:w-44 pl-4 pr-10 py-2.5 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 bg-white cursor-pointer hover:border-slate-300 appearance-none outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-all shadow-sm">
                                 <option value="newest" {{ ($filters['sort'] ?? 'newest') === 'newest' ? 'selected' : '' }}>Newest</option>
@@ -164,10 +168,39 @@
                             <svg class="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                     </div>
+
+                    {{-- Mobile Horizontal Scroll Filter Tags --}}
+                    <div class="lg:hidden flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-none py-1.5 w-full">
+                        <!-- Filters Tag -->
+                        <button type="button" onclick="openFiltersDrawer('categories')" class="flex items-center gap-1.5 px-4.5 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200 transition select-none flex-shrink-0">
+                            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.477 8 1.4V7a1 1 0 01-.293.707l-5.414 5.414A1 1 0 0014 13.828V18a1 1 0 01-.293.707l-2.929 2.929A1 1 0 019 20.93V13.83a1 1 0 00-.293-.708L3.293 7.707A1 1 0 013 7V4.4A19.98 19.98 0 0112 3z"></path>
+                            </svg>
+                            <span>Filters</span>
+                        </button>
+
+                        <!-- Sort Tag -->
+                        <button type="button" onclick="openFiltersDrawer('sort')" class="flex items-center gap-1 px-4 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200 transition select-none flex-shrink-0">
+                            <span>Sort by</span>
+                            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path></svg>
+                        </button>
+
+                        <!-- Price Tag -->
+                        <button type="button" onclick="openFiltersDrawer('price')" class="flex items-center gap-1 px-4 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200 transition select-none flex-shrink-0">
+                            <span>Price</span>
+                            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path></svg>
+                        </button>
+
+                        <!-- Availability Tag -->
+                        <button type="button" onclick="openFiltersDrawer('availability')" class="flex items-center gap-1 px-4 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200 transition select-none flex-shrink-0">
+                            <span>Availability</span>
+                            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path></svg>
+                        </button>
+                    </div>
                 </form>
 
                 {{-- Products Grid --}}
-                <div class="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6 md:gap-8 mb-12">
+                <div class="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6 md:gap-8 mb-6">
                     @forelse($products as $product)
                     <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-100 transition-all duration-300 flex flex-col group">
                         {{-- Product Image Area --}}
@@ -175,23 +208,35 @@
                             @if($product->cover_image || $product->image)
                                 <img src="{{ asset('storage/' . ($product->cover_image ?? $product->image)) }}" 
                                      alt="{{ $product->name }}" 
-                                     class="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-in-out">
+                                     class="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-in-out {{ $product->stock <= 0 ? 'opacity-45 grayscale' : '' }}">
                             @else
                                 <div class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400">No Image</div>
                             @endif
                             
+                            @if($product->stock <= 0)
+                            <div class="absolute top-4 right-4 bg-gray-500 text-white px-2 py-0.5 rounded text-[10px] font-sans font-bold uppercase tracking-wider shadow-md">
+                                Sold Out
+                            </div>
+                            @endif
+                            
                             {{-- Quick Add Overlay Button --}}
                             <div class="absolute bottom-4 left-4 right-4 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                                @if($product->stock <= 0)
+                                <button class="w-full bg-gray-200/90 text-gray-500 font-semibold py-3 rounded-lg shadow-lg cursor-not-allowed text-sm" disabled>
+                                    Sold Out
+                                </button>
+                                @else
                                 <button class="w-full bg-white/90 backdrop-blur-sm text-slate-900 font-semibold py-3 rounded-lg shadow-lg hover:bg-slate-900 hover:text-white transition-colors text-sm" onclick="event.preventDefault(); window.addToCart({{ $product->id }}, 1)">
                                     Quick Add
                                 </button>
+                                @endif
                             </div>
                         </a>
 
                         {{-- Product Details --}}
                         <div class="p-4 flex flex-col flex-grow">
                             <a href="{{ route('product.detail', $product->slug) }}">
-                                <h3 class="font-bold text-slate-900 text-sm md:text-base leading-snug mb-1 group-hover:text-amber-700 transition-colors">
+                                <h3 class="font-bold text-slate-900 text-xs sm:text-sm md:text-base leading-snug mb-1 group-hover:text-amber-700 transition-colors line-clamp-2 break-words">
                                     {{ $product->name }}
                                 </h3>
                             </a>
@@ -211,19 +256,28 @@
                                     </div>
                                     <span class="text-[10px] sm:text-xs text-gray-500">({{ $product->reviews_count ?? 0 }})</span>
                                 </div>
-                                <div class="text-[10px] sm:text-xs font-medium text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                                    {{ $product->purchased_count ?? 0 }}+ sold
+                                @if(($product->purchased_count ?? 0) > 0)
+                                <div class="text-[10px] sm:text-xs font-medium text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded whitespace-nowrap">
+                                    {{ $product->purchased_count }}+ sold
                                 </div>
+                                @endif
                             </div>
                             @if($product->category)
                                 <p class="text-xs text-amber-600 font-medium mb-2">{{ $product->category->name }}</p>
                             @endif
 
 
-                            <div class="flex items-center gap-3 mt-auto pt-4 border-t border-slate-100">
-                                <span class="text-lg font-extrabold text-slate-900">{!! \App\Helpers\CurrencyHelper::format($product->price) !!}</span>
-                                @if($product->compare_price)
-                                    <span class="text-sm text-slate-400 line-through">{!! \App\Helpers\CurrencyHelper::format($product->compare_price) !!}</span>
+                            <div class="flex flex-wrap items-center gap-x-1.5 gap-y-1 mt-auto pt-4 border-t border-slate-100 w-full">
+                                @if($product->is_on_sale && $product->compare_price && $product->compare_price > $product->price)
+                                    <span class="text-sm sm:text-lg font-sans font-bold text-slate-900 whitespace-nowrap">{!! \App\Helpers\CurrencyHelper::format($product->price) !!}</span>
+                                    <span class="text-[10px] sm:text-sm font-sans text-gray-400 line-through whitespace-nowrap">{!! \App\Helpers\CurrencyHelper::format($product->compare_price) !!}</span>
+                                    @if($product->discount_price && (float)$product->discount_price > 0)
+                                        <span class="text-[10px] sm:text-xs font-sans font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded whitespace-nowrap">Save {!! \App\Helpers\CurrencyHelper::format($product->discount_price) !!}</span>
+                                    @else
+                                        <span class="text-[10px] sm:text-xs font-sans font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded whitespace-nowrap">{{ round((1 - $product->price/$product->compare_price) * 100) }}% OFF</span>
+                                    @endif
+                                @else
+                                    <span class="text-sm sm:text-lg font-sans font-bold text-slate-900 whitespace-nowrap">{!! \App\Helpers\CurrencyHelper::format($product->price) !!}</span>
                                 @endif
                             </div>
                         </div>
@@ -236,14 +290,14 @@
                 </div>
 
                 {{-- Pagination --}}
-                <div class="mt-12 border-t border-slate-100 pt-8">
-                    {{ $products->links() }}
+                <div class="mt-6 border-t border-slate-100 pt-4">
+                    {{ $products->links('partials.pagination') }}
                 </div>
             </div>
         </div>
     </div>
         {{-- 1. FEATURES / BENEFITS STRIP --}}
-<section class="py-10 bg-white border-t border-b border-gray-100">
+<section class="py-6 bg-white border-t border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-gray-100">
             
@@ -285,11 +339,143 @@
 
 </section>
 
+{{-- Mobile Filter Drawer (Bottom Sheet) --}}
+<div id="filters-drawer-backdrop" onclick="closeFiltersDrawer()" class="fixed inset-0 bg-black/60 z-[90] hidden opacity-0 transition-opacity duration-300"></div>
+
+<div id="filters-drawer" class="fixed bottom-0 left-0 right-0 h-[80vh] bg-white rounded-t-3xl shadow-2xl z-[100] flex flex-col transform translate-y-full transition-transform duration-300 ease-out overflow-hidden lg:hidden">
+    <!-- Header of bottom sheet -->
+    <div class="px-6 py-4 border-b flex items-center justify-between">
+        <span class="font-bold text-slate-900 text-sm tracking-wide">Filters & Sort</span>
+        <button type="button" onclick="closeFiltersDrawer()" class="text-slate-400 hover:text-slate-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Main split content -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Left Sidebar Tabs -->
+        <div class="w-[120px] bg-[#f5f5f5] flex flex-col overflow-y-auto flex-shrink-0">
+            <button type="button" onclick="switchFilterTab('categories')" id="drawer-tab-categories" class="drawer-tab px-4 py-4 text-left text-xs font-semibold text-slate-800 border-b border-slate-200 transition-colors bg-white border-l-4 border-l-[#ff470b]">
+                Categories
+            </button>
+            <button type="button" onclick="switchFilterTab('price')" id="drawer-tab-price" class="drawer-tab px-4 py-4 text-left text-xs font-semibold text-slate-600 border-b border-slate-200 transition-colors hover:bg-white/50">
+                Price Range
+            </button>
+            <button type="button" onclick="switchFilterTab('availability')" id="drawer-tab-availability" class="drawer-tab px-4 py-4 text-left text-xs font-semibold text-slate-600 border-b border-slate-200 transition-colors hover:bg-white/50">
+                Availability
+            </button>
+            <button type="button" onclick="switchFilterTab('sort')" id="drawer-tab-sort" class="drawer-tab px-4 py-4 text-left text-xs font-semibold text-slate-600 border-b border-slate-200 transition-colors hover:bg-white/50">
+                Sort By
+            </button>
+        </div>
+
+        <!-- Right Content Panels -->
+        <form id="mobile-filter-form" action="{{ route('products.all') }}" method="GET" class="flex-1 flex flex-col h-full m-0 overflow-hidden">
+            @if(request('q'))
+                <input type="hidden" name="q" value="{{ request('q') }}">
+            @endif
+            @if(request('search'))
+                <input type="hidden" name="search" value="{{ request('search') }}">
+            @endif
+
+            <div class="flex-1 p-5 overflow-y-auto">
+                <!-- Categories Panel -->
+                <div id="drawer-panel-categories" class="drawer-panel block">
+                    <h4 class="text-sm font-bold text-slate-900 mb-4">Select Categories</h4>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach($categories as $category)
+                            <label class="mobile-pill-checkbox relative inline-flex items-center justify-center px-4 py-2 border border-slate-200 rounded-full text-xs font-medium cursor-pointer select-none transition-all duration-200 {{ in_array($category->id, $selectedCategories) ? 'bg-black border-black text-white' : 'bg-white text-slate-700 hover:border-slate-400' }}">
+                                <input type="checkbox" name="categories[]" value="{{ $category->id }}" class="hidden" {{ in_array($category->id, $selectedCategories) ? 'checked' : '' }} onchange="togglePillActive(this)">
+                                <span>{{ $category->name }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Price Range Panel -->
+                <div id="drawer-panel-price" class="drawer-panel hidden">
+                    <h4 class="text-sm font-bold text-slate-900 mb-4">Select Price Range</h4>
+                    <div class="flex flex-col gap-2">
+                        @foreach([
+                            '' => 'All Prices',
+                            '0-50' => '$0 - $50',
+                            '50-100' => '$50 - $100',
+                            '100-200' => '$100 - $200',
+                            '200+' => '$200+'
+                        ] as $val => $lbl)
+                            <label class="mobile-radio-row flex items-center justify-between p-3 border border-slate-200 rounded-xl text-xs font-medium cursor-pointer select-none {{ request('price_range') === $val ? 'bg-black/5 border-black' : 'bg-white text-slate-700' }}">
+                                <span class="font-semibold text-slate-900">{{ $lbl }}</span>
+                                <input type="radio" name="price_range" value="{{ $val }}" class="w-4 h-4 text-orange-600 focus:ring-orange-500 border-slate-300" {{ request('price_range') === $val ? 'checked' : '' }} onchange="updateRadioRow(this)">
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Availability Panel -->
+                <div id="drawer-panel-availability" class="drawer-panel hidden">
+                    <h4 class="text-sm font-bold text-slate-900 mb-4">Availability</h4>
+                    <div class="flex flex-col gap-2">
+                        <label class="mobile-radio-row flex items-center justify-between p-3 border border-slate-200 rounded-xl text-xs font-medium cursor-pointer {{ !empty($filters['in_stock']) ? 'bg-black/5 border-black' : 'bg-white text-slate-700' }}">
+                            <span class="font-semibold text-slate-900">In Stock Only</span>
+                            <input type="radio" name="in_stock" value="1" class="w-4 h-4 text-orange-600 focus:ring-orange-500 border-slate-300" {{ !empty($filters['in_stock']) ? 'checked' : '' }} onchange="updateRadioRow(this)">
+                        </label>
+                        <label class="mobile-radio-row flex items-center justify-between p-3 border border-slate-200 rounded-xl text-xs font-medium cursor-pointer {{ empty($filters['in_stock']) ? 'bg-black/5 border-black' : 'bg-white text-slate-700' }}">
+                            <span class="font-semibold text-slate-900">Show All Products</span>
+                            <input type="radio" name="in_stock" value="" class="w-4 h-4 text-orange-600 focus:ring-orange-500 border-slate-300" {{ empty($filters['in_stock']) ? 'checked' : '' }} onchange="updateRadioRow(this)">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Sort By Panel -->
+                <div id="drawer-panel-sort" class="drawer-panel hidden">
+                    <h4 class="text-sm font-bold text-slate-900 mb-4">Sort Products</h4>
+                    <div class="flex flex-col gap-2">
+                        @foreach([
+                            'newest' => 'Newest',
+                            'price_asc' => 'Price: Low to High',
+                            'price_desc' => 'Price: High to Low',
+                            'name_asc' => 'Name A-Z'
+                        ] as $val => $lbl)
+                            <label class="mobile-radio-row flex items-center justify-between p-3 border border-slate-200 rounded-xl text-xs font-medium cursor-pointer select-none {{ ($filters['sort'] ?? 'newest') === $val ? 'bg-black/5 border-black' : 'bg-white text-slate-700' }}">
+                                <span class="font-semibold text-slate-900">{{ $lbl }}</span>
+                                <input type="radio" name="sort" value="{{ $val }}" class="w-4 h-4 text-orange-600 focus:ring-orange-500 border-slate-300" {{ ($filters['sort'] ?? 'newest') === $val ? 'checked' : '' }} onchange="updateRadioRow(this)">
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sticky Action Bar -->
+            <div class="flex items-center justify-between gap-4 p-4 border-t bg-white">
+                <!-- Reset Button -->
+                <a href="{{ route('products.all') }}" class="w-[30%] text-center py-3 border border-slate-300 text-slate-900 rounded-full text-sm font-bold hover:bg-slate-50 transition">
+                    Reset
+                </a>
+                <!-- Submit / Apply Button -->
+                <button type="submit" class="w-[65%] py-3 bg-[#ff470b] text-white rounded-full text-sm font-bold hover:bg-[#ff3300] shadow-md transition">
+                    Show results
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <style>
     .custom-scrollbar::-webkit-scrollbar { width: 4px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* Hide scrollbars but keep functionality */
+    .scrollbar-none::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-none {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
 </style>
 
 <script>
@@ -300,6 +486,90 @@
             item.style.display = name.includes(query) ? '' : 'none';
         });
     });
+
+    function openFiltersDrawer(tabName = 'categories') {
+        const drawer = document.getElementById('filters-drawer');
+        const backdrop = document.getElementById('filters-drawer-backdrop');
+        if (drawer && backdrop) {
+            backdrop.classList.remove('hidden');
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                backdrop.classList.add('opacity-100');
+                drawer.classList.remove('translate-y-full');
+                drawer.classList.add('translate-y-0');
+            }, 10);
+            switchFilterTab(tabName);
+        }
+    }
+
+    function closeFiltersDrawer() {
+        const drawer = document.getElementById('filters-drawer');
+        const backdrop = document.getElementById('filters-drawer-backdrop');
+        if (drawer && backdrop) {
+            backdrop.classList.remove('opacity-100');
+            backdrop.classList.add('opacity-0');
+            drawer.classList.remove('translate-y-0');
+            drawer.classList.add('translate-y-full');
+            setTimeout(() => {
+                backdrop.classList.add('hidden');
+            }, 300);
+        }
+    }
+
+    function switchFilterTab(tabName) {
+        // 1. Reset all tabs
+        document.querySelectorAll('.drawer-tab').forEach(tab => {
+            tab.classList.remove('bg-white', 'text-slate-800', 'border-l-4', 'border-l-[#ff470b]');
+            tab.classList.add('text-slate-600');
+        });
+        // 2. Set active tab
+        const activeTab = document.getElementById('drawer-tab-' + tabName);
+        if (activeTab) {
+            activeTab.classList.remove('text-slate-600');
+            activeTab.classList.add('bg-white', 'text-slate-800', 'border-l-4', 'border-l-[#ff470b]');
+        }
+
+        // 3. Hide all panels
+        document.querySelectorAll('.drawer-panel').forEach(panel => {
+            panel.classList.add('hidden');
+            panel.classList.remove('block');
+        });
+        // 4. Show active panel
+        const activePanel = document.getElementById('drawer-panel-' + tabName);
+        if (activePanel) {
+            activePanel.classList.remove('hidden');
+            activePanel.classList.add('block');
+        }
+    }
+
+    function togglePillActive(checkbox) {
+        const label = checkbox.closest('.mobile-pill-checkbox');
+        if (label) {
+            if (checkbox.checked) {
+                label.classList.add('bg-black', 'border-black', 'text-white');
+                label.classList.remove('bg-white', 'text-slate-700');
+            } else {
+                label.classList.remove('bg-black', 'border-black', 'text-white');
+                label.classList.add('bg-white', 'text-slate-700');
+            }
+        }
+    }
+
+    function updateRadioRow(radio) {
+        const radioName = radio.name;
+        document.querySelectorAll(`input[name="${radioName}"]`).forEach(input => {
+            const row = input.closest('.mobile-radio-row');
+            if (row) {
+                if (input.checked) {
+                    row.classList.add('bg-black/5', 'border-black');
+                    row.classList.remove('bg-white', 'text-slate-700');
+                } else {
+                    row.classList.remove('bg-black/5', 'border-black');
+                    row.classList.add('bg-white', 'text-slate-700');
+                }
+            }
+        });
+    }
 </script>
 
 @endsection

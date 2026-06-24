@@ -2,6 +2,7 @@
     $cartItemsCount = \App\Models\CartItem::where(auth()->check() ? ['user_id' => auth()->id()] : ['session_id' => session()->getId()])->sum('quantity');
     $homepageTheme = \App\Models\StoreSetting::getValue('homepage_theme', 'theme_1');
     $isTheme2 = ($homepageTheme === 'theme_2');
+    $popularSearches = \App\Models\PopularSearch::orderBy('sort_order')->orderBy('created_at', 'desc')->take(12)->get();
 @endphp
 
 <style>
@@ -74,9 +75,18 @@
         transform: scaleX(1);
         transform-origin: bottom left;
     }
+    
+    /* Hide scrollbars for Category menu */
+    .scrollbar-none::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-none {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
 </style>
 
-<header id="main-header" class="w-full fixed top-0 left-0 z-50 flex flex-col bg-transparent {{ $isTheme2 ? 'theme-2-header' : '' }}">
+<header id="main-header" class="w-full fixed top-0 left-0 z-50 flex flex-col is-scrolled {{ $isTheme2 ? 'theme-2-header' : '' }}">
     @php
         $countdownActive = \App\Models\StoreSetting::getValue('countdown_is_active', '0') === '1';
         $countdownEndTime = \App\Models\StoreSetting::getValue('countdown_end_time');
@@ -141,40 +151,89 @@
                 </button>
 
                 {{-- Main Navigation Menu (Desktop) --}}
-                <nav class="hidden lg:flex items-center gap-6 xl:gap-8 text-xs xl:text-sm font-semibold tracking-wide uppercase">
+                <nav class="hidden lg:flex items-center gap-3.5 xl:gap-6 text-[10px] xl:text-xs font-bold tracking-wide uppercase">
                     <a href="{{ route('home') ?? '#' }}" class="dynamic-color text-white nav-link">Home</a>
                     <a href="{{ route('products.all') ?? '#' }}" class="dynamic-color text-white nav-link">Products</a>
                     <a href="{{ route('hot-deals') ?? '#' }}" class="dynamic-color text-white nav-link">Hot Deals</a>
                     
                     {{-- Categories Dropdown --}}
                     @php
-                        $headerCategories = \App\Models\Category::where('status', true)->take(10)->get();
+                        $headerCategories = \App\Models\Category::with(['products' => function($query) {
+                            $query->where('is_active', true)->latest()->take(10);
+                        }])->where('status', true)->take(12)->get();
                     @endphp
                     <div class="group/cat relative py-4">
-                        <a href="{{ route('categories') ?? '#' }}" class="dynamic-color text-white nav-link">
+                        <a href="{{ route('categories') ?? '#' }}" class="dynamic-color text-white nav-link transition-all duration-300 select-none">
                             Categories
                         </a>
                         
+                        {{-- Small Triangle Arrow --}}
+                        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] {{ $isTheme2 ? 'border-b-[#0c0c0e]' : 'border-b-white' }} opacity-0 invisible group-hover/cat:opacity-100 group-hover/cat:visible transition-all duration-300 z-50"></div>
+                        
                         {{-- Dropdown Menu --}}
-                        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 invisible group-hover/cat:opacity-100 group-hover/cat:visible transition-all duration-300 z-50 transform translate-y-2 group-hover/cat:translate-y-0 w-[600px]">
-                            <div class="bg-white/80 backdrop-blur-2xl border border-white/40 shadow-[0_20px_40px_rgba(0,0,0,0.1)] rounded-3xl p-8">
-                                <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-200/50">
-                                    <h3 class="text-slate-800 font-bold text-sm tracking-widest uppercase">Explore Collections</h3>
-                                    <a href="{{ route('categories') }}" class="text-amber-600 hover:text-amber-700 text-xs font-bold tracking-wider uppercase flex items-center gap-1 group/link">
-                                        View All
-                                        <svg class="w-4 h-4 transform group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                                    </a>
+                        <div class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover/cat:opacity-100 group-hover/cat:visible transition-all duration-300 z-50 transform translate-y-2 group-hover/cat:translate-y-0 w-[750px] xl:w-[950px]">
+                            <div class="{{ $isTheme2 ? 'bg-[#0c0c0e]/95 border-white/5 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] text-slate-100' : 'bg-white border-slate-200 shadow-2xl text-slate-800' }} backdrop-blur-2xl border rounded-3xl overflow-hidden flex h-[480px]">
+                                <!-- Left column: Category tabs (Temu Style) -->
+                                <div class="w-[240px] xl:w-[260px] {{ $isTheme2 ? 'bg-[#08080a] border-white/5' : 'bg-[#f5f5f5] border-slate-100' }} border-r flex flex-col py-4 overflow-y-auto scrollbar-none flex-shrink-0">
+                                    @foreach($headerCategories as $index => $cat)
+                                        <div class="category-tab px-6 py-3.5 flex items-center justify-between cursor-pointer transition-colors duration-150 {{ $index === 0 ? ($isTheme2 ? 'bg-[#0c0c0e] font-bold text-amber-400' : 'bg-white font-bold text-slate-900') : ($isTheme2 ? 'text-slate-400 font-medium hover:bg-slate-900/50' : 'text-slate-600 font-medium hover:bg-white/50') }}" 
+                                             data-category-id="{{ $cat->id }}">
+                                            <span class="text-xs xl:text-[13px] tracking-wide truncate">{{ $cat->name }}</span>
+                                            <svg class="w-3.5 h-3.5 {{ $index === 0 ? ($isTheme2 ? 'text-amber-400' : 'text-slate-800') : 'text-slate-400' }} chevron-icon transition-colors duration-150" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+                                            </svg>
+                                        </div>
+                                    @endforeach
                                 </div>
-                                <div class="grid grid-cols-2 gap-x-8 gap-y-4">
-                                    @foreach($headerCategories as $cat)
-                                        <a href="{{ route('category.detail', $cat->slug) }}" class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/60 transition-colors group/item">
-                                            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0 group-hover/item:bg-amber-100 group-hover/item:text-amber-600 text-slate-400 transition-colors">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"></path></svg>
+
+                                <!-- Right column: Products panels -->
+                                <div class="flex-1 {{ $isTheme2 ? 'bg-[#0c0c0e]' : 'bg-white' }} p-6 xl:p-8 overflow-y-auto relative">
+                                    @foreach($headerCategories as $index => $cat)
+                                        <div id="category-panel-{{ $cat->id }}" class="category-panel {{ $index === 0 ? 'block' : 'hidden' }} transition-all duration-300">
+                                            <!-- Panel Header -->
+                                            <div class="flex items-center justify-between mb-6 pb-4 {{ $isTheme2 ? 'border-white/5' : 'border-slate-100' }} border-b">
+                                                <h3 class="{{ $isTheme2 ? 'text-white' : 'text-slate-800' }} font-bold text-xs tracking-widest uppercase">Featured in {{ $cat->name }}</h3>
+                                                <a href="{{ route('category.detail', $cat->slug) }}" class="{{ $isTheme2 ? 'text-amber-400 hover:text-amber-300' : 'text-amber-600 hover:text-amber-700' }} text-xs font-bold tracking-wider uppercase flex items-center gap-1 group/link">
+                                                    View All
+                                                    <svg class="w-4 h-4 transform group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                                </a>
                                             </div>
-                                            <div>
-                                                <div class="text-slate-800 font-bold text-xs tracking-wider uppercase group-hover/item:text-amber-600 transition-colors">{{ $cat->name }}</div>
-                                            </div>
-                                        </a>
+
+                                            <!-- Products Grid (Temu circular items style) -->
+                                            @if($cat->products->isEmpty())
+                                                <div class="flex flex-col items-center justify-center h-[280px] {{ $isTheme2 ? 'text-slate-500' : 'text-slate-400' }}">
+                                                    <svg class="w-12 h-12 mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                                    </svg>
+                                                    <p class="text-sm font-medium">No products found in this category.</p>
+                                                </div>
+                                            @else
+                                                <div class="grid grid-cols-4 xl:grid-cols-5 gap-x-3 xl:gap-x-4 gap-y-6">
+                                                    @foreach($cat->products as $prod)
+                                                        <a href="{{ route('product.detail', $prod->id) }}" class="flex flex-col items-center group/prod text-center relative">
+                                                            <!-- Round Image Container (Temu Style) -->
+                                                            <div class="w-16 h-16 xl:w-20 xl:h-20 rounded-full overflow-hidden {{ $isTheme2 ? 'bg-slate-900/60 border-white/5' : 'bg-slate-100 border-slate-200' }} border flex items-center justify-center mb-2 relative transition-all duration-300 group-hover/prod:scale-105 group-hover/prod:shadow-md p-0">
+                                                                <img src="{{ asset('storage/' . $prod->image) }}" 
+                                                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=150&q=80';" 
+                                                                     alt="{{ $prod->name }}" 
+                                                                     class="w-full h-full object-cover">
+                                                                
+                                                                <!-- HOT Badge -->
+                                                                @if($prod->is_on_sale || ($prod->purchased_count ?? 0) > 10)
+                                                                    <div class="absolute -top-0.5 -right-0.5 bg-[#ff470b] text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm z-10">
+                                                                        HOT
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <!-- Title -->
+                                                            <span class="text-[12px] font-medium {{ $isTheme2 ? 'text-slate-300 group-hover/prod:text-amber-400' : 'text-slate-700 group-hover/prod:text-slate-900' }} transition-colors line-clamp-2 w-full px-1 leading-tight mt-1 text-center">
+                                                                {{ $prod->name }}
+                                                            </span>
+                                                        </a>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -280,24 +339,62 @@
 
 {{-- Search Modal HTML --}}
 <div id="search-modal" class="fixed inset-0 {{ $isTheme2 ? 'bg-[#0c0c0e]/95 backdrop-blur-md text-[#f3e8ff]' : 'bg-white/95 backdrop-blur-sm' }} z-[80] hidden opacity-0 transition-opacity duration-300 flex-col">
-    <div class="max-w-4xl mx-auto w-full px-4 pt-16 sm:pt-24 relative flex-1">
-        <button id="close-search" class="absolute top-4 right-4 sm:top-8 sm:right-8 {{ $isTheme2 ? 'text-slate-400 hover:text-amber-400' : 'text-gray-500 hover:text-red-500' }} transition transform hover:rotate-90 duration-300">
-            <svg class="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    <div class="max-w-3xl mx-auto w-full px-4 pt-8 sm:pt-20 relative flex-1">
+        <!-- Close Button Top Right -->
+        <button id="close-search" class="hidden sm:block absolute top-4 right-4 sm:top-8 sm:right-8 {{ $isTheme2 ? 'text-slate-400 hover:text-amber-400' : 'text-gray-500 hover:text-red-500' }} transition transform hover:rotate-90 duration-300">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         
-        <div class="text-center mb-8 transform -translate-y-4 opacity-0 transition-all duration-500" id="search-content">
-            <h2 class="text-3xl sm:text-5xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-800' }} mb-6 font-serif">What are you looking for?</h2>
-            <form action="{{ route('products.all') }}" method="GET" class="relative max-w-2xl mx-auto">
-                <input type="text" name="q" placeholder="Search products, brands, categories..." class="w-full text-lg sm:text-2xl px-0 py-4 {{ $isTheme2 ? 'border-b-2 border-slate-800 focus:border-amber-400 text-white placeholder:text-slate-600' : 'border-b-2 border-gray-300 focus:border-amber-500 text-gray-800 placeholder:text-gray-400' }} bg-transparent outline-none transition-colors" autofocus>
-                <button type="submit" class="absolute right-0 top-1/2 -translate-y-1/2 {{ $isTheme2 ? 'text-slate-500 hover:text-amber-400' : 'text-gray-400 hover:text-amber-500' }} transition transform hover:scale-110">
-                    <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <div class="mb-8 transform -translate-y-4 opacity-0 transition-all duration-500" id="search-content">
+            <!-- Search bar row -->
+            <div class="flex items-center gap-4 mb-8">
+                <!-- Back button (<) -->
+                <button type="button" onclick="window.closeSearch()" class="text-gray-900 {{ $isTheme2 ? 'text-white hover:text-amber-400' : 'text-gray-800 hover:text-gray-600' }} transition flex-shrink-0">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path>
+                    </svg>
                 </button>
-            </form>
+                
+                <!-- Form with round black border and solid circle search button -->
+                <form action="{{ route('products.all') }}" method="GET" class="relative flex-1 m-0">
+                    <input type="text" name="q" placeholder="Search GetCare..." class="w-full text-base pl-6 pr-14 py-3 border-2 {{ $isTheme2 ? 'border-amber-400 bg-slate-900 text-white placeholder:text-slate-500' : 'border-black bg-white text-black placeholder:text-gray-400' }} rounded-full outline-none focus:ring-0" autofocus>
+                    <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 {{ $isTheme2 ? 'bg-amber-500 text-slate-950 hover:bg-amber-400' : 'bg-black text-white hover:bg-gray-800' }} rounded-full flex items-center justify-center transition-colors">
+                        <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path>
+                        </svg>
+                    </button>
+                </form>
+            </div>
             
-            <div class="mt-10 flex flex-wrap justify-center gap-2 sm:gap-4 text-sm">
-                <span class="text-gray-500">Popular:</span>
-                <a href="#" class="text-amber-500 hover:underline">Skincare</a>
-                <a href="#" class="text-amber-500 hover:underline">Gifts</a>
+            <!-- Popular right now section -->
+            <div class="mt-8 text-left">
+                <h3 class="text-lg font-bold {{ $isTheme2 ? 'text-white' : 'text-slate-900' }} mb-4 font-sans tracking-tight">Popular right now</h3>
+                <div class="flex flex-wrap gap-2.5">
+                    @forelse($popularSearches as $search)
+                        <a href="{{ route('products.all') }}?q={{ urlencode($search->name) }}" class="flex items-center gap-2 {{ $isTheme2 ? 'bg-[#1c1c1e] text-slate-200 hover:bg-slate-800 hover:text-white' : 'bg-slate-100 text-slate-800 hover:bg-slate-200 hover:text-black' }} rounded-full p-1 pr-4 transition-all max-w-full">
+                            <!-- Small round image -->
+                            <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 bg-white">
+                                @if($search->image)
+                                    <img src="{{ asset('storage/' . $search->image) }}" alt="{{ $search->name }}" class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full bg-amber-100 flex items-center justify-center text-amber-600 text-[10px] font-bold font-sans">
+                                        {{ strtoupper(substr($search->name, 0, 1)) }}
+                                    </div>
+                                @endif
+                            </div>
+                            
+                            <!-- Fire emoji + Text -->
+                            <span class="text-xs sm:text-[13px] font-medium truncate flex items-center gap-1.5">
+                                @if($search->is_hot)
+                                    <span>🔥</span>
+                                @endif
+                                {{ $search->name }}
+                            </span>
+                        </a>
+                    @empty
+                        <span class="text-sm text-slate-400 italic">No popular searches set.</span>
+                    @endforelse
+                </div>
             </div>
         </div>
     </div>
@@ -306,23 +403,67 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         
-        // --- 0. Scroll Animation Logic ---
-        const mainHeader = document.getElementById('main-header');
-        const currencyContainer = document.getElementById('currency-selector-container');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                mainHeader.classList.add('is-scrolled');
-                if (currencyContainer && window.innerWidth < 768) {
-                    currencyContainer.style.opacity = '0';
-                    currencyContainer.style.pointerEvents = 'none';
+        // --- 0. Removed Scroll Animation Logic (Header is now permanently affixed) ---
+
+        // --- Categories Megamenu Tab Switch Logic ---
+        const categoryTabs = document.querySelectorAll('.category-tab');
+        const isTheme2 = {{ $isTheme2 ? 'true' : 'false' }};
+        
+        categoryTabs.forEach(tab => {
+            tab.addEventListener('mouseenter', function() {
+                const categoryId = this.getAttribute('data-category-id');
+                
+                // 1. Reset all tabs
+                categoryTabs.forEach(t => {
+                    t.classList.remove('bg-white', 'font-bold', 'text-slate-900', 'bg-[#0c0c0e]', 'text-amber-400');
+                    if (isTheme2) {
+                        t.classList.add('text-slate-400', 'font-medium');
+                    } else {
+                        t.classList.add('text-slate-600', 'font-medium');
+                    }
+                    const chev = t.querySelector('.chevron-icon');
+                    if (chev) {
+                        if (isTheme2) {
+                            chev.classList.remove('text-amber-400');
+                            chev.classList.add('text-slate-400');
+                        } else {
+                            chev.classList.remove('text-slate-800');
+                            chev.classList.add('text-slate-400');
+                        }
+                    }
+                });
+                
+                // 2. Set active tab
+                this.classList.remove('text-slate-400', 'text-slate-600', 'font-medium');
+                if (isTheme2) {
+                    this.classList.add('bg-[#0c0c0e]', 'font-bold', 'text-amber-400');
+                } else {
+                    this.classList.add('bg-white', 'font-bold', 'text-slate-900');
                 }
-            } else {
-                mainHeader.classList.remove('is-scrolled');
-                if (currencyContainer) {
-                    currencyContainer.style.opacity = '1';
-                    currencyContainer.style.pointerEvents = 'auto';
+                const activeChev = this.querySelector('.chevron-icon');
+                if (activeChev) {
+                    if (isTheme2) {
+                        activeChev.classList.remove('text-slate-400');
+                        activeChev.classList.add('text-amber-400');
+                    } else {
+                        activeChev.classList.remove('text-slate-400');
+                        activeChev.classList.add('text-slate-800');
+                    }
                 }
-            }
+                
+                // 3. Toggle panels
+                const panels = document.querySelectorAll('.category-panel');
+                panels.forEach(p => {
+                    p.classList.add('hidden');
+                    p.classList.remove('block');
+                });
+                
+                const targetPanel = document.getElementById('category-panel-' + categoryId);
+                if (targetPanel) {
+                    targetPanel.classList.remove('hidden');
+                    targetPanel.classList.add('block');
+                }
+            });
         });
 
         // --- 1. Mobile Menu Logic ---
@@ -445,7 +586,42 @@
                 if (targetDateStr) {
                     localStorage.setItem('countdown_dismissed_date', targetDateStr);
                 }
+                if (typeof adjustHeaderOffset === 'function') {
+                    setTimeout(adjustHeaderOffset, 50);
+                }
             }
         };
+
+        // --- 6. Mobile Layout & Currency Selector Offset Logic ---
+        function adjustHeaderOffset() {
+            const header = document.getElementById('main-header');
+            const mainContent = document.querySelector('main');
+            if (header && mainContent) {
+                const height = header.offsetHeight;
+                mainContent.style.paddingTop = height + 'px';
+            }
+        }
+
+        // Run on load and resize
+        adjustHeaderOffset();
+        window.addEventListener('resize', adjustHeaderOffset);
+        window.adjustHeaderOffset = adjustHeaderOffset;
+
+        // Hide currency selector on scroll (both mobile and desktop)
+        const currencyContainer = document.getElementById('currency-selector-container');
+        if (currencyContainer) {
+            function checkCurrencyVisibility() {
+                if (window.scrollY > 20) {
+                    currencyContainer.style.opacity = '0';
+                    currencyContainer.style.pointerEvents = 'none';
+                } else {
+                    currencyContainer.style.opacity = '1';
+                    currencyContainer.style.pointerEvents = 'auto';
+                }
+            }
+            window.addEventListener('scroll', checkCurrencyVisibility);
+            window.addEventListener('resize', checkCurrencyVisibility);
+            checkCurrencyVisibility();
+        }
     });
 </script>

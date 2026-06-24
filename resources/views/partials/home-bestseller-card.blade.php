@@ -4,13 +4,15 @@
     
     // Parse tags to render as badges
     $badges = [];
-    if (!empty($product->tags)) {
+    if ($product->stock <= 0) {
+        $badges[] = 'Sold Out';
+    } elseif (!empty($product->tags)) {
         $badges = array_map('trim', explode(',', $product->tags));
     } else {
         if ($product->stock < 5 && $product->stock > 0) {
             $badges[] = 'Limited';
         }
-        if ($product->compare_price && $product->compare_price > $product->price) {
+        if ($product->is_on_sale && $product->compare_price && $product->compare_price > $product->price) {
             $badges[] = 'Sale';
         }
     }
@@ -24,7 +26,7 @@
             @if($product->cover_image || $product->image)
                 <img src="{{ asset('storage/' . ($product->cover_image ?? $product->image)) }}" 
                      alt="{{ $product->name }}" 
-                     class="w-full h-full object-contain mix-blend-multiply group-hover/img:scale-105 transition-transform duration-700 ease-out {{ $isTheme2 ? 'brightness-110 contrast-105' : '' }}">
+                     class="w-full h-full object-contain mix-blend-multiply group-hover/img:scale-105 transition-transform duration-700 ease-out {{ $isTheme2 ? 'brightness-110 contrast-105' : '' }} {{ $product->stock <= 0 ? 'opacity-45 grayscale' : '' }}">
             @else
                 <div class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400">No Image</div>
             @endif
@@ -35,7 +37,9 @@
                 @foreach($badges as $badge)
                     @php
                         $badgeStyle = 'bg-slate-900 text-white';
-                        if (strtolower($badge) === 'limited') {
+                        if (strtolower($badge) === 'sold out') {
+                            $badgeStyle = 'bg-gray-500 text-white';
+                        } elseif (strtolower($badge) === 'limited') {
                             $badgeStyle = $isTheme2 ? 'bg-amber-950/40 text-amber-400 border border-amber-500/30' : 'bg-blue-50 text-blue-700 border border-blue-100';
                         } elseif (strtolower($badge) === 'top rated') {
                             $badgeStyle = $isTheme2 ? 'bg-amber-500/10 text-amber-300 border border-amber-500/30' : 'bg-amber-50 text-amber-700 border border-amber-100';
@@ -54,9 +58,15 @@
 
             {{-- Quick Add Overlay --}}
             <div class="absolute inset-x-0 bottom-6 flex justify-center opacity-0 translate-y-3 group-hover/img:opacity-100 group-hover/img:translate-y-0 transition-all duration-300 z-20">
+                @if($product->stock <= 0)
+                <button class="bg-gray-200/90 text-gray-500 font-extrabold py-3 px-8 rounded-full shadow-lg transition-all text-xs uppercase tracking-wider cursor-not-allowed" disabled>
+                    Sold Out
+                </button>
+                @else
                 <button class="bg-white/95 backdrop-blur-sm hover:bg-slate-900 hover:text-white text-slate-900 font-extrabold py-3 px-8 rounded-full shadow-lg transition-all text-xs uppercase tracking-wider" onclick="event.preventDefault(); window.addToCart({{ $product->id }}, 1)">
                     Quick Add
                 </button>
+                @endif
             </div>
         </a>
 
@@ -75,12 +85,12 @@
             </a>
 
             {{-- Price --}}
-            <div class="mt-2 text-slate-900 dark:text-slate-100 font-bold text-sm">
-                @if($product->compare_price && $product->compare_price > $product->price)
-                    <span class="text-amber-600 dark:text-amber-400 font-extrabold text-base">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
-                    <span class="text-slate-400 dark:text-slate-500 line-through text-xs ml-1">{{ \App\Helpers\CurrencyHelper::format($product->compare_price) }}</span>
+            <div class="mt-2 flex items-center justify-center gap-1.5 flex-wrap">
+                @if($product->is_on_sale && $product->compare_price && $product->compare_price > $product->price)
+                    <span class="text-amber-600 dark:text-amber-400 font-sans font-bold text-sm sm:text-lg">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
+                    <span class="text-slate-400 dark:text-slate-500 font-sans text-xs sm:text-sm line-through ml-1">{{ \App\Helpers\CurrencyHelper::format($product->compare_price) }}</span>
                 @else
-                    <span>{!! \App\Helpers\CurrencyHelper::format($product->price) !!}</span>
+                    <span class="text-slate-900 dark:text-slate-100 font-sans font-bold text-sm sm:text-lg">{!! \App\Helpers\CurrencyHelper::format($product->price) !!}</span>
                 @endif
             </div>
         </div>

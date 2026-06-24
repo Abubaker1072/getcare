@@ -69,7 +69,7 @@ class AuthController extends Controller
         // Merge session cart to user cart
         $this->mergeSessionCart($oldSessionId, $user->id);
 
-        return redirect('/dashboard');
+        return redirect('/dashboard')->with('registered_success', true);
     }
 
     public function logout(Request $request)

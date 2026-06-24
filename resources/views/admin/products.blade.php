@@ -57,6 +57,7 @@
                         <th class="p-5 font-bold">Category</th>
                         <th class="p-5 font-bold">Stock</th>
                         <th class="p-5 font-bold">Price</th>
+                        <th class="p-5 font-bold">Sale</th>
                         <th class="p-5 font-bold">Status</th>
                         <th class="p-5 font-bold text-right">Actions</th>
                     </tr>
@@ -94,6 +95,14 @@
                         </td>
                         <td class="p-5 text-slate-600 font-medium">{{ $product->stock }}</td>
                         <td class="p-5 text-slate-900 font-bold">{!! \App\Helpers\CurrencyHelper::format($product->price) !!}</td>
+                        <td class="p-5">
+                            <form action="{{ route('admin.products.toggle-sale', $product->id) }}" method="POST" onclick="event.stopPropagation();">
+                                @csrf
+                                <button type="submit" class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 {{ $product->is_on_sale ? 'bg-emerald-500' : 'bg-slate-200' }}" role="switch" aria-checked="{{ $product->is_on_sale ? 'true' : 'false' }}">
+                                    <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out {{ $product->is_on_sale ? 'translate-x-5' : 'translate-x-0' }}"></span>
+                                </button>
+                            </form>
+                        </td>
                         <td class="p-5">
                             @if($product->is_active)
                                 <span class="bg-emerald-50 text-emerald-600 border border-emerald-100 px-2.5 py-1 rounded-lg text-xs font-bold tracking-wide">Active</span>

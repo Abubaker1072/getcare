@@ -272,10 +272,14 @@
                 </div>
             </div>
 
-            <div class="mb-8">
-                <label class="flex items-center">
-                    <input type="checkbox" name="is_active" value="1" class="rounded border-slate-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" checked>
-                    <span class="ml-2 text-sm font-bold text-slate-700">Active (Visible to customers)</span>
+            <div class="mb-8 flex flex-wrap gap-6">
+                <label class="flex items-center cursor-pointer">
+                    <input type="checkbox" name="is_active" value="1" class="rounded border-slate-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-5 h-5 transition duration-150" checked>
+                    <span class="ml-2.5 text-sm font-bold text-slate-700">Active (Visible to customers)</span>
+                </label>
+                <label class="flex items-center cursor-pointer">
+                    <input type="checkbox" name="is_on_sale" value="1" class="rounded border-slate-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-5 h-5 transition duration-150" checked>
+                    <span class="ml-2.5 text-sm font-bold text-slate-700">On Sale (Show comparison prices & badges)</span>
                 </label>
             </div>
 

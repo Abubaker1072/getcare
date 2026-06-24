@@ -14,12 +14,12 @@
     .reel-swiper {
         padding: 40px 0;
     }
-    .swiper-slide {
+    .reel-swiper .swiper-slide {
         transition: transform 0.3s ease, opacity 0.3s ease;
         opacity: 0.5;
         transform: scale(0.85);
     }
-    .swiper-slide-active {
+    .reel-swiper .swiper-slide-active {
         opacity: 1;
         transform: scale(1);
     }
@@ -124,6 +124,75 @@
         font-size: 16px !important;
         font-weight: bold;
     }
+
+    /* Hot Deal Swiper Custom Transitions & Optimization */
+    .hotdeal-swiper .swiper-wrapper {
+        will-change: transform;
+    }
+    .hotdeal-swiper .swiper-slide {
+        will-change: transform;
+    }
+    
+    /* Slide Content Animations (Active Slide) */
+    .hotdeal-swiper .swiper-slide img {
+        transform: scale(0.92) translateY(5px);
+        opacity: 0.8;
+        transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease;
+    }
+    .hotdeal-swiper .swiper-slide-active img {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+
+    .hotdeal-swiper .swiper-slide h2 {
+        transform: translateY(10px);
+        opacity: 0.8;
+        transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.7s ease;
+    }
+    .hotdeal-swiper .swiper-slide-active h2 {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .hotdeal-swiper .swiper-slide p {
+        transform: translateY(8px);
+        opacity: 0.7;
+        transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.7s ease;
+        transition-delay: 0.05s;
+    }
+    .hotdeal-swiper .swiper-slide-active p {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .hotdeal-swiper .swiper-slide .claim-offer-btn {
+        transform: translateY(10px);
+        opacity: 0.8;
+        transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.7s ease;
+        transition-delay: 0.1s;
+    }
+    .hotdeal-swiper .swiper-slide-active .claim-offer-btn {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    @media (max-width: 767px) {
+        /* Optimize expensive CSS filters to prevent paint lag during manual touch swiping on mobile */
+        .hotdeal-swiper img {
+            filter: none !important;
+        }
+        .hotdeal-swiper .blur-2xl {
+            filter: none !important;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.22) 0%, transparent 65%) !important;
+        }
+        /* Snappier transition durations on mobile for better touch gesture response */
+        .hotdeal-swiper .swiper-slide img,
+        .hotdeal-swiper .swiper-slide h2,
+        .hotdeal-swiper .swiper-slide p,
+        .hotdeal-swiper .swiper-slide .claim-offer-btn {
+            transition-duration: 0.4s !important;
+        }
+    }
 </style>
 
 <div class="{{ $isTheme2 ? 'theme-2 bg-[#0c0c0e] text-[#f3e8ff]' : '' }}">
@@ -153,7 +222,7 @@
                     ? asset('storage/' . $heroMediaPath) 
                     : 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=1400&h=700&fit=crop';
             @endphp
-            <section class="relative min-h-screen md:h-[600px] lg:h-[700px] overflow-hidden border-b {{ $isTheme2 ? 'border-white/5' : 'border-transparent' }}">
+            <section class="relative min-h-[450px] sm:min-h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden border-b {{ $isTheme2 ? 'border-white/5' : 'border-transparent' }}">
                 {{-- Background Media --}}
                 <div class="absolute inset-0 z-0">
                     @if($isSliderActive && $sliderMedia->isNotEmpty())
@@ -177,8 +246,9 @@
                         
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {
+                                const heroSlides = document.querySelectorAll('.hero-bg-swiper .swiper-slide');
                                 new Swiper('.hero-bg-swiper', {
-                                    loop: true,
+                                    loop: heroSlides.length > 1,
                                     effect: 'fade',
                                     fadeEffect: {
                                         crossFade: true
@@ -248,10 +318,13 @@
             <section class="w-full">
                 <div class="flex flex-col md:flex-row w-full h-auto md:h-[600px]">
                     <!-- Left Side: Product Set -->
-                    <div class="w-full md:w-1/2 {{ $isTheme2 ? 'bg-[#0a0a0c] border-r border-white/5' : 'bg-[#e6e2f1]' }} flex flex-col justify-center items-center p-12 relative overflow-hidden" 
+                    <div class="w-full md:w-1/2 {{ $isTheme2 ? 'bg-[#0a0a0c] border-r border-white/5' : 'bg-[#e6e2f1]' }} flex flex-col justify-center items-center p-6 sm:p-12 relative overflow-hidden group" 
                          style="{{ $isTheme2 ? 'background: radial-gradient(circle at center, rgba(245,158,11,0.06) 0%, rgba(10,10,12,0) 75%), #0a0a0c;' : '' }}">
                         
-                        <img src="{{ $routineProductUrl }}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&q=80';" alt="Complete Glow Up Set" class="w-[80%] max-w-sm object-contain z-10 drop-shadow-2xl mix-blend-multiply transition-transform duration-700 hover:scale-105 filter {{ $isTheme2 ? 'brightness-110 contrast-105' : '' }}">
+                        {{-- Background bubble/glow --}}
+                        <div class="hidden md:block absolute w-[200px] sm:w-[320px] h-[200px] sm:h-[320px] {{ $isTheme2 ? 'bg-gradient-to-tr from-amber-500/15 to-transparent' : 'bg-gradient-to-tr from-purple-300/30 to-pink-300/30' }} rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700 pointer-events-none z-0"></div>
+
+                        <img src="{{ $routineProductUrl }}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&q=80';" alt="Complete Glow Up Set" class="w-[80%] max-w-sm object-contain z-10 drop-shadow-2xl transition-transform duration-700 group-hover:scale-105 filter {{ $isTheme2 ? 'brightness-110 contrast-105' : '' }}">
                         
                         <div class="mt-8 text-center z-10">
                             <h3 class="text-xl font-serif {{ $isTheme2 ? 'text-white' : 'text-slate-800' }} mb-2 font-medium">The Complete Glow Up Set</h3>
@@ -266,7 +339,7 @@
                     </div>
 
                     <!-- Right Side: Lifestyle Image -->
-                    <div class="w-full md:w-1/2 relative flex items-center justify-center p-12 h-[400px] md:h-full overflow-hidden group">
+                    <div class="w-full md:w-1/2 relative flex items-center justify-center p-6 sm:p-12 h-[350px] sm:h-[400px] md:h-full overflow-hidden group">
                         <img src="{{ $routineLifestyleUrl }}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=1000&q=80';" alt="Skincare Routine" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t {{ $isTheme2 ? 'from-black/80 via-black/40' : 'from-black/60 via-black/20' }} to-transparent"></div>
                         
@@ -281,9 +354,9 @@
 
         @elseif($section['id'] === 'categories')
             {{-- CATEGORIES SECTION --}}
-            <section id="categories" class="py-12 md:py-20 {{ $isTheme2 ? 'bg-[#0c0c0e] border-b border-white/5' : 'bg-white' }}">
+            <section id="categories" class="py-1 sm:py-2 {{ $isTheme2 ? 'bg-[#0c0c0e] border-b border-white/5' : 'bg-white' }}">
                 <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-                    <div class="text-center mb-8 md:mb-12 reveal-on-scroll">
+                    <div class="text-center mb-2 md:mb-3 reveal-on-scroll">
                         <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }} mb-2 md:mb-4">Featured Collections</h2>
                         <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-gray-600' }} text-sm md:text-lg">Discover our premium skincare & beauty devices</p>
                     </div>
@@ -319,7 +392,7 @@
 
         @elseif($section['id'] === 'products')
             {{-- PRODUCTS SECTION --}}
-            <section class="py-16 md:py-24 relative overflow-hidden {{ $isTheme2 ? 'bg-[#0c0c0e] border-b border-white/5' : '' }}">
+            <section class="py-2 sm:py-3 relative overflow-hidden {{ $isTheme2 ? 'bg-[#0c0c0e] border-b border-white/5' : '' }}">
                 {{-- Animated Background Gradient --}}
                 @if(!$isTheme2)
                     <div class="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-slate-50 -z-10"></div>
@@ -332,34 +405,38 @@
 
                 <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
                     {{-- Section Header --}}
-                    <div class="text-center mb-12 md:mb-16 reveal-on-scroll">
-                        <span class="inline-block text-sm font-semibold {{ $isTheme2 ? 'text-amber-500' : 'text-amber-600' }} mb-3 tracking-wider uppercase">Premium Selection</span>
+                    <div class="text-center mb-3 md:mb-4 reveal-on-scroll">
+                        <span class="inline-block text-sm font-semibold {{ $isTheme2 ? 'text-amber-500' : 'text-amber-600' }} mb-2 tracking-wider uppercase">Premium Selection</span>
                         <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }} mb-4">Bestselling Products</h2>
                         <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-gray-600' }} text-base md:text-lg max-w-2xl mx-auto">Discover our most loved beauty and skincare devices trusted by thousands</p>
                     </div>
 
                     {{-- Products Grid --}}
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 md:gap-8 mb-12 reveal-on-scroll">
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 md:gap-8 mb-6 reveal-on-scroll">
                         @foreach($bestsellingProducts->take(8) as $index => $product)
                         <div class="product-card group cursor-pointer animation-delay-{{ $index * 100 }}">
                             {{-- Card Container --}}
-                            <div class="relative h-full rounded-2xl overflow-hidden {{ $isTheme2 ? 'bg-slate-900/40 border border-white/5' : 'bg-white shadow-lg' }} hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                            <div class="relative h-full rounded-2xl overflow-hidden {{ $isTheme2 ? 'bg-slate-900/40 border border-white/5' : 'bg-white shadow-lg' }} hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col justify-between">
                                 {{-- Product Image Container --}}
-                                <a href="{{ route('product.detail', $product->id) }}" class="block relative bg-gradient-to-br from-slate-100 to-slate-200 h-32 sm:h-40 md:h-48 overflow-hidden">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/0 group-hover:from-black/30 transition duration-500"></div>
+                                <a href="{{ route('product.detail', $product->id) }}" class="block relative {{ $isTheme2 ? 'bg-slate-950/60' : 'bg-slate-50' }} h-40 sm:h-48 md:h-56 overflow-hidden flex items-center justify-center p-4">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-black/0 group-hover:from-black/10 transition duration-500"></div>
                                     <img src="{{ asset('storage/' . ($product->cover_image ?? $product->image)) }}" 
                                          alt="{{ $product->name }}" 
-                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out">
+                                         class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700 ease-out {{ $product->stock <= 0 ? 'opacity-45 grayscale' : '' }}">
 
-                                    @if($product->compare_price && $product->compare_price > $product->price)
-                                    <div class="absolute top-4 right-4 bg-red-600 text-white px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg transform transition-transform duration-300 hover:scale-110">
+                                    @if($product->stock <= 0)
+                                    <div class="absolute top-4 right-4 bg-gray-500 text-white px-3 py-1 rounded-full text-[10px] font-sans font-bold uppercase tracking-wider shadow-lg transform transition-transform duration-300 hover:scale-110 z-10">
+                                        Sold Out
+                                    </div>
+                                    @elseif($product->is_on_sale && $product->compare_price && $product->compare_price > $product->price)
+                                    <div class="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-[10px] font-sans font-bold uppercase tracking-wider shadow-lg transform transition-transform duration-300 hover:scale-110 z-10">
                                         Sale
                                     </div>
                                     @endif
 
                                     <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                         <div class="text-white text-center">
-                                            <svg class="w-16 h-16 mx-auto mb-2 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-12 h-12 mx-auto mb-2 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                                             </svg>
                                         </div>
@@ -367,16 +444,16 @@
                                 </a>
 
                                 {{-- Product Info --}}
-                                <div class="p-3 sm:p-4">
+                                <div class="p-3 sm:p-4 flex-grow flex flex-col justify-between">
                                     <a href="{{ route('product.detail', $product->id) }}">
-                                        <h3 class="font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }} text-xs sm:text-sm line-clamp-2 mb-1.5 leading-tight group-hover:text-amber-600 transition-colors">
+                                        <h3 class="font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }} text-xs sm:text-sm line-clamp-2 mb-1.5 leading-tight group-hover:text-amber-600 transition-colors break-words">
                                             {{ $product->name }}
                                         </h3>
                                     </a>
 
-                                    <div class="flex items-center justify-between mb-2">
-                                        <div class="flex items-center gap-1">
-                                            <div class="flex text-amber-400 text-[10px] sm:text-xs">
+                                    <div class="flex items-center justify-between gap-1 mb-2">
+                                        <div class="flex items-center gap-1 flex-shrink-0">
+                                            <div class="flex flex-row flex-nowrap text-amber-400 text-[10px] sm:text-xs whitespace-nowrap">
                                                 @for($i = 1; $i <= 5; $i++)
                                                     @if($i <= floor((float)$product->rating))
                                                         ★
@@ -389,23 +466,25 @@
                                             </div>
                                             <span class="text-[10px] sm:text-xs text-gray-500">({{ $product->reviews_count ?? 0 }})</span>
                                         </div>
-                                        <div class="text-[10px] sm:text-xs font-medium text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                                            {{ $product->purchased_count ?? 0 }}+ sold
+                                        @if(($product->purchased_count ?? 0) > 0)
+                                        <div class="text-[10px] sm:text-xs font-medium text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded whitespace-nowrap flex-shrink-0">
+                                            {{ $product->purchased_count }}+ sold
                                         </div>
+                                        @endif
                                     </div>
 
-                                    <div>
-                                        <div class="flex items-baseline gap-2 mb-1">
-                                            @if($product->compare_price && $product->compare_price > $product->price)
-                                                <span class="text-lg sm:text-xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }}">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
-                                                <span class="text-xs text-gray-400 line-through">{{ \App\Helpers\CurrencyHelper::format($product->compare_price) }}</span>
+                                    <div class="w-full overflow-hidden">
+                                        <div class="flex flex-wrap items-center gap-x-1.5 gap-y-1 mb-1 w-full">
+                                            @if($product->is_on_sale && $product->compare_price && $product->compare_price > $product->price)
+                                                <span class="text-sm sm:text-lg font-sans font-bold {{ $isTheme2 ? 'text-white' : 'text-slate-900' }} whitespace-nowrap">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
+                                                <span class="text-[10px] sm:text-sm font-sans text-gray-400 line-through whitespace-nowrap">{{ \App\Helpers\CurrencyHelper::format($product->compare_price) }}</span>
                                                 @if($product->discount_price && (float)$product->discount_price > 0)
-                                                    <span class="text-xs font-bold text-green-600">Save {{ \App\Helpers\CurrencyHelper::format($product->discount_price) }}</span>
+                                                    <span class="text-[10px] sm:text-xs font-sans font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded whitespace-nowrap">Save {{ \App\Helpers\CurrencyHelper::format($product->discount_price) }}</span>
                                                 @else
-                                                    <span class="text-xs font-bold text-green-600">{{ round((1 - $product->price/$product->compare_price) * 100) }}% OFF</span>
+                                                    <span class="text-[10px] sm:text-xs font-sans font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded whitespace-nowrap">{{ round((1 - $product->price/$product->compare_price) * 100) }}% OFF</span>
                                                 @endif
                                             @else
-                                                <span class="text-lg sm:text-xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }}">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
+                                                <span class="text-sm sm:text-lg font-sans font-bold {{ $isTheme2 ? 'text-white' : 'text-slate-900' }} whitespace-nowrap">{{ \App\Helpers\CurrencyHelper::format($product->price) }}</span>
                                             @endif
                                         </div>
                                     </div>
@@ -428,8 +507,8 @@
                 </div>
 
                 @if(isset($hotDealProducts) && $hotDealProducts->isNotEmpty())
-                    <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 mt-16 relative">
-                        <div class="swiper hotdeal-swiper !pb-12">
+                    <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 mt-2 sm:mt-3 relative">
+                        <div class="swiper hotdeal-swiper !pb-6">
                             <div class="swiper-wrapper">
                                 @foreach($hotDealProducts as $featuredHotDeal)
                                     @php
@@ -438,57 +517,50 @@
                                         $featuredSavings = ($featuredCompare && $featuredCompare > $featuredSale) ? ($featuredHotDeal->discount_price && (float)$featuredHotDeal->discount_price > 0 ? (float)$featuredHotDeal->discount_price : $featuredCompare - $featuredSale) : 0;
                                     @endphp
                                     <div class="swiper-slide">
-                                        <div class="fade-up relative rounded-[2rem] {{ $isTheme2 ? 'bg-slate-950 border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.5)]' : 'bg-white border border-slate-100 shadow-[0_10px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)]' }} overflow-hidden group hover:-translate-y-2 transition-all duration-500">
-                                            <div class="flex flex-row items-stretch p-4 sm:p-0">
-                                                <div class="w-1/2 sm:p-6 md:p-10 relative z-10 flex flex-col justify-center">
-                                                    <span class="{{ $isTheme2 ? 'text-amber-500' : 'text-amber-600' }} text-[8px] sm:text-[10px] md:text-xs font-bold tracking-widest uppercase mb-1 sm:mb-3 block">Master Collection</span>
-                                                    <h2 class="text-xl sm:text-3xl md:text-4xl font-light mb-2 sm:mb-4 {{ $isTheme2 ? 'text-white' : 'text-slate-900' }}">
+                                        <div class="fade-up relative rounded-[2rem] {{ $isTheme2 ? 'bg-slate-950 border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.5)]' : 'bg-white border border-slate-100 shadow-[0_10px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)]' }} overflow-hidden group hover:-translate-y-2 transition-[transform,box-shadow] duration-500">
+                                            <div class="flex flex-col-reverse sm:flex-row items-stretch">
+                                                <div class="w-full sm:w-1/2 p-6 sm:p-6 md:p-10 relative z-10 flex flex-col justify-center">
+                                                    <span class="{{ $isTheme2 ? 'text-amber-500' : 'text-amber-600' }} text-[10px] sm:text-[10px] md:text-xs font-bold tracking-widest uppercase mb-2 sm:mb-3 block">Master Collection</span>
+                                                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-light mb-2 sm:mb-4 {{ $isTheme2 ? 'text-white' : 'text-slate-900' }}">
                                                         {{ $featuredHotDeal->name }}
                                                     </h2>
-                                                    <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-slate-500' }} text-[10px] sm:text-sm leading-relaxed mb-4 sm:mb-6 max-w-md font-light line-clamp-2 sm:line-clamp-3 pr-2 sm:pr-0">
+                                                    <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-slate-500' }} text-sm leading-relaxed mb-4 sm:mb-6 max-w-md font-light line-clamp-3 pr-2 sm:pr-0">
                                                         {{ $featuredHotDeal->description ?? 'Premium selection of our top-rated products.' }}
                                                     </p>
-                                                    <div class="flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-5 mb-0 sm:mb-6">
+                                                    <div class="flex flex-wrap items-center gap-3 mb-4 sm:mb-6">
                                                         <div>
                                                             @if($featuredCompare && $featuredCompare > $featuredSale)
-                                                                <span class="{{ $isTheme2 ? 'text-slate-500' : 'text-slate-400' }} line-through text-[10px] sm:text-xs block mb-0.5 sm:mb-1">Standard Price {{ \App\Helpers\CurrencyHelper::format($featuredCompare) }}</span>
+                                                                <span class="{{ $isTheme2 ? 'text-slate-500' : 'text-slate-400' }} line-through text-xs block mb-0.5 sm:mb-1">Standard Price {{ \App\Helpers\CurrencyHelper::format($featuredCompare) }}</span>
                                                             @endif
-                                                            <span class="text-lg sm:text-3xl md:text-4xl font-bold {{ $isTheme2 ? 'text-amber-400' : 'text-slate-900' }}">{{ \App\Helpers\CurrencyHelper::format($featuredSale) }}</span>
+                                                            <span class="text-2xl sm:text-3xl md:text-4xl font-bold {{ $isTheme2 ? 'text-amber-400' : 'text-slate-900' }}">{{ \App\Helpers\CurrencyHelper::format($featuredSale) }}</span>
                                                         </div>
                                                         @if($featuredSavings > 0)
-                                                        <div class="{{ $isTheme2 ? 'bg-amber-950/20 border border-amber-500/20' : 'bg-red-50 border border-red-100' }} px-2 sm:px-4 py-1 sm:py-2 rounded-md sm:rounded-lg w-fit mt-1 sm:mt-0">
-                                                            <span class="{{ $isTheme2 ? 'text-amber-500' : 'text-red-600' }} font-bold tracking-wider uppercase text-[8px] sm:text-xs">You Save {{ \App\Helpers\CurrencyHelper::format($featuredSavings) }}</span>
+                                                        <div class="{{ $isTheme2 ? 'bg-amber-950/20 border border-amber-500/20' : 'bg-red-50 border border-red-100' }} px-3 py-1.5 rounded-lg w-fit mt-1 sm:mt-0">
+                                                            <span class="{{ $isTheme2 ? 'text-amber-500' : 'text-red-600' }} font-bold tracking-wider uppercase text-xs">You Save {{ \App\Helpers\CurrencyHelper::format($featuredSavings) }}</span>
                                                         </div>
                                                         @endif
                                                     </div>
-                                                    <div class="hidden sm:block mt-2">
+                                                    <div class="mt-2 sm:mt-4">
                                                         <a href="{{ route('product.detail', $featuredHotDeal->slug ?? $featuredHotDeal->id) }}"
-                                                           class="inline-block {{ $isTheme2 ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950' : 'bg-slate-900 text-white hover:bg-slate-800' }} px-4 py-2 sm:px-8 sm:py-3 rounded-lg sm:rounded-xl text-[10px] sm:text-xs md:text-sm font-bold tracking-[0.1em] sm:tracking-[0.2em] uppercase hover:scale-105 hover:shadow-xl transition-all duration-300">
+                                                           class="claim-offer-btn inline-block text-center {{ $isTheme2 ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950' : 'bg-slate-900 text-white hover:bg-slate-800' }} px-6 py-3 rounded-xl text-xs sm:text-sm font-bold tracking-[0.1em] sm:tracking-[0.2em] uppercase hover:scale-105 hover:shadow-xl transition-all duration-300 w-full sm:w-fit">
                                                             Claim Offer
                                                         </a>
                                                     </div>
                                                 </div>
-                                                <div class="w-1/2 relative flex flex-col justify-between sm:justify-center sm:p-6 {{ $isTheme2 ? 'bg-slate-900/30' : 'bg-slate-50/50 sm:bg-transparent' }} overflow-hidden rounded-r-[2rem] sm:rounded-none">
-                                                    <div class="absolute w-[150px] sm:w-[250px] h-[150px] sm:h-[250px] {{ $isTheme2 ? 'bg-gradient-to-tr from-amber-500/20 to-transparent' : 'bg-gradient-to-tr from-amber-300/40 to-rose-200/40' }} rounded-full blur-2xl group-hover:scale-125 group-hover:rotate-12 transition-all duration-700"></div>
-                                                    <div class="h-[140px] sm:h-[250px] lg:h-[300px] flex items-center justify-center p-2 sm:p-0">
+                                                <div class="w-full sm:w-1/2 relative flex flex-col justify-center items-center p-6 {{ $isTheme2 ? 'bg-slate-900/30' : 'bg-slate-50/50 sm:bg-transparent' }} overflow-hidden rounded-t-[2rem] sm:rounded-none">
+                                                    <div class="absolute w-[200px] sm:w-[250px] h-[200px] sm:h-[250px] {{ $isTheme2 ? 'bg-gradient-to-tr from-amber-500/20 to-transparent' : 'bg-gradient-to-tr from-amber-300/40 to-rose-200/40' }} rounded-full blur-2xl group-hover:scale-125 group-hover:rotate-12 transition-all duration-700"></div>
+                                                    <div class="h-[200px] sm:h-[250px] lg:h-[300px] w-full flex items-center justify-center p-2 sm:p-0">
                                                         @if($featuredHotDeal->cover_image || $featuredHotDeal->image)
                                                             <img src="{{ asset('storage/' . ($featuredHotDeal->cover_image ?? $featuredHotDeal->image)) }}"
                                                                  alt="{{ $featuredHotDeal->name }}"
-                                                                 class="relative z-10 w-full max-w-[250px] h-full object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
+                                                                 class="relative z-10 h-full max-h-[180px] sm:max-h-full object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
                                                         @else
                                                             <img src="{{ asset('images/categories/hero-deal.jpg') }}"
                                                                  alt="{{ $featuredHotDeal->name }}"
-                                                                 class="relative z-10 w-full max-w-[250px] h-full object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
+                                                                 class="relative z-10 h-full max-h-[180px] sm:max-h-full object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
                                                         @endif
                                                     </div>
-                                                    <div class="sm:hidden w-full flex justify-end pr-2 pb-2">
-                                                        <a href="{{ route('product.detail', $featuredHotDeal->slug ?? $featuredHotDeal->id) }}"
-                                                           class="inline-block {{ $isTheme2 ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950' : 'bg-slate-900 text-white hover:bg-slate-800' }} px-4 py-2 rounded-lg text-[10px] font-bold tracking-[0.1em] uppercase shadow-lg">
-                                                            Claim Offer
-                                                        </a>
-                                                    </div>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -500,12 +572,87 @@
                 @endif
             </section>
 
+            {{-- HOMEPAGE GALLERY MARQUEE (IMAGE 2) --}}
+            <section class="py-1.5 sm:py-2 {{ $isTheme2 ? 'bg-[#0c0c0e] border-b border-white/5' : 'bg-white' }} overflow-hidden">
+                <div class="max-w-7xl mx-auto px-4 mb-3 text-center reveal-on-scroll">
+                    <h2 class="text-3xl md:text-5xl font-serif font-light {{ $isTheme2 ? 'text-white' : 'text-slate-900' }} mb-2">#Beauty Vibes</h2>
+                    <span class="inline-block text-xs font-semibold uppercase tracking-[0.2em] {{ $isTheme2 ? 'text-amber-500' : 'text-slate-800' }} pb-1 border-b border-current">FOLLOW US</span>
+                </div>
+
+                <div class="marquee-container flex overflow-hidden w-full relative py-2 hover-pause cursor-default">
+                    {{-- First Block --}}
+                    <div class="animate-marquee flex items-center gap-4 sm:gap-6 px-3">
+                        @forelse($marqueeImages as $img)
+                            @if($img->link_url)
+                                <a href="{{ $img->link_url }}" class="flex-shrink-0 relative group block overflow-hidden rounded-2xl w-48 sm:w-64 h-48 sm:h-64 shadow-md">
+                            @else
+                                <div class="flex-shrink-0 relative group overflow-hidden rounded-2xl w-48 sm:w-64 h-48 sm:h-64 shadow-md">
+                            @endif
+                                <img src="{{ asset('storage/' . $img->image_path) }}" alt="{{ $img->title ?: 'Gallery Image' }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                @if($img->title)
+                                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                        <span class="text-white text-xs font-semibold tracking-wider uppercase text-center w-full pb-4">{{ $img->title }}</span>
+                                    </div>
+                                @endif
+                            @if($img->link_url)
+                                </a>
+                            @else
+                                </div>
+                            @endif
+                        @empty
+                            @php
+                                $fallbacks = [
+                                    'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500&q=80',
+                                    'https://images.unsplash.com/photo-1608248597481-496100c80836?w=500&q=80',
+                                    'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=500&q=80',
+                                    'https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?w=500&q=80',
+                                    'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=500&q=80'
+                                ];
+                            @endphp
+                            @foreach($fallbacks as $url)
+                                <div class="flex-shrink-0 relative group overflow-hidden rounded-2xl w-48 sm:w-64 h-48 sm:h-64 shadow-md">
+                                    <img src="{{ $url }}" alt="Beauty Vibes" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                </div>
+                            @endforeach
+                        @endforelse
+                    </div>
+
+                    {{-- Second Block --}}
+                    <div class="animate-marquee flex items-center gap-4 sm:gap-6 px-3" aria-hidden="true">
+                        @forelse($marqueeImages as $img)
+                            @if($img->link_url)
+                                <a href="{{ $img->link_url }}" class="flex-shrink-0 relative group block overflow-hidden rounded-2xl w-48 sm:w-64 h-48 sm:h-64 shadow-md">
+                            @else
+                                <div class="flex-shrink-0 relative group overflow-hidden rounded-2xl w-48 sm:w-64 h-48 sm:h-64 shadow-md">
+                            @endif
+                                <img src="{{ asset('storage/' . $img->image_path) }}" alt="{{ $img->title ?: 'Gallery Image' }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                @if($img->title)
+                                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                        <span class="text-white text-xs font-semibold tracking-wider uppercase text-center w-full pb-4">{{ $img->title }}</span>
+                                    </div>
+                                @endif
+                            @if($img->link_url)
+                                </a>
+                            @else
+                                </div>
+                            @endif
+                        @empty
+                            @foreach($fallbacks as $url)
+                                <div class="flex-shrink-0 relative group overflow-hidden rounded-2xl w-48 sm:w-64 h-48 sm:h-64 shadow-md">
+                                    <img src="{{ $url }}" alt="Beauty Vibes" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                </div>
+                            @endforeach
+                        @endforelse
+                    </div>
+                </div>
+            </section>
+
         @elseif($section['id'] === 'reels')
             {{-- PROFESSIONAL REELS SECTION --}}
-            <section class="py-16 {{ $isTheme2 ? 'bg-[#08080a] border-b border-white/5' : 'bg-white' }} overflow-hidden">
-                <div class="text-center mb-10 px-4">
+            <section class="py-2 sm:py-3 {{ $isTheme2 ? 'bg-[#08080a] border-b border-white/5' : 'bg-white' }} overflow-hidden">
+                <div class="text-center mb-3 px-4">
                     <h2 class="text-3xl md:text-4xl font-light {{ $isTheme2 ? 'text-white' : 'text-gray-800' }}">Used by the professionals, approved by the professionals</h2>
-                    <p class="text-sm md:text-base {{ $isTheme2 ? 'text-slate-400' : 'text-gray-500' }} mt-3">Professional-grade beauty technology</p>
+                    <p class="text-sm md:text-base {{ $isTheme2 ? 'text-slate-400' : 'text-gray-500' }} mt-2">Professional-grade beauty technology</p>
                 </div>
 
                     <div class="swiper reel-swiper w-full max-w-7xl mx-auto relative">
@@ -591,7 +738,7 @@
 
         @elseif($section['id'] === 'brand_marquee')
             {{-- BRAND LOGOS MARQUEE --}}
-            <section class="{{ $isTheme2 ? 'bg-[#0d0d0f] border-t border-b border-amber-500/20 text-[#c5a880]/80' : 'bg-[#EAE2DB] text-gray-800' }} py-6 overflow-hidden marquee-container flex cursor-default">
+            <section class="{{ $isTheme2 ? 'bg-[#0d0d0f] border-t border-b border-amber-500/20 text-[#c5a880]/80' : 'bg-[#EAE2DB] text-gray-800' }} py-1 sm:py-1.5 overflow-hidden marquee-container flex cursor-default">
                 {{-- First Block --}}
                 <div class="animate-marquee items-center gap-12 px-6">
                     <span class="text-xl md:text-2xl font-bold tracking-tighter">socioon</span>
@@ -643,11 +790,11 @@
                     ]
                 ];
             @endphp
-            <section class="py-16 md:py-24 {{ $isTheme2 ? 'bg-[#0a0a0c] border-b border-white/5' : 'bg-white' }}">
+            <section class="py-2 sm:py-3 {{ $isTheme2 ? 'bg-[#0a0a0c] border-b border-white/5' : 'bg-white' }}">
                 <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
                     
                     {{-- Header --}}
-                    <div class="text-center mb-12 reveal-on-scroll">
+                    <div class="text-center mb-3 reveal-on-scroll">
                         <h2 class="text-3xl md:text-4xl font-light {{ $isTheme2 ? 'text-white' : 'text-gray-800' }} mb-2">Our Products For Daily Use</h2>
                         <p class="text-sm md:text-base {{ $isTheme2 ? 'text-amber-400' : 'text-gray-500' }} italic font-serif">Your Simplified routine Bible</p>
                     </div>
@@ -722,7 +869,7 @@
                     </div>
 
                     {{-- View All Button --}}
-                    <div class="mt-12 text-center">
+                    <div class="mt-6 text-center">
                         <a href="#" class="inline-block {{ $isTheme2 ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold hover:shadow-lg hover:shadow-amber-500/10' : 'bg-[#EBE2D9] text-gray-800 hover:bg-[#dfd3c7]' }} px-8 py-3 rounded-full text-xs font-semibold tracking-widest uppercase transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm">
                             VIEW ALL
                         </a>
@@ -733,156 +880,108 @@
 
         @elseif($section['id'] === 'why_choose_us')
             {{-- PREMIUM WHY CHOOSE US SECTION (New UI) --}}
-            <section class="py-24 {{ $isTheme2 ? 'bg-[#08080a] border-b border-white/5' : 'bg-[#FAF6F2]' }} overflow-hidden relative">
-                <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 relative z-10">
-                    <div class="text-center mb-20 relative z-20 reveal-on-scroll">
-                        <h2 class="text-4xl md:text-5xl font-bold {{ $isTheme2 ? 'text-white' : 'text-gray-900' }} mb-4">
-                            @php
-                                $wcuTitle = \App\Models\StoreSetting::getValue('why_choose_us_title', 'Why Choose Us');
-                                $titleParts = explode(' ', $wcuTitle, 2);
-                                $firstWord = $titleParts[0] ?? '';
-                                $restTitle = $titleParts[1] ?? '';
-                            @endphp
-                            {{ $firstWord }} <em class="text-blue-500 italic font-serif">{{ explode(' ', $restTitle)[0] ?? '' }}</em> {{ substr($restTitle, strlen(explode(' ', $restTitle)[0] ?? '')) }}
-                        </h2>
-                        <p class="text-lg {{ $isTheme2 ? 'text-slate-400' : 'text-slate-600' }}">
-                            {{ \App\Models\StoreSetting::getValue('why_choose_us_subtitle', 'Our Philosophy') }}
+            @php
+                $wcuImage = \App\Models\StoreSetting::getValue('wcu_image_path');
+                $wcuMainTitle = \App\Models\StoreSetting::getValue('wcu_main_title', 'WHY CHOOSE US');
+                $wcuMainDesc = \App\Models\StoreSetting::getValue('wcu_main_desc', 'Experience the perfect blend of luxury and science. Our curated collection of premium beauty essentials is designed to elevate your daily routine.');
+                $wcuStat1Title = \App\Models\StoreSetting::getValue('wcu_stat1_title', '95%');
+                $wcuStat1Desc = \App\Models\StoreSetting::getValue('wcu_stat1_desc', 'Customer satisfaction rate');
+                $wcuStat2Title = \App\Models\StoreSetting::getValue('wcu_stat2_title', '$109+');
+                $wcuStat2Desc = \App\Models\StoreSetting::getValue('wcu_stat2_desc', 'Average order value');
+                $wcuBox1Title = \App\Models\StoreSetting::getValue('wcu_box1_title', 'Expertly Curated');
+                $wcuBox1Desc = \App\Models\StoreSetting::getValue('wcu_box1_desc', 'Every product in our collection is meticulously selected by beauty experts.');
+                $wcuBox2Title = \App\Models\StoreSetting::getValue('wcu_box2_title', 'Proven Results');
+                $wcuBox2Desc = \App\Models\StoreSetting::getValue('wcu_box2_desc', 'Our treatments and formulations are clinically backed for maximum efficacy.');
+                $wcuBox3Title = \App\Models\StoreSetting::getValue('wcu_box3_title', 'Premium Quality');
+                $wcuBox3Desc = \App\Models\StoreSetting::getValue('wcu_box3_desc', 'We source only the finest ingredients to ensure a luxurious experience.');
+            @endphp
+            <section class="py-2 sm:py-3 overflow-hidden relative {{ $isTheme2 ? 'bg-[#08080a] border-b border-white/5' : 'bg-white' }}" id="wcu-section">
+                <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 relative z-10 flex flex-col md:flex-row items-center">
+                    
+                    {{-- Left side content --}}
+                    <div class="w-full {{ $wcuImage ? 'md:w-1/2 pr-0 md:pr-10' : 'mx-auto' }} mb-2 md:mb-0">
+                        <div class="flex items-center justify-center md:justify-start gap-4 mb-4 wcu-animate opacity-0 translate-y-8 transition-all duration-700 ease-out">
+                            <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light {{ $isTheme2 ? 'text-amber-500' : 'text-[#5B4A82]' }} leading-tight uppercase tracking-wide text-center md:text-left">
+                                {!! nl2br(e($wcuMainTitle)) !!}
+                            </h2>
+                        </div>
+                        
+                        <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-gray-500' }} mb-5 {{ $wcuImage ? 'max-w-md' : 'max-w-2xl mx-auto md:mx-0' }} text-sm md:text-base leading-relaxed wcu-animate opacity-0 translate-y-8 transition-all duration-700 delay-100 ease-out text-center md:text-left">
+                            {{ $wcuMainDesc }}
                         </p>
-                    </div>
-
-                    <div class="relative max-w-5xl mx-auto reveal-on-scroll">
-                        <!-- Decorative Lines Background -->
-                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full z-0 pointer-events-none hidden md:block">
-                            <svg viewBox="0 0 1000 600" preserveAspectRatio="none" class="w-full h-full overflow-visible opacity-50">
-                                <path d="M 250 150 Q 500 300 500 450" stroke="{{ $isTheme2 ? '#334155' : '#cbd5e1' }}" stroke-width="2" stroke-dasharray="8 8" fill="none"/>
-                                <path d="M 750 150 Q 500 300 500 450" stroke="{{ $isTheme2 ? '#334155' : '#cbd5e1' }}" stroke-width="2" stroke-dasharray="8 8" fill="none"/>
-                            </svg>
-                        </div>
-
-                        {{-- Mobile Swiper --}}
-                        <div class="block md:hidden">
-                            <div class="swiper wcu-swiper relative z-10 px-0 pb-12 w-full">
-                                <div class="swiper-wrapper flex">
-                                <!-- Card 1 -->
-                                <div class="swiper-slide w-full h-auto flex justify-center py-6 px-4">
-                                    <div class="bg-white rounded-3xl p-3 w-full max-w-[340px] shadow-2xl relative transition-transform duration-500 hover:scale-105 hover:z-20 transform h-full">
-                                        @if(\App\Models\StoreSetting::getValue('why_choose_us_card1_image_path'))
-                                            <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-white shadow-lg overflow-hidden bg-white z-20">
-                                                <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('why_choose_us_card1_image_path')) }}" alt="Icon" class="w-full h-full object-cover">
-                                            </div>
-                                        @else
-                                            <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-yellow-500 shadow-lg z-20 before:absolute before:inset-0 before:rounded-full before:-top-1.5 before:-left-1.5 before:bg-yellow-400 before:-z-10"></div>
-                                        @endif
-                                        <div class="bg-yellow-50 rounded-2xl p-8 pt-14 h-full flex flex-col text-center border border-yellow-100">
-                                            <h3 class="text-xl font-bold text-gray-900 mb-3">{{ \App\Models\StoreSetting::getValue('why_choose_us_card1_title', 'Advanced Tech') }}</h3>
-                                            <p class="text-gray-600 text-sm leading-relaxed">{{ \App\Models\StoreSetting::getValue('why_choose_us_card1_desc', 'FDA-cleared devices and premium formulations engineered for visible results.') }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Card 2 -->
-                                <div class="swiper-slide w-full h-auto flex justify-center py-6 px-4">
-                                    <div class="bg-white rounded-3xl p-3 w-full max-w-[340px] shadow-2xl relative transition-transform duration-500 hover:scale-105 hover:z-20 transform h-full">
-                                        @if(\App\Models\StoreSetting::getValue('why_choose_us_card2_image_path'))
-                                            <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-white shadow-lg overflow-hidden bg-white z-20">
-                                                <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('why_choose_us_card2_image_path')) }}" alt="Icon" class="w-full h-full object-cover">
-                                            </div>
-                                        @else
-                                            <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-purple-600 shadow-lg z-20 before:absolute before:inset-0 before:rounded-full before:-top-1.5 before:-left-1.5 before:bg-purple-500 before:-z-10"></div>
-                                        @endif
-                                        <div class="bg-purple-50 rounded-2xl p-8 pt-14 h-full flex flex-col text-center border border-purple-100">
-                                            <h3 class="text-xl font-bold text-gray-900 mb-3">{{ \App\Models\StoreSetting::getValue('why_choose_us_card2_title', 'Expert Care') }}</h3>
-                                            <p class="text-gray-600 text-sm leading-relaxed">{{ \App\Models\StoreSetting::getValue('why_choose_us_card2_desc', 'Professional guidance and fully customized skincare routines for your unique needs.') }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Card 3 -->
-                                <div class="swiper-slide w-full h-auto flex justify-center py-6 px-4">
-                                    <div class="bg-white rounded-3xl p-3 w-full max-w-[340px] shadow-2xl relative transition-transform duration-500 hover:scale-105 hover:z-20 transform h-full">
-                                        @if(\App\Models\StoreSetting::getValue('why_choose_us_card3_image_path'))
-                                            <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-white shadow-lg overflow-hidden bg-white z-20">
-                                                <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('why_choose_us_card3_image_path')) }}" alt="Icon" class="w-full h-full object-cover">
-                                            </div>
-                                        @else
-                                            <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-pink-600 shadow-lg z-20 before:absolute before:inset-0 before:rounded-full before:-top-1.5 before:-left-1.5 before:bg-pink-500 before:-z-10"></div>
-                                        @endif
-                                        <div class="bg-pink-50 rounded-2xl p-8 pt-14 h-full flex flex-col text-center border border-pink-100">
-                                            <h3 class="text-xl font-bold text-gray-900 mb-3">{{ \App\Models\StoreSetting::getValue('why_choose_us_card3_title', 'Guaranteed Results') }}</h3>
-                                            <p class="text-gray-600 text-sm leading-relaxed">{{ \App\Models\StoreSetting::getValue('why_choose_us_card3_desc', 'Experience visible transformations driven by our proven, high-end beauty solutions.') }}</p>
-                                        </div>
-                                    </div>
-                                </div>
+                        
+                        <div class="flex flex-wrap justify-center md:justify-start gap-12 mb-6 wcu-animate opacity-0 translate-y-8 transition-all duration-700 delay-200 ease-out">
+                            <div class="text-center md:text-left">
+                                <h3 class="text-4xl md:text-5xl font-bold {{ $isTheme2 ? 'text-amber-400' : 'text-[#5B4A82]' }} mb-2">{{ $wcuStat1Title }}</h3>
+                                <p class="{{ $isTheme2 ? 'text-slate-500' : 'text-gray-500' }} text-sm max-w-[120px] mx-auto md:mx-0">{{ $wcuStat1Desc }}</p>
                             </div>
-                            <div class="swiper-pagination !bottom-0"></div>
+                            <div class="text-center md:text-left">
+                                <h3 class="text-4xl md:text-5xl font-bold {{ $isTheme2 ? 'text-amber-400' : 'text-[#5B4A82]' }} mb-2">{{ $wcuStat2Title }}</h3>
+                                <p class="{{ $isTheme2 ? 'text-slate-500' : 'text-gray-500' }} text-sm max-w-[120px] mx-auto md:mx-0">{{ $wcuStat2Desc }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <!-- Box 1 -->
+                            <div class="wcu-animate opacity-0 -translate-x-12 transition-all duration-700 ease-out {{ $isTheme2 ? 'bg-slate-800 border border-white/10' : 'bg-gradient-to-br from-[#7C5CC1] to-[#593CA4]' }} rounded-2xl p-6 flex-1 text-white shadow-lg transform hover:-translate-y-2 hover:shadow-xl">
+                                <h4 class="font-bold mb-2 {{ $isTheme2 ? 'text-amber-400' : 'text-white' }}">{{ $wcuBox1Title }}</h4>
+                                <p class="text-xs {{ $isTheme2 ? 'text-slate-300' : 'text-white/80' }}">{{ $wcuBox1Desc }}</p>
+                            </div>
+                            <!-- Box 2 -->
+                            <div class="wcu-animate opacity-0 translate-y-12 transition-all duration-700 delay-150 ease-out {{ $isTheme2 ? 'bg-slate-800 border border-white/10' : 'bg-gradient-to-br from-[#12C2E9] to-[#0CB0D5]' }} rounded-2xl p-6 flex-1 text-white shadow-lg transform hover:-translate-y-2 hover:shadow-xl">
+                                <h4 class="font-bold mb-2 {{ $isTheme2 ? 'text-amber-400' : 'text-white' }}">{{ $wcuBox2Title }}</h4>
+                                <p class="text-xs {{ $isTheme2 ? 'text-slate-300' : 'text-white/80' }}">{{ $wcuBox2Desc }}</p>
+                            </div>
+                            <!-- Box 3 -->
+                            <div class="wcu-animate opacity-0 translate-x-12 transition-all duration-700 delay-300 ease-out {{ $isTheme2 ? 'bg-slate-800 border border-white/10' : 'bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-50' }} rounded-2xl p-6 flex-1 {{ $isTheme2 ? 'text-white' : 'text-gray-800' }} transform hover:-translate-y-2 hover:shadow-xl">
+                                <h4 class="font-bold mb-2 {{ $isTheme2 ? 'text-amber-400' : 'text-gray-800' }}">{{ $wcuBox3Title }}</h4>
+                                <p class="text-xs {{ $isTheme2 ? 'text-slate-300' : 'text-gray-500' }}">{{ $wcuBox3Desc }}</p>
+                            </div>
                         </div>
                     </div>
 
-                    {{-- Desktop Grid --}}
-                        <div class="hidden md:grid grid-cols-3 gap-8 relative z-10 px-0 w-full justify-items-center">
-                            <!-- Card 1 -->
-                            <div class="bg-white rounded-3xl p-3 w-full max-w-[340px] shadow-2xl relative transition-transform duration-500 hover:scale-105 hover:z-20 transform -rotate-3 h-full mt-6">
-                                @if(\App\Models\StoreSetting::getValue('why_choose_us_card1_image_path'))
-                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-white shadow-lg overflow-hidden bg-white z-20">
-                                        <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('why_choose_us_card1_image_path')) }}" alt="Icon" class="w-full h-full object-cover">
-                                    </div>
-                                @else
-                                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-yellow-500 shadow-lg z-20 before:absolute before:inset-0 before:rounded-full before:-top-1.5 before:-left-1.5 before:bg-yellow-400 before:-z-10"></div>
-                                @endif
-                                <div class="bg-yellow-50 rounded-2xl p-8 pt-14 h-full flex flex-col text-center border border-yellow-100">
-                                    <h3 class="text-xl font-bold text-gray-900 mb-3">{{ \App\Models\StoreSetting::getValue('why_choose_us_card1_title', 'Advanced Tech') }}</h3>
-                                    <p class="text-gray-600 text-sm leading-relaxed">{{ \App\Models\StoreSetting::getValue('why_choose_us_card1_desc', 'FDA-cleared devices and premium formulations engineered for visible results.') }}</p>
-                                </div>
-                            </div>
-
-                            <!-- Card 2 -->
-                            <div class="bg-white rounded-3xl p-3 w-full max-w-[340px] shadow-2xl relative transition-transform duration-500 hover:scale-105 hover:z-20 transform rotate-3 translate-y-8 h-full mt-6">
-                                @if(\App\Models\StoreSetting::getValue('why_choose_us_card2_image_path'))
-                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-white shadow-lg overflow-hidden bg-white z-20">
-                                        <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('why_choose_us_card2_image_path')) }}" alt="Icon" class="w-full h-full object-cover">
-                                    </div>
-                                @else
-                                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-purple-600 shadow-lg z-20 before:absolute before:inset-0 before:rounded-full before:-top-1.5 before:-left-1.5 before:bg-purple-500 before:-z-10"></div>
-                                @endif
-                                <div class="bg-purple-50 rounded-2xl p-8 pt-14 h-full flex flex-col text-center border border-purple-100">
-                                    <h3 class="text-xl font-bold text-gray-900 mb-3">{{ \App\Models\StoreSetting::getValue('why_choose_us_card2_title', 'Expert Care') }}</h3>
-                                    <p class="text-gray-600 text-sm leading-relaxed">{{ \App\Models\StoreSetting::getValue('why_choose_us_card2_desc', 'Professional guidance and fully customized skincare routines for your unique needs.') }}</p>
-                                </div>
-                            </div>
-
-                            <!-- Card 3 -->
-                            <div class="bg-white rounded-3xl p-3 w-full max-w-[340px] shadow-2xl relative transition-transform duration-500 hover:scale-105 hover:z-20 transform -rotate-2 h-full mt-6">
-                                @if(\App\Models\StoreSetting::getValue('why_choose_us_card3_image_path'))
-                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-white shadow-lg overflow-hidden bg-white z-20">
-                                        <img src="{{ asset('storage/' . \App\Models\StoreSetting::getValue('why_choose_us_card3_image_path')) }}" alt="Icon" class="w-full h-full object-cover">
-                                    </div>
-                                @else
-                                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-pink-600 shadow-lg z-20 before:absolute before:inset-0 before:rounded-full before:-top-1.5 before:-left-1.5 before:bg-pink-500 before:-z-10"></div>
-                                @endif
-                                <div class="bg-pink-50 rounded-2xl p-8 pt-14 h-full flex flex-col text-center border border-pink-100">
-                                    <h3 class="text-xl font-bold text-gray-900 mb-3">{{ \App\Models\StoreSetting::getValue('why_choose_us_card3_title', 'Guaranteed Results') }}</h3>
-                                    <p class="text-gray-600 text-sm leading-relaxed">{{ \App\Models\StoreSetting::getValue('why_choose_us_card3_desc', 'Experience visible transformations driven by our proven, high-end beauty solutions.') }}</p>
-                                </div>
-                            </div>
+                    {{-- Right side image --}}
+                    @if($wcuImage)
+                    <div class="w-full md:w-1/2 relative flex justify-center md:justify-end h-full min-h-[300px] md:min-h-[400px] mt-10 md:mt-0 wcu-animate opacity-0 translate-x-10 transition-all duration-1000 delay-300 ease-out">
+                        <div class="relative md:absolute md:right-[-10%] md:top-1/2 md:-translate-y-1/2 w-[300px] h-[300px] md:w-[600px] md:h-[600px] lg:w-[800px] lg:h-[800px] rounded-full {{ $isTheme2 ? 'bg-slate-800' : 'bg-gradient-to-br from-[#8C76A6] to-[#5B4A82]' }} overflow-hidden">
+                            <img src="{{ asset('storage/' . $wcuImage) }}" alt="Why Choose Us" class="w-full h-full object-cover mix-blend-overlay opacity-80 object-top">
                         </div>
                     </div>
+                    @endif
+                    
                 </div>
             </section>
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.remove('opacity-0', 'translate-y-8', 'translate-x-10', '-translate-x-12', 'translate-y-12', 'translate-x-12');
+                                entry.target.classList.add('opacity-100', 'translate-y-0', 'translate-x-0');
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.1 });
+
+                    document.querySelectorAll('.wcu-animate').forEach((el) => observer.observe(el));
+                });
+            </script>
 
         @elseif($section['id'] === 'testimonials')
             {{-- TESTIMONIALS SECTION --}}
-            <section class="py-16 md:py-24 {{ $isTheme2 ? 'bg-[#0a0a0c] border-b border-white/5' : 'bg-[#faf9f8]' }} overflow-hidden">
+            <section class="py-2 sm:py-3 {{ $isTheme2 ? 'bg-[#0a0a0c] border-b border-white/5' : 'bg-[#faf9f8]' }} overflow-hidden">
                 <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
                     
                     {{-- Section Header --}}
-                    <div class="text-center mb-12 md:mb-16 reveal-on-scroll">
-                        <span class="inline-block text-sm font-semibold {{ $isTheme2 ? 'text-amber-500' : 'text-amber-600' }} mb-3 tracking-wider uppercase">Real Results</span>
+                    <div class="text-center mb-3 md:mb-4 reveal-on-scroll">
+                        <span class="inline-block text-sm font-semibold {{ $isTheme2 ? 'text-amber-500' : 'text-amber-600' }} mb-2 tracking-wider uppercase">Real Results</span>
                         <h2 class="text-3xl sm:text-4xl md:text-5xl font-light {{ $isTheme2 ? 'text-white' : 'text-gray-900' }} mb-4">What Our Clients Say</h2>
                         <div class="w-16 h-0.5 {{ $isTheme2 ? 'bg-amber-500' : 'bg-amber-600' }} mx-auto"></div>
                     </div>
 
                     {{-- Swiper Container --}}
-                    <div class="swiper testimonial-swiper pb-12 reveal-on-scroll">
+                    <div class="swiper testimonial-swiper pb-6 reveal-on-scroll">
                         <div class="swiper-wrapper">
                             @forelse($homepageReviews as $rev)
                                 <div class="swiper-slide h-auto md:w-1/3">
@@ -975,7 +1074,7 @@
 
         @elseif($section['id'] === 'features_strip')
             {{-- FEATURES / BENEFITS STRIP --}}
-            <section class="py-10 {{ $isTheme2 ? 'bg-[#0d0d0f] border-t border-b border-white/5 text-slate-300' : 'bg-white border-t border-b border-gray-100' }}">
+            <section class="py-2 sm:py-3 {{ $isTheme2 ? 'bg-[#0d0d0f] border-t border-b border-white/5 text-slate-300' : 'bg-white border-t border-b border-gray-100' }}">
                 <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x {{ $isTheme2 ? 'divide-white/5' : 'divide-gray-100' }} reveal-on-scroll">
                         
@@ -1027,11 +1126,12 @@
     document.addEventListener('DOMContentLoaded', function () {
 
 
+        const reelSlides = document.querySelectorAll('.reel-swiper .swiper-slide');
         const swiper = new Swiper('.reel-swiper', {
             slidesPerView: 'auto',
             centeredSlides: true,
             spaceBetween: 20,
-            loop: true,
+            loop: reelSlides.length > 4,
             navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
@@ -1127,85 +1227,104 @@
                 }
             }
         });
-    });
-    // Initialize Hot Deal Swiper
-    const hotdealSwiper = new Swiper('.hotdeal-swiper', {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        loop: true,
-        autoplay: {
-            delay: 4000,
-            disableOnInteraction: false,
-        },
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        }
-    });
 
-    // Initialize Why Choose Us Swiper
-    const wcuSwiper = new Swiper('.wcu-swiper', {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        breakpoints: {
-            768: {
-                slidesPerView: 'auto',
-                spaceBetween: 0,
-                allowTouchMove: false // Disable swiping on desktop where grid takes over
-            }
+        // Initialize Hot Deal Swiper
+        const hotdealSwiperEl = document.querySelector('.hotdeal-swiper');
+        if (hotdealSwiperEl) {
+            const hotdealSlidesCount = hotdealSwiperEl.querySelectorAll('.swiper-slide').length;
+            new Swiper('.hotdeal-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 24,
+                loop: hotdealSlidesCount > 1,
+                speed: 650,
+                grabCursor: true,
+                autoplay: {
+                    delay: 5500,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                    dynamicBullets: true,
+                }
+            });
         }
-    });
 
-    // Initialize Articles Swiper
-    const articlesSwiper = new Swiper('.articles-swiper', {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        breakpoints: {
-            768: {
-                slidesPerView: 'auto',
-                spaceBetween: 0,
-                allowTouchMove: false // Disable swiping on desktop where grid takes over
-            }
-        }
-    });
-
-    // Initialize Testimonial Swiper
-    const testimonialSwiper = new Swiper('.testimonial-swiper', {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        loop: true,
-        autoplay: {
-            delay: 3500, // Slides every 3.5 seconds
-            disableOnInteraction: false, // Keeps playing even if the user clicks
-        },
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        breakpoints: {
-            // Mobile: 1 card
-            640: {
+        // Initialize Why Choose Us Swiper
+        const wcuSwiperEl = document.querySelector('.wcu-swiper');
+        if (wcuSwiperEl) {
+            new Swiper('.wcu-swiper', {
                 slidesPerView: 1,
                 spaceBetween: 20,
-            },
-            // Tablet: 2 cards side-by-side
-            768: {
-                slidesPerView: 2,
-                spaceBetween: 30,
-            },
-            // Desktop: 3 cards side-by-side
-            1024: {
-                slidesPerView: 3,
-                spaceBetween: 40,
-            },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                breakpoints: {
+                    768: {
+                        slidesPerView: 'auto',
+                        spaceBetween: 0,
+                        allowTouchMove: false // Disable swiping on desktop where grid takes over
+                    }
+                }
+            });
+        }
+
+        // Initialize Articles Swiper
+        const articlesSwiperEl = document.querySelector('.articles-swiper');
+        if (articlesSwiperEl) {
+            new Swiper('.articles-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                breakpoints: {
+                    768: {
+                        slidesPerView: 'auto',
+                        spaceBetween: 0,
+                        allowTouchMove: false // Disable swiping on desktop where grid takes over
+                    }
+                }
+            });
+        }
+
+        // Initialize Testimonial Swiper
+        const testimonialSwiperEl = document.querySelector('.testimonial-swiper');
+        if (testimonialSwiperEl) {
+            const testimonialSlidesCount = testimonialSwiperEl.querySelectorAll('.swiper-slide').length;
+            new Swiper('.testimonial-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: testimonialSlidesCount > 3,
+                autoplay: {
+                    delay: 3500, // Slides every 3.5 seconds
+                    disableOnInteraction: false, // Keeps playing even if the user clicks
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                breakpoints: {
+                    // Mobile: 1 card
+                    640: {
+                        slidesPerView: 1,
+                        spaceBetween: 20,
+                    },
+                    // Tablet: 2 cards side-by-side
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 30,
+                    },
+                    // Desktop: 3 cards side-by-side
+                    1024: {
+                        slidesPerView: 3,
+                        spaceBetween: 40,
+                    },
+                }
+            });
         }
     });
 </script>
