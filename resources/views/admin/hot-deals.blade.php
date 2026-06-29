@@ -35,6 +35,7 @@
                         <th class="p-5 font-bold">Price</th>
                         <th class="p-5 font-bold">Stock</th>
                         <th class="p-5 font-bold">Hot Deal</th>
+                        <th class="p-5 font-bold">Show on Hero</th>
                         <th class="p-5 font-bold">Status</th>
                     </tr>
                 </thead>
@@ -60,6 +61,21 @@
                                 <span class="bg-rose-50 text-rose-600 border border-rose-100 px-2.5 py-1 rounded-lg text-xs font-bold">Yes</span>
                             @else
                                 <span class="bg-slate-50 text-slate-500 border border-slate-200 px-2.5 py-1 rounded-lg text-xs font-bold">No</span>
+                            @endif
+                        </td>
+                        <td class="p-5">
+                            @if($product->homepageHotDeal)
+                                <form action="{{ route('admin.hot-deal-management.toggle-hero', $product->id) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    <button type="submit" class="px-3 py-1 rounded-lg text-xs font-bold border transition-colors
+                                        {{ $product->homepageHotDeal->show_on_hero 
+                                            ? 'bg-amber-50 text-amber-600 border-amber-200 hover:bg-amber-100' 
+                                            : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100' }}">
+                                        {{ $product->homepageHotDeal->show_on_hero ? 'Featured (Hero)' : 'Show on Hero' }}
+                                    </button>
+                                </form>
+                            @else
+                                <span class="text-xs text-slate-400 font-medium">—</span>
                             @endif
                         </td>
                         <td class="p-5">

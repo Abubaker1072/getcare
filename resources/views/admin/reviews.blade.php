@@ -42,17 +42,29 @@
                         <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors group">
                             <td class="p-5">
                                 <div class="flex items-center">
-                                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center mr-3 font-bold text-sm shadow-md shadow-amber-500/10">
+                                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center mr-3 font-bold text-sm shadow-md shadow-amber-500/10 flex-shrink-0">
                                         {{ strtoupper(substr($rev->name, 0, 1)) }}
                                     </div>
                                     <div>
                                         <p class="font-extrabold text-slate-900 dark:text-white text-base">{{ $rev->name }}</p>
+                                        @if($rev->email)
+                                            <p class="text-xs text-indigo-600 dark:text-indigo-400 font-medium mt-0.5">{{ $rev->email }}</p>
+                                        @endif
                                         <p class="text-xs text-slate-400 dark:text-slate-500 font-medium mt-0.5">{{ $rev->created_at->format('M d, Y') }}</p>
                                     </div>
                                 </div>
                             </td>
                             <td class="p-5">
-                                <p class="text-slate-700 dark:text-slate-300 font-bold">{{ $rev->product_name ?? 'General Website' }}</p>
+                                <div class="flex items-center gap-3">
+                                    @if($rev->product && ($rev->product->cover_image || $rev->product->image))
+                                        <img src="{{ asset('storage/' . ($rev->product->cover_image ?? $rev->product->image)) }}" alt="Product" class="w-12 h-12 object-contain bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-xl p-1 flex-shrink-0">
+                                    @else
+                                        <div class="w-12 h-12 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center justify-center text-xs text-slate-400 dark:text-slate-500 font-semibold flex-shrink-0">No Img</div>
+                                    @endif
+                                    <div>
+                                        <p class="text-slate-700 dark:text-slate-300 font-bold leading-tight">{{ $rev->product_name ?? ($rev->product ? $rev->product->name : 'General Website') }}</p>
+                                    </div>
+                                </div>
                             </td>
                             <td class="p-5">
                                 <div class="flex items-center text-amber-400">

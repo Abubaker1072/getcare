@@ -56,6 +56,13 @@
     .marquee-container:hover .animate-marquee {
         animation-play-state: paused;
     }
+    @keyframes marquee-shortcuts {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+    .animate-marquee-shortcuts {
+        animation: marquee-shortcuts 25s linear infinite;
+    }
     
     /* Theme 2 Luxury Custom styles */
     .theme-2-glow {
@@ -193,6 +200,182 @@
             transition-duration: 0.4s !important;
         }
     }
+    
+    /* Routine Carousel Pagination Styling */
+    .routine-pagination .swiper-pagination-bullet {
+        background: #94a3b8;
+        opacity: 0.5;
+        width: 6px;
+        height: 6px;
+        transition: all 0.3s ease;
+    }
+    .routine-pagination .swiper-pagination-bullet-active {
+        background: #0f172a !important;
+        opacity: 1;
+        width: 16px;
+        border-radius: 3px;
+    }
+    .theme-2 .routine-pagination .swiper-pagination-bullet-active {
+        background: #f59e0b !important;
+    }
+
+    /* Premium Blog/Article Card Styles */
+    .article-card-premium {
+        position: relative;
+        background: #ffffff;
+        border: 1px solid #f1f5f9;
+        border-radius: 1.25rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                    box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                    border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: transform, box-shadow;
+    }
+    .article-card-premium:hover {
+        transform: translateY(-6px);
+        border-color: transparent;
+        box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.08);
+    }
+    .theme-2 .article-card-premium {
+        background: rgba(15, 23, 42, 0.4);
+        border-color: rgba(255, 255, 255, 0.05);
+    }
+    .theme-2 .article-card-premium:hover {
+        border-color: rgba(245, 158, 11, 0.15);
+        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.4);
+    }
+    
+    .article-card-image-wrapper {
+        position: relative;
+        overflow: hidden;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .article-card-image-wrapper img {
+        transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .article-card-premium:hover .article-card-image-wrapper img {
+        transform: scale(1.05);
+    }
+    
+    /* Elegant text limit with transition support */
+    .article-desc {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        max-height: 2.75rem; /* ~2 lines */
+        transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+        opacity: 0.85;
+    }
+    .article-desc.expanded {
+        display: block;
+        max-height: 25rem;
+        opacity: 1;
+    }
+
+    .article-card-badge {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        color: #1e293b;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 0.35rem 0.75rem;
+        border-radius: 9999px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+    .theme-2 .article-card-badge {
+        background: rgba(15, 23, 42, 0.85);
+        color: #f59e0b;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .article-card-read-time {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        color: #ffffff;
+        font-size: 0.65rem;
+        font-weight: 500;
+        padding: 0.35rem 0.65rem;
+        border-radius: 9999px;
+        transition: all 0.3s ease;
+    }
+    
+    /* Swiper bullets styling specifically for articles */
+    .articles-swiper .swiper-pagination-bullet {
+        background: #94a3b8;
+        opacity: 0.5;
+        width: 6px;
+        height: 6px;
+        transition: all 0.3s ease;
+    }
+    .articles-swiper .swiper-pagination-bullet-active {
+        background: #0f172a !important;
+        opacity: 1;
+        width: 16px;
+        border-radius: 3px;
+    }
+    .theme-2 .articles-swiper .swiper-pagination-bullet-active {
+        background: #f59e0b !important;
+    }
+
+    /* PREMIUM OVERHAUL CUSTOM ANIMATIONS & EFFECTS */
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+    }
+    .animate-float {
+        animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+        0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+        50% { transform: scale(1.1); opacity: 0.8; box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+    }
+    .animate-pulse-glow {
+        animation: pulse-glow 2s infinite;
+    }
+
+    /* Viewport scroll reveal base classes */
+    .reveal-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: transform, opacity;
+    }
+    .reveal-on-scroll.is-revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .animation-delay-100 { transition-delay: 100ms; }
+    .animation-delay-200 { transition-delay: 200ms; }
+    .animation-delay-300 { transition-delay: 300ms; }
+    .animation-delay-400 { transition-delay: 400ms; }
+    .animation-delay-500 { transition-delay: 500ms; }
+
+    /* Category Nav Scroll Styling */
+    .scrollbar-hidden::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hidden {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
 </style>
 
 <div class="{{ $isTheme2 ? 'theme-2 bg-[#0c0c0e] text-[#f3e8ff]' : '' }}">
@@ -307,44 +490,98 @@
                 </div>
             </section>
         
+        @elseif($section['id'] === 'category_quick_nav')
+            {{-- Circular Category Quick Navigation (Amazon/Temu/Daraz Inspired) Marquee --}}
+            <section class="py-6 sm:py-10 {{ $isTheme2 ? 'bg-[#0a0a0c] border-b border-white/5' : 'bg-[#faf9f6] border-b border-slate-100' }} overflow-hidden">
+                <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+                    <div class="w-full overflow-hidden relative">
+                        <div class="flex gap-8 w-max animate-marquee-shortcuts hover:[animation-play-state:paused] cursor-pointer">
+                            
+                            {{-- Original Items --}}
+                            @foreach($featuredCategories as $cat)
+                                <a href="{{ route('products.all', ['categories' => [$cat->id]]) }}" class="flex flex-col items-center gap-3 group shrink-0 w-20 sm:w-28 text-center transition-transform duration-300 hover:-translate-y-1">
+                                    <div class="w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 {{ $isTheme2 ? 'border-white/10 group-hover:border-amber-500 shadow-amber-500/10' : 'border-gray-200 group-hover:border-slate-800' }} p-0.5 bg-white transition-all duration-300 shadow-sm group-hover:shadow-lg">
+                                        <img src="{{ ImageHelper::getCategoryImage($cat->image) }}" alt="{{ $cat->name }}" class="w-full h-full object-cover rounded-full transition-transform duration-700 group-hover:scale-110">
+                                    </div>
+                                    <span class="text-[10px] sm:text-xs font-extrabold tracking-wider text-center uppercase {{ $isTheme2 ? 'text-slate-400 group-hover:text-amber-400' : 'text-gray-600 group-hover:text-slate-900' }} transition-colors whitespace-normal leading-tight line-clamp-3">
+                                        {{ $cat->name }}
+                                    </span>
+                                </a>
+                            @endforeach
+
+                            {{-- Duplicate Items for Seamless Loop --}}
+                            @foreach($featuredCategories as $cat)
+                                <a href="{{ route('products.all', ['categories' => [$cat->id]]) }}" class="flex flex-col items-center gap-3 group shrink-0 w-20 sm:w-28 text-center transition-transform duration-300 hover:-translate-y-1">
+                                    <div class="w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 {{ $isTheme2 ? 'border-white/10 group-hover:border-amber-500 shadow-amber-500/10' : 'border-gray-200 group-hover:border-slate-800' }} p-0.5 bg-white transition-all duration-300 shadow-sm group-hover:shadow-lg">
+                                        <img src="{{ ImageHelper::getCategoryImage($cat->image) }}" alt="{{ $cat->name }}" class="w-full h-full object-cover rounded-full transition-transform duration-700 group-hover:scale-110">
+                                    </div>
+                                    <span class="text-[10px] sm:text-xs font-extrabold tracking-wider text-center uppercase {{ $isTheme2 ? 'text-slate-400 group-hover:text-amber-400' : 'text-gray-600 group-hover:text-slate-900' }} transition-colors whitespace-normal leading-tight line-clamp-3">
+                                        {{ $cat->name }}
+                                    </span>
+                                </a>
+                            @endforeach
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
         @elseif($section['id'] === 'complete_routine')
             {{-- COMPLETE ROUTINE SECTION --}}
             @php
-                $routineProductImage = \App\Models\StoreSetting::getValue('routine_product_image_path');
-                $routineProductUrl = $routineProductImage ? asset('storage/' . $routineProductImage) : asset('images/complete-routine-placeholder.png');
                 $routineLifestyleImage = \App\Models\StoreSetting::getValue('routine_lifestyle_image_path');
                 $routineLifestyleUrl = $routineLifestyleImage ? asset('storage/' . $routineLifestyleImage) : asset('images/lifestyle-placeholder.jpg');
             @endphp
             <section class="w-full">
-                <div class="flex flex-col md:flex-row w-full h-auto md:h-[600px]">
-                    <!-- Left Side: Product Set -->
-                    <div class="w-full md:w-1/2 {{ $isTheme2 ? 'bg-[#0a0a0c] border-r border-white/5' : 'bg-[#e6e2f1]' }} flex flex-col justify-center items-center p-6 sm:p-12 relative overflow-hidden group" 
+                <div class="flex flex-row w-full h-[280px] xs:h-[340px] sm:h-[420px] md:h-[600px]">
+                    <!-- Left Side: Product Set (Swiper Slider) -->
+                    <div class="w-1/2 h-full {{ $isTheme2 ? 'bg-[#0a0a0c] border-r border-white/5' : 'bg-[#e6e2f1]' }} relative overflow-hidden flex flex-col justify-center" 
                          style="{{ $isTheme2 ? 'background: radial-gradient(circle at center, rgba(245,158,11,0.06) 0%, rgba(10,10,12,0) 75%), #0a0a0c;' : '' }}">
                         
                         {{-- Background bubble/glow --}}
                         <div class="hidden md:block absolute w-[200px] sm:w-[320px] h-[200px] sm:h-[320px] {{ $isTheme2 ? 'bg-gradient-to-tr from-amber-500/15 to-transparent' : 'bg-gradient-to-tr from-purple-300/30 to-pink-300/30' }} rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700 pointer-events-none z-0"></div>
 
-                        <img src="{{ $routineProductUrl }}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&q=80';" alt="Complete Glow Up Set" class="w-[80%] max-w-sm object-contain z-10 drop-shadow-2xl transition-transform duration-700 group-hover:scale-105 filter {{ $isTheme2 ? 'brightness-110 contrast-105' : '' }}">
-                        
-                        <div class="mt-8 text-center z-10">
-                            <h3 class="text-xl font-serif {{ $isTheme2 ? 'text-white' : 'text-slate-800' }} mb-2 font-medium">The Complete Glow Up Set</h3>
-                            <p class="text-lg font-semibold {{ $isTheme2 ? 'text-amber-400' : 'text-slate-900' }}">$199.00</p>
-                            
-                            <div class="flex justify-center gap-2 mt-4">
-                                <span class="w-2 h-2 rounded-full {{ $isTheme2 ? 'bg-slate-700' : 'bg-slate-300' }}"></span>
-                                <span class="w-2 h-2 rounded-full {{ $isTheme2 ? 'bg-amber-500' : 'bg-slate-800' }}"></span>
-                                <span class="w-2 h-2 rounded-full {{ $isTheme2 ? 'bg-slate-700' : 'bg-slate-300' }}"></span>
+                        @if(isset($heroHotDeals) && $heroHotDeals->isNotEmpty())
+                            <div class="swiper routine-swiper w-full h-full">
+                                <div class="swiper-wrapper">
+                                    @foreach($heroHotDeals as $product)
+                                        <div class="swiper-slide flex flex-col justify-center items-center p-3 sm:p-6 text-center select-none h-full">
+                                            <a href="{{ route('product.detail', $product->id) }}" class="flex flex-col items-center justify-center group/item h-full">
+                                                <div class="relative w-[85%] max-w-[100px] xs:max-w-[140px] sm:max-w-[200px] md:max-w-[280px] aspect-square flex items-center justify-center mb-1 xs:mb-3 sm:mb-6">
+                                                    <img src="{{ asset('storage/' . ($product->cover_image ?? $product->image)) }}" 
+                                                         onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&q=80';" 
+                                                         alt="{{ $product->name }}" 
+                                                         class="max-w-full max-h-full object-contain drop-shadow-2xl transition-transform duration-700 group-hover/item:scale-105 filter {{ $isTheme2 ? 'brightness-110 contrast-105' : '' }}">
+                                                </div>
+                                                <div class="mt-1 text-center">
+                                                    <h3 class="text-[10px] xs:text-xs sm:text-base md:text-xl font-serif {{ $isTheme2 ? 'text-white' : 'text-slate-800' }} font-medium line-clamp-1 max-w-[160px] sm:max-w-xs mx-auto">
+                                                        {{ $product->name }}
+                                                    </h3>
+                                                    <p class="text-[10px] xs:text-xs sm:text-base md:text-lg font-semibold {{ $isTheme2 ? 'text-amber-400' : 'text-slate-900' }} mt-0.5 sm:mt-1">
+                                                        {{ \App\Helpers\CurrencyHelper::format($product->price) }}
+                                                    </p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                {{-- Pagination dots --}}
+                                <div class="swiper-pagination routine-pagination !bottom-1 sm:!bottom-4"></div>
                             </div>
-                        </div>
+                        @else
+                            <div class="flex flex-col items-center justify-center text-center p-4 text-slate-500">
+                                <p class="text-xs sm:text-sm italic">No hot deals featured for hero.</p>
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Right Side: Lifestyle Image -->
-                    <div class="w-full md:w-1/2 relative flex items-center justify-center p-6 sm:p-12 h-[350px] sm:h-[400px] md:h-full overflow-hidden group">
+                    <div class="w-1/2 relative flex items-center justify-center p-4 sm:p-12 h-full overflow-hidden group">
                         <img src="{{ $routineLifestyleUrl }}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=1000&q=80';" alt="Skincare Routine" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t {{ $isTheme2 ? 'from-black/80 via-black/40' : 'from-black/60 via-black/20' }} to-transparent"></div>
                         
                         <div class="relative z-10 text-left w-full mt-auto">
-                            <h2 class="text-4xl md:text-5xl lg:text-6xl font-serif font-medium {{ $isTheme2 ? 'text-[#c5a880]' : 'text-white' }} leading-tight drop-shadow-md">
+                            <h2 class="text-sm xs:text-lg sm:text-3xl md:text-5xl lg:text-6xl font-serif font-medium {{ $isTheme2 ? 'text-[#c5a880]' : 'text-white' }} leading-tight drop-shadow-md">
                                 Complete Routine in <br>One Set
                             </h2>
                         </div>
@@ -389,6 +626,66 @@
                     @endif
                 </div>
             </section>
+
+        @elseif($section['id'] === 'flash_sale_banner')
+            {{-- Conversion-Driven Flash Sale Banner --}}
+            @php
+                $countdownActive = \App\Models\StoreSetting::getValue('countdown_is_active', '0') === '1';
+                $countdownEndTime = \App\Models\StoreSetting::getValue('countdown_end_time');
+                $countdownText = \App\Models\StoreSetting::getValue('countdown_text', 'Limited Time Flash Sale');
+                $countdownSubtext = \App\Models\StoreSetting::getValue('countdown_subtext', 'Extra 10% Off automatically applied at checkout!');
+            @endphp
+            @if($countdownActive && $countdownEndTime)
+            <section class="py-4 sm:py-6 relative overflow-hidden {{ $isTheme2 ? 'bg-[#0c0c0e] border-b border-white/5' : '' }}">
+                <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+                    <div id="homepage-flash-banner" data-target-time="{{ $countdownEndTime }}" class="max-w-3xl mx-auto reveal-on-scroll animation-delay-100">
+                        <div class="relative rounded-2xl p-4 sm:p-6 {{ $isTheme2 ? 'bg-[#121218]/80 border border-amber-500/20 shadow-lg shadow-amber-500/5' : 'bg-gradient-to-r from-rose-50 to-orange-50 border border-rose-100 shadow-sm' }} flex flex-col sm:flex-row items-center justify-between gap-4">
+                            
+                            {{-- Left side label --}}
+                            <div class="flex items-center gap-3">
+                                <span class="relative flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                                </span>
+                                <div>
+                                    <h4 class="text-xs sm:text-sm font-bold uppercase tracking-wider {{ $isTheme2 ? 'text-white' : 'text-gray-900' }}">
+                                        {{ $countdownText }}
+                                    </h4>
+                                    <p class="text-[10px] sm:text-xs {{ $isTheme2 ? 'text-amber-400' : 'text-rose-600' }} font-bold tracking-wide">
+                                        {{ $countdownSubtext }}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            {{-- Right side timer --}}
+                            <div class="flex items-center gap-2">
+                                <div class="flex flex-col items-center">
+                                    <div id="flash-hours" class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-xl text-base sm:text-lg font-bold {{ $isTheme2 ? 'bg-slate-900 text-amber-400 border border-amber-500/30' : 'bg-white text-rose-600 shadow-sm border border-rose-100' }}">
+                                        00
+                                    </div>
+                                    <span class="text-[8px] sm:text-[9px] uppercase font-semibold text-gray-400 tracking-wider mt-1">Hrs</span>
+                                </div>
+                                <span class="text-base sm:text-lg font-bold {{ $isTheme2 ? 'text-amber-500' : 'text-rose-600' }} -mt-5">:</span>
+                                <div class="flex flex-col items-center">
+                                    <div id="flash-minutes" class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-xl text-base sm:text-lg font-bold {{ $isTheme2 ? 'bg-slate-900 text-amber-400 border border-amber-500/30' : 'bg-white text-rose-600 shadow-sm border border-rose-100' }}">
+                                        00
+                                    </div>
+                                    <span class="text-[8px] sm:text-[9px] uppercase font-semibold text-gray-400 tracking-wider mt-1">Min</span>
+                                </div>
+                                <span class="text-base sm:text-lg font-bold {{ $isTheme2 ? 'text-amber-500' : 'text-rose-600' }} -mt-5">:</span>
+                                <div class="flex flex-col items-center">
+                                    <div id="flash-seconds" class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-xl text-base sm:text-lg font-bold {{ $isTheme2 ? 'bg-slate-900 text-amber-400 border border-amber-500/30 animate-pulse-glow' : 'bg-white text-rose-600 shadow-sm border border-rose-100 animate-pulse-glow' }}">
+                                        00
+                                    </div>
+                                    <span class="text-[8px] sm:text-[9px] uppercase font-semibold text-gray-400 tracking-wider mt-1">Sec</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+            @endif
 
         @elseif($section['id'] === 'products')
             {{-- PRODUCTS SECTION --}}
@@ -518,46 +815,46 @@
                                     @endphp
                                     <div class="swiper-slide">
                                         <div class="fade-up relative rounded-[2rem] {{ $isTheme2 ? 'bg-slate-950 border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.5)]' : 'bg-white border border-slate-100 shadow-[0_10px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)]' }} overflow-hidden group hover:-translate-y-2 transition-[transform,box-shadow] duration-500">
-                                            <div class="flex flex-col-reverse sm:flex-row items-stretch">
-                                                <div class="w-full sm:w-1/2 p-6 sm:p-6 md:p-10 relative z-10 flex flex-col justify-center">
-                                                    <span class="{{ $isTheme2 ? 'text-amber-500' : 'text-amber-600' }} text-[10px] sm:text-[10px] md:text-xs font-bold tracking-widest uppercase mb-2 sm:mb-3 block">Master Collection</span>
-                                                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-light mb-2 sm:mb-4 {{ $isTheme2 ? 'text-white' : 'text-slate-900' }}">
+                                            <div class="flex flex-row items-stretch h-[180px] xs:h-[210px] sm:h-auto">
+                                                <div class="w-[58%] sm:w-1/2 p-2.5 xs:p-3 sm:p-6 md:p-10 relative z-10 flex flex-col justify-center">
+                                                    <span class="{{ $isTheme2 ? 'text-amber-500' : 'text-amber-600' }} text-[8px] sm:text-[10px] md:text-xs font-bold tracking-widest uppercase mb-0.5 sm:mb-3 block">Master Collection</span>
+                                                    <h2 class="text-[11px] xs:text-xs sm:text-2xl md:text-4xl font-light mb-1 sm:mb-4 {{ $isTheme2 ? 'text-white' : 'text-slate-900' }} line-clamp-2 leading-tight">
                                                         {{ $featuredHotDeal->name }}
                                                     </h2>
-                                                    <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-slate-500' }} text-sm leading-relaxed mb-4 sm:mb-6 max-w-md font-light line-clamp-3 pr-2 sm:pr-0">
+                                                    <p class="{{ $isTheme2 ? 'text-slate-400' : 'text-slate-500' }} text-[9px] xs:text-[10px] sm:text-sm leading-relaxed mb-1.5 sm:mb-6 max-w-md font-light line-clamp-2 sm:line-clamp-3 pr-1 sm:pr-0">
                                                         {{ $featuredHotDeal->description ?? 'Premium selection of our top-rated products.' }}
                                                     </p>
-                                                    <div class="flex flex-wrap items-center gap-3 mb-4 sm:mb-6">
+                                                    <div class="flex flex-wrap items-center gap-1.5 sm:gap-3 mb-1.5 sm:mb-6">
                                                         <div>
                                                             @if($featuredCompare && $featuredCompare > $featuredSale)
-                                                                <span class="{{ $isTheme2 ? 'text-slate-500' : 'text-slate-400' }} line-through text-xs block mb-0.5 sm:mb-1">Standard Price {{ \App\Helpers\CurrencyHelper::format($featuredCompare) }}</span>
+                                                                <span class="{{ $isTheme2 ? 'text-slate-500' : 'text-slate-400' }} line-through text-[8px] sm:text-xs block mb-0.5">Standard Price {{ \App\Helpers\CurrencyHelper::format($featuredCompare) }}</span>
                                                             @endif
-                                                            <span class="text-2xl sm:text-3xl md:text-4xl font-bold {{ $isTheme2 ? 'text-amber-400' : 'text-slate-900' }}">{{ \App\Helpers\CurrencyHelper::format($featuredSale) }}</span>
+                                                            <span class="text-xs xs:text-sm sm:text-2xl md:text-4xl font-bold {{ $isTheme2 ? 'text-amber-400' : 'text-slate-900' }}">{{ \App\Helpers\CurrencyHelper::format($featuredSale) }}</span>
                                                         </div>
                                                         @if($featuredSavings > 0)
-                                                        <div class="{{ $isTheme2 ? 'bg-amber-950/20 border border-amber-500/20' : 'bg-red-50 border border-red-100' }} px-3 py-1.5 rounded-lg w-fit mt-1 sm:mt-0">
-                                                            <span class="{{ $isTheme2 ? 'text-amber-500' : 'text-red-600' }} font-bold tracking-wider uppercase text-xs">You Save {{ \App\Helpers\CurrencyHelper::format($featuredSavings) }}</span>
+                                                        <div class="{{ $isTheme2 ? 'bg-amber-950/20 border border-amber-500/20' : 'bg-red-50 border border-red-100' }} px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-md sm:rounded-lg w-fit mt-0.5 sm:mt-0">
+                                                            <span class="{{ $isTheme2 ? 'text-amber-500' : 'text-red-600' }} font-bold tracking-wider uppercase text-[7px] xs:text-[8px] sm:text-xs">You Save {{ \App\Helpers\CurrencyHelper::format($featuredSavings) }}</span>
                                                         </div>
                                                         @endif
                                                     </div>
-                                                    <div class="mt-2 sm:mt-4">
+                                                    <div class="mt-1 sm:mt-4">
                                                         <a href="{{ route('product.detail', $featuredHotDeal->slug ?? $featuredHotDeal->id) }}"
-                                                           class="claim-offer-btn inline-block text-center {{ $isTheme2 ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950' : 'bg-slate-900 text-white hover:bg-slate-800' }} px-6 py-3 rounded-xl text-xs sm:text-sm font-bold tracking-[0.1em] sm:tracking-[0.2em] uppercase hover:scale-105 hover:shadow-xl transition-all duration-300 w-full sm:w-fit">
+                                                           class="claim-offer-btn inline-block text-center {{ $isTheme2 ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950' : 'bg-slate-900 text-white hover:bg-slate-800' }} px-3 py-1.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl text-[8px] xs:text-[9px] sm:text-xs font-bold tracking-[0.05em] sm:tracking-[0.2em] uppercase hover:scale-105 hover:shadow-xl transition-all duration-300 w-fit">
                                                             Claim Offer
                                                         </a>
                                                     </div>
                                                 </div>
-                                                <div class="w-full sm:w-1/2 relative flex flex-col justify-center items-center p-6 {{ $isTheme2 ? 'bg-slate-900/30' : 'bg-slate-50/50 sm:bg-transparent' }} overflow-hidden rounded-t-[2rem] sm:rounded-none">
-                                                    <div class="absolute w-[200px] sm:w-[250px] h-[200px] sm:h-[250px] {{ $isTheme2 ? 'bg-gradient-to-tr from-amber-500/20 to-transparent' : 'bg-gradient-to-tr from-amber-300/40 to-rose-200/40' }} rounded-full blur-2xl group-hover:scale-125 group-hover:rotate-12 transition-all duration-700"></div>
-                                                    <div class="h-[200px] sm:h-[250px] lg:h-[300px] w-full flex items-center justify-center p-2 sm:p-0">
+                                                <div class="w-[42%] sm:w-1/2 relative flex flex-col justify-center items-center p-2 sm:p-6 {{ $isTheme2 ? 'bg-slate-900/30' : 'bg-slate-50/50 sm:bg-transparent' }} overflow-hidden rounded-none">
+                                                    <div class="absolute w-[100px] sm:w-[250px] h-[100px] sm:h-[250px] {{ $isTheme2 ? 'bg-gradient-to-tr from-amber-500/20 to-transparent' : 'bg-gradient-to-tr from-amber-300/40 to-rose-200/40' }} rounded-full blur-2xl group-hover:scale-125 group-hover:rotate-12 transition-all duration-700"></div>
+                                                    <div class="h-[100px] sm:h-[250px] lg:h-[300px] w-full flex items-center justify-center p-1 sm:p-0">
                                                         @if($featuredHotDeal->cover_image || $featuredHotDeal->image)
                                                             <img src="{{ asset('storage/' . ($featuredHotDeal->cover_image ?? $featuredHotDeal->image)) }}"
                                                                  alt="{{ $featuredHotDeal->name }}"
-                                                                 class="relative z-10 h-full max-h-[180px] sm:max-h-full object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
+                                                                 class="relative z-10 w-full max-w-[90px] xs:max-w-[110px] sm:max-w-[250px] h-full object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
                                                         @else
                                                             <img src="{{ asset('images/categories/hero-deal.jpg') }}"
                                                                  alt="{{ $featuredHotDeal->name }}"
-                                                                 class="relative z-10 h-full max-h-[180px] sm:max-h-full object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
+                                                                 class="relative z-10 w-full max-w-[90px] xs:max-w-[110px] sm:max-w-[250px] h-full object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-700 ease-in-out">
                                                         @endif
                                                     </div>
                                                 </div>
@@ -658,7 +955,17 @@
                     <div class="swiper reel-swiper w-full max-w-7xl mx-auto relative">
                         <div class="swiper-wrapper">
                             
-                            @forelse ($reels as $reel)
+                            @php
+                                $repeatedReels = $reels;
+                                if ($reels->isNotEmpty() && $reels->count() < 6) {
+                                    $repeatedReels = collect();
+                                    while ($repeatedReels->count() < 6) {
+                                        $repeatedReels = $repeatedReels->concat($reels);
+                                    }
+                                }
+                            @endphp
+                            
+                            @forelse ($repeatedReels as $reel)
                             <div class="swiper-slide w-64 sm:w-72 md:w-80 flex flex-col items-center group/slide reel-card-item">
                                 <div class="relative w-full aspect-[9/16] rounded-2xl overflow-hidden bg-gray-900 shadow-lg cursor-pointer">
                                     <video src="{{ asset('storage/' . $reel->video_path) }}" 
@@ -675,6 +982,23 @@
                                             <svg class="w-8 h-8 play-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                                             <svg class="w-8 h-8 pause-icon hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
                                         </div>
+                                    </div>
+
+                                    <!-- Social Stats Overlay -->
+                                    <div class="absolute top-4 left-4 z-20 flex flex-col gap-1.5">
+                                        <button type="button" onclick="event.stopPropagation(); const span = this.querySelector('.likes-count'); if(!this.dataset.liked) { span.textContent = parseInt(span.textContent) + 1; this.dataset.liked = true; this.querySelector('svg').classList.add('text-red-500', 'fill-current'); this.querySelector('svg').classList.remove('text-white'); }" class="bg-black/40 hover:bg-black/60 text-white text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-sm flex items-center gap-1.5 transition-all duration-350 active:scale-110 focus:outline-none">
+                                            <svg class="w-3.5 h-3.5 text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                            </svg>
+                                            <span class="likes-count">{{ rand(50, 450) }}</span>
+                                        </button>
+                                        <span class="bg-black/40 text-white text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-sm flex items-center gap-1.5 select-none w-fit">
+                                            <svg class="w-3.5 h-3.5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                            </svg>
+                                            <span>{{ rand(1, 15) }}.{{ rand(1, 9) }}k views</span>
+                                        </span>
                                     </div>
 
                                     <div class="absolute top-4 right-4 flex flex-col gap-2 text-white z-20">
@@ -814,20 +1138,54 @@
                                     $text = $customText ?: $data['default_text'];
                                     $link = $customLink ?: $data['default_link'];
                                     $imageUrl = $customImagePath ? asset('storage/' . $customImagePath) : $data['default_image'];
+
+                                    $categories = [
+                                        1 => 'Wellness Guide',
+                                        2 => 'Skincare Ritual',
+                                        3 => 'Science & Safety'
+                                    ];
+                                    $readTimes = [
+                                        1 => '5 min read',
+                                        2 => '4 min read',
+                                        3 => '6 min read'
+                                    ];
+                                    $category = $categories[$i] ?? 'Skincare';
+                                    $readTime = $readTimes[$i] ?? '5 min read';
                                 @endphp
                                 
                                 {{-- Article Card Mobile --}}
                                 <div class="swiper-slide w-full h-auto px-4 flex justify-center">
-                                    <div class="group w-full {{ $isTheme2 ? 'bg-slate-900/40 border border-white/5 hover:border-amber-500/30' : 'bg-[#FCFAF8] hover:shadow-xl' }} rounded-2xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-2 h-full">
-                                        <a href="{{ $link }}" class="h-48 overflow-hidden block">
-                                            <img src="{{ $imageUrl }}" onerror="this.onerror=null; this.src='{{ $data['default_image'] }}';" alt="{{ $title }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                                        </a>
-                                        <div class="p-6 flex flex-col flex-grow">
-                                            <a href="{{ $link }}">
-                                                <h3 class="text-lg {{ $isTheme2 ? 'text-slate-200' : 'text-gray-800' }} font-medium mb-4 leading-snug group-hover:text-amber-500 transition-colors">{{ $title }}</h3>
+                                    <div class="article-card-premium group w-full">
+                                        <div class="article-card-image-wrapper h-52 relative">
+                                            {{-- Badges --}}
+                                            <span class="article-card-badge">{{ $category }}</span>
+                                            <span class="article-card-read-time">{{ $readTime }}</span>
+                                            <a href="{{ $link }}" class="w-full h-full block">
+                                                <img src="{{ $imageUrl }}" onerror="this.onerror=null; this.src='{{ $data['default_image'] }}';" alt="{{ $title }}" class="w-full h-full object-cover">
                                             </a>
-                                            <p class="hidden text-sm {{ $isTheme2 ? 'text-slate-400' : 'text-gray-600' }} mb-6 flex-grow leading-relaxed">{{ $text }}</p>
-                                            <button onclick="let p = this.previousElementSibling; p.classList.toggle('hidden'); this.innerText = p.classList.contains('hidden') ? 'Read more' : 'Read less';" class="mt-auto text-left text-xs {{ $isTheme2 ? 'text-amber-500 border-amber-500' : 'text-gray-800 border-gray-800' }} font-semibold uppercase tracking-wider border-b w-fit pb-0.5 hover:text-amber-600 transition-colors">Read more</button>
+                                        </div>
+                                        <div class="p-6 flex flex-col flex-grow">
+                                            {{-- Category tag --}}
+                                            <span class="text-[10px] tracking-[0.2em] font-bold text-amber-600 dark:text-amber-500 uppercase mb-2 block">{{ $category }}</span>
+                                            <a href="{{ $link }}">
+                                                <h3 class="text-lg font-light {{ $isTheme2 ? 'text-slate-200' : 'text-gray-800' }} mb-3 group-hover:text-amber-500 dark:group-hover:text-amber-400 transition-colors duration-300 leading-snug line-clamp-2">{{ $title }}</h3>
+                                            </a>
+                                            
+                                            {{-- Paragraph with line-clamping toggling --}}
+                                            <div class="article-desc text-sm {{ $isTheme2 ? 'text-slate-400' : 'text-gray-500' }} mb-6 leading-relaxed">
+                                                {{ $text }}
+                                            </div>
+                                            
+                                            <div class="mt-auto flex items-center justify-between pt-2">
+                                                <button onclick="let desc = this.closest('.article-card-premium').querySelector('.article-desc'); desc.classList.toggle('expanded'); this.innerText = desc.classList.contains('expanded') ? 'Read less' : 'Read more';" class="text-xs {{ $isTheme2 ? 'text-amber-500 border-amber-500/30 hover:border-amber-500' : 'text-gray-800 border-gray-300 hover:border-gray-800' }} font-bold uppercase tracking-wider border-b pb-0.5 transition-colors">Read more</button>
+                                                
+                                                <a href="{{ $link }}" class="inline-flex items-center text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-amber-500 transition-colors">
+                                                    <span class="sr-only">Go to article</span>
+                                                    <svg class="w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                                    </svg>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -850,28 +1208,62 @@
                                 $text = $customText ?: $data['default_text'];
                                 $link = $customLink ?: $data['default_link'];
                                 $imageUrl = $customImagePath ? asset('storage/' . $customImagePath) : $data['default_image'];
+
+                                $categories = [
+                                    1 => 'Wellness Guide',
+                                    2 => 'Skincare Ritual',
+                                    3 => 'Science & Safety'
+                                ];
+                                $readTimes = [
+                                    1 => '5 min read',
+                                    2 => '4 min read',
+                                    3 => '6 min read'
+                                ];
+                                $category = $categories[$i] ?? 'Skincare';
+                                $readTime = $readTimes[$i] ?? '5 min read';
                             @endphp
                             
                             {{-- Article Card Desktop --}}
-                            <div class="group w-full {{ $isTheme2 ? 'bg-slate-900/40 border border-white/5 hover:border-amber-500/30' : 'bg-[#FCFAF8] hover:shadow-xl' }} rounded-2xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-2 h-full">
-                                <a href="{{ $link }}" class="h-56 overflow-hidden block">
-                                    <img src="{{ $imageUrl }}" onerror="this.onerror=null; this.src='{{ $data['default_image'] }}';" alt="{{ $title }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                                </a>
-                                <div class="p-8 flex flex-col flex-grow">
-                                    <a href="{{ $link }}">
-                                        <h3 class="text-xl {{ $isTheme2 ? 'text-slate-200' : 'text-gray-800' }} font-medium mb-4 leading-snug group-hover:text-amber-500 transition-colors">{{ $title }}</h3>
+                            <div class="article-card-premium group w-full">
+                                <div class="article-card-image-wrapper h-56 relative">
+                                    {{-- Badges --}}
+                                    <span class="article-card-badge">{{ $category }}</span>
+                                    <span class="article-card-read-time">{{ $readTime }}</span>
+                                    <a href="{{ $link }}" class="w-full h-full block">
+                                        <img src="{{ $imageUrl }}" onerror="this.onerror=null; this.src='{{ $data['default_image'] }}';" alt="{{ $title }}" class="w-full h-full object-cover">
                                     </a>
-                                    <p class="hidden text-sm {{ $isTheme2 ? 'text-slate-400' : 'text-gray-600' }} mb-6 flex-grow leading-relaxed">{{ $text }}</p>
-                                    <button onclick="let p = this.previousElementSibling; p.classList.toggle('hidden'); this.innerText = p.classList.contains('hidden') ? 'Read more' : 'Read less';" class="mt-auto text-left text-xs {{ $isTheme2 ? 'text-amber-500 border-amber-500' : 'text-gray-800 border-gray-800' }} font-semibold uppercase tracking-wider border-b w-fit pb-0.5 hover:text-amber-600 transition-colors">Read more</button>
+                                </div>
+                                <div class="p-8 flex flex-col flex-grow">
+                                    {{-- Category tag --}}
+                                    <span class="text-[10px] tracking-[0.2em] font-bold text-amber-600 dark:text-amber-500 uppercase mb-2 block">{{ $category }}</span>
+                                    <a href="{{ $link }}">
+                                        <h3 class="text-xl font-light {{ $isTheme2 ? 'text-slate-200' : 'text-gray-800' }} mb-3 group-hover:text-amber-500 dark:group-hover:text-amber-400 transition-colors duration-300 leading-snug line-clamp-2">{{ $title }}</h3>
+                                    </a>
+                                    
+                                    {{-- Paragraph with line-clamping toggling --}}
+                                    <div class="article-desc text-sm {{ $isTheme2 ? 'text-slate-400' : 'text-gray-500' }} mb-6 leading-relaxed">
+                                        {{ $text }}
+                                    </div>
+                                    
+                                    <div class="mt-auto flex items-center justify-between pt-2">
+                                        <button onclick="let desc = this.closest('.article-card-premium').querySelector('.article-desc'); desc.classList.toggle('expanded'); this.innerText = desc.classList.contains('expanded') ? 'Read less' : 'Read more';" class="text-xs {{ $isTheme2 ? 'text-amber-500 border-amber-500/30 hover:border-amber-500' : 'text-gray-800 border-gray-300 hover:border-gray-800' }} font-bold uppercase tracking-wider border-b pb-0.5 transition-colors">Read more</button>
+                                        
+                                        <a href="{{ $link }}" class="inline-flex items-center text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-amber-500 transition-colors">
+                                            <span class="sr-only">Go to article</span>
+                                            <svg class="w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                            </svg>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         @endforeach
                     </div>
 
                     {{-- View All Button --}}
-                    <div class="mt-6 text-center">
-                        <a href="#" class="inline-block {{ $isTheme2 ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold hover:shadow-lg hover:shadow-amber-500/10' : 'bg-[#EBE2D9] text-gray-800 hover:bg-[#dfd3c7]' }} px-8 py-3 rounded-full text-xs font-semibold tracking-widest uppercase transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm">
-                            VIEW ALL
+                    <div class="mt-12 text-center">
+                        <a href="#" class="inline-block {{ $isTheme2 ? 'border-2 border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-slate-950 hover:shadow-[0_0_20px_rgba(245,158,11,0.2)]' : 'border-2 border-slate-800 text-slate-800 hover:bg-slate-800 hover:text-white hover:shadow-lg' }} px-8 py-3.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 transform hover:scale-105 active:scale-95">
+                            VIEW ALL ARTICLES
                         </a>
                     </div>
 
@@ -1124,6 +1516,56 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Flash Sale rolling/target countdown timer
+        function startFlashCountdown() {
+            const hoursEl = document.getElementById('flash-hours');
+            const minutesEl = document.getElementById('flash-minutes');
+            const secondsEl = document.getElementById('flash-seconds');
+            const bannerEl = document.getElementById('homepage-flash-banner');
+
+            if (!hoursEl || !minutesEl || !secondsEl) return;
+
+            const targetTimeStr = bannerEl ? bannerEl.getAttribute('data-target-time') : null;
+            let targetTime = null;
+            if (targetTimeStr) {
+                targetTime = new Date(targetTimeStr).getTime();
+            }
+
+            function updateTimer() {
+                const now = new Date();
+                let timeRemainingMs = 0;
+
+                if (targetTime && !isNaN(targetTime)) {
+                    timeRemainingMs = targetTime - now.getTime();
+                    if (timeRemainingMs < 0) {
+                        timeRemainingMs = 0;
+                    }
+                }
+
+                // If no target time or it has expired, use rolling 8-hour loop
+                if (timeRemainingMs <= 0) {
+                    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    const diffMs = now.getTime() - startOfDay.getTime();
+                    const eightHoursMs = 8 * 60 * 60 * 1000;
+                    const currentCycle = Math.floor(diffMs / eightHoursMs);
+                    const nextCycleTime = new Date(startOfDay.getTime() + (currentCycle + 1) * eightHoursMs);
+                    timeRemainingMs = nextCycleTime.getTime() - now.getTime();
+                }
+                
+                const totalSeconds = Math.floor(timeRemainingMs / 1000);
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+
+                hoursEl.textContent = String(hours).padStart(2, '0');
+                minutesEl.textContent = String(minutes).padStart(2, '0');
+                secondsEl.textContent = String(seconds).padStart(2, '0');
+            }
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+        startFlashCountdown();
 
 
         const reelSlides = document.querySelectorAll('.reel-swiper .swiper-slide');
@@ -1131,7 +1573,7 @@
             slidesPerView: 'auto',
             centeredSlides: true,
             spaceBetween: 20,
-            loop: reelSlides.length > 4,
+            loop: true,
             navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
@@ -1247,6 +1689,28 @@
                     el: '.swiper-pagination',
                     clickable: true,
                     dynamicBullets: true,
+                }
+            });
+        }
+
+        // Initialize Routine Swiper (Left Slider)
+        const routineSwiperEl = document.querySelector('.routine-swiper');
+        if (routineSwiperEl) {
+            const routineSlidesCount = routineSwiperEl.querySelectorAll('.swiper-slide').length;
+            new Swiper('.routine-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: routineSlidesCount > 1,
+                speed: 650,
+                grabCursor: true,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true,
+                },
+                pagination: {
+                    el: '.routine-pagination',
+                    clickable: true,
                 }
             });
         }

@@ -88,6 +88,7 @@ class StoreManageController extends Controller
             'countdown_is_active' => 'nullable|in:0,1',
             'countdown_end_time' => 'nullable|date',
             'countdown_text' => 'nullable|string|max:255',
+            'countdown_subtext' => 'nullable|string|max:255',
 
             // Shipping & Payments
             'shipping_fee' => 'nullable|numeric|min:0',
@@ -118,6 +119,16 @@ class StoreManageController extends Controller
             'wcu_box3_title' => 'nullable|string|max:255',
             'wcu_box3_desc' => 'nullable|string',
             'wcu_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            // Concierge settings
+            'concierge_welcome_text' => 'nullable|string|max:1000',
+            'concierge_link_1_title' => 'nullable|string|max:255',
+            'concierge_link_1_url' => 'nullable|string|max:1000',
+            'concierge_link_2_title' => 'nullable|string|max:255',
+            'concierge_link_2_url' => 'nullable|string|max:1000',
+            'concierge_link_3_title' => 'nullable|string|max:255',
+            'concierge_link_3_url' => 'nullable|string|max:1000',
+            'concierge_link_4_title' => 'nullable|string|max:255',
+            'concierge_link_4_url' => 'nullable|string|max:1000',
         ]);
 
         // Simple text fields saving
@@ -125,7 +136,7 @@ class StoreManageController extends Controller
             'company_name', 'support_phone', 'support_email', 'street_address', 'city', 'state', 'zip_code',
             'hero_title', 'hero_subtitle', 'hero_media_type', 'hero_active_mode',
             'hero_slider_interval',
-            'countdown_is_active', 'countdown_end_time', 'countdown_text',
+            'countdown_is_active', 'countdown_end_time', 'countdown_text', 'countdown_subtext',
             'shipping_fee', 'shipping_is_active', 'cod_is_active', 'cod_description', 'bank_is_active', 'bank_details',
             'homepage_theme', 'homepage_layout',
             'article_1_title', 'article_1_text', 'article_1_link',
@@ -133,7 +144,12 @@ class StoreManageController extends Controller
             'article_3_title', 'article_3_text', 'article_3_link',
             'wcu_main_title', 'wcu_main_desc', 'wcu_stat1_title', 'wcu_stat1_desc',
             'wcu_stat2_title', 'wcu_stat2_desc', 'wcu_box1_title', 'wcu_box1_desc',
-            'wcu_box2_title', 'wcu_box2_desc', 'wcu_box3_title', 'wcu_box3_desc'
+            'wcu_box2_title', 'wcu_box2_desc', 'wcu_box3_title', 'wcu_box3_desc',
+            'concierge_welcome_text',
+            'concierge_link_1_title', 'concierge_link_1_url',
+            'concierge_link_2_title', 'concierge_link_2_url',
+            'concierge_link_3_title', 'concierge_link_3_url',
+            'concierge_link_4_title', 'concierge_link_4_url'
         ];
 
         foreach ($keys as $key) {
@@ -253,7 +269,12 @@ class StoreManageController extends Controller
             'wcu_main_title', 'wcu_main_desc', 'wcu_stat1_title', 'wcu_stat1_desc',
             'wcu_stat2_title', 'wcu_stat2_desc', 'wcu_box1_title', 'wcu_box1_desc',
             'wcu_box2_title', 'wcu_box2_desc', 'wcu_box3_title', 'wcu_box3_desc',
-            'wcu_image_path'
+            'wcu_image_path',
+            'concierge_welcome_text',
+            'concierge_link_1_title', 'concierge_link_1_url',
+            'concierge_link_2_title', 'concierge_link_2_url',
+            'concierge_link_3_title', 'concierge_link_3_url',
+            'concierge_link_4_title', 'concierge_link_4_url'
         ];
 
         foreach ($keys as $key) {

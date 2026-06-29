@@ -50,27 +50,31 @@ class CustomerActionController extends Controller
         return back()->with('success', 'Your inquiry has been submitted successfully! Our concierge team will get back to you shortly.');
     }
 
-    /**
-     * Store a new customer review/testimonial.
-     */
     public function storeReview(Request $request)
     {
         $request->validate([
+            'product_id' => 'required|exists:products,id',
             'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
             'rating' => 'required|integer|between:1,5',
             'title' => 'required|string|max:255',
             'text' => 'required|string',
         ]);
 
+        $product = \App\Models\Product::findOrFail($request->product_id);
+
         Review::create([
+            'product_id' => $request->product_id,
+            'product_name' => $product->name,
             'name' => $request->name,
+            'email' => $request->email,
             'rating' => $request->rating,
             'title' => $request->title,
             'text' => $request->text,
-            'is_approved' => true, // Auto-approved by default, can be toggled by admin
+            'is_approved' => false, // Must be approved by admin
         ]);
 
-        return back()->with('success', 'Thank you for sharing your transformation story! Your review has been submitted.');
+        return back()->with('success', 'Thank you! Your review has been submitted and is pending admin approval.');
     }
 
     /**

@@ -70,7 +70,7 @@ class CRMController extends Controller
      */
     public function reviewsIndex()
     {
-        $reviews = Review::latest()->paginate(15);
+        $reviews = Review::with('product')->latest()->paginate(15);
         return view('admin.reviews', compact('reviews'));
     }
 

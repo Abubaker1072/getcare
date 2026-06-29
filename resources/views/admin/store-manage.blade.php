@@ -68,6 +68,10 @@
                         <svg class="w-5 h-5 mr-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path></svg>
                         Main Page Content
                     </button>
+                    <button type="button" onclick="switchTab('tab-concierge')" id="nav-tab-concierge" class="tab-btn w-full flex items-center px-4 py-3 text-slate-500 hover:text-slate-900 rounded-2xl text-sm font-medium text-left transition-colors">
+                        <svg class="w-5 h-5 mr-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                        Concierge Customizer
+                    </button>
                 </nav>
             </div>
 
@@ -336,6 +340,12 @@
                                 <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Discount Coupon / Promo Banner Text</label>
                                 <input type="text" name="countdown_text" value="{{ \App\Models\StoreSetting::getValue('countdown_text', 'Up to 20% Off | Code REFRESH20') }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-4 py-3 font-medium focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
                                 <p class="text-xs text-slate-400 mt-2 font-medium">This is the text that will be displayed in the red/amber banner at the top of the header, next to the ticking clock.</p>
+                            </div>
+
+                            <div class="col-span-2">
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Promo Banner Subtext (Extra Alert)</label>
+                                <input type="text" name="countdown_subtext" value="{{ \App\Models\StoreSetting::getValue('countdown_subtext', 'Extra 10% Off automatically applied at checkout!') }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-4 py-3 font-medium focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                                <p class="text-xs text-slate-400 mt-2 font-medium">This is the subtext that will be displayed right below the primary banner text inside the homepage flash sale box.</p>
                             </div>
                         </div>
                     </div>
@@ -736,6 +746,79 @@
                         </div>
                     </div>
 
+                </div>
+                
+                <!-- Tab: Concierge Customizer -->
+                <div id="tab-concierge" class="tab-content hidden space-y-6">
+                    <div class="bg-white rounded-3xl border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] p-8">
+                        <h3 class="text-lg font-extrabold text-slate-900 mb-6 flex items-center">
+                            <span class="bg-indigo-100 text-indigo-600 w-8 h-8 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                            </span>
+                            Virtual Beauty Concierge Customizer
+                        </h3>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Concierge Welcome / Greeting Text</label>
+                                <input type="text" name="concierge_welcome_text" value="{{ \App\Models\StoreSetting::getValue('concierge_welcome_text', 'Hello! How can we elevate your skincare and beauty routine today?') }}" class="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-4 py-3 font-medium focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all">
+                            </div>
+
+                            <div class="border-t border-slate-100 pt-6">
+                                <h4 class="text-sm font-bold text-slate-800 mb-4">Quick Navigation Links Customization</h4>
+                                <div class="space-y-4">
+                                    <!-- Link 1 -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Link 1 Button Text</label>
+                                            <input type="text" name="concierge_link_1_title" value="{{ \App\Models\StoreSetting::getValue('concierge_link_1_title', 'Discover Devices') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-indigo-500/20 outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Link 1 URL Page Link</label>
+                                            <input type="text" name="concierge_link_1_url" value="{{ \App\Models\StoreSetting::getValue('concierge_link_1_url', '/shop/all') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-indigo-500/20 outline-none">
+                                        </div>
+                                    </div>
+
+                                    <!-- Link 2 -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Link 2 Button Text</label>
+                                            <input type="text" name="concierge_link_2_title" value="{{ \App\Models\StoreSetting::getValue('concierge_link_2_title', 'My Routine Dashboard') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-indigo-500/20 outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Link 2 URL Page Link</label>
+                                            <input type="text" name="concierge_link_2_url" value="{{ \App\Models\StoreSetting::getValue('concierge_link_2_url', '/dashboard') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-indigo-500/20 outline-none">
+                                        </div>
+                                    </div>
+
+                                    <!-- Link 3 -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Link 3 Button Text</label>
+                                            <input type="text" name="concierge_link_3_title" value="{{ \App\Models\StoreSetting::getValue('concierge_link_3_title', 'Beauty Routine Bible') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-indigo-500/20 outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Link 3 URL Page Link</label>
+                                            <input type="text" name="concierge_link_3_url" value="{{ \App\Models\StoreSetting::getValue('concierge_link_3_url', '/blog') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-indigo-500/20 outline-none">
+                                        </div>
+                                    </div>
+
+                                    <!-- Link 4 -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Link 4 Button Text</label>
+                                            <input type="text" name="concierge_link_4_title" value="{{ \App\Models\StoreSetting::getValue('concierge_link_4_title', 'Track My Order') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-indigo-500/20 outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Link 4 URL Page Link</label>
+                                            <input type="text" name="concierge_link_4_url" value="{{ \App\Models\StoreSetting::getValue('concierge_link_4_url', '/dashboard#orders') }}" class="w-full bg-white border border-slate-200 text-slate-900 rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-indigo-500/20 outline-none">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

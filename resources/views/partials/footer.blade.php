@@ -5,20 +5,20 @@
 
 <footer class="{{ $isTheme2 ? 'bg-[#08080a] text-slate-300 border-t border-white/5' : 'bg-[#FAF6F2] text-[#3D352E] border-t border-[#EAE2DB]' }} font-sans">
     {{-- Main Footer Content --}}
-    <div class="px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24">
+    <div class="px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div class="max-w-7xl mx-auto">
             {{-- Footer Grid --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8 mb-16 md:mb-20">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 mb-5 sm:mb-8">
                 
                 {{-- About Us Section --}}
                 <div class="lg:col-span-1">
-                    <h3 class="font-serif font-bold text-[13px] tracking-[0.25em] uppercase {{ $isTheme2 ? 'text-white' : 'text-[#3D352E]' }} mb-6">ABOUT US</h3>
-                    <p class="text-xs leading-relaxed {{ $isTheme2 ? 'text-slate-400' : 'text-[#6B5E53]' }} font-medium mb-6">
+                    <h3 class="font-serif font-bold text-[13px] tracking-[0.25em] uppercase {{ $isTheme2 ? 'text-white' : 'text-[#3D352E]' }} mb-2.5">ABOUT US</h3>
+                    <p class="text-xs leading-relaxed {{ $isTheme2 ? 'text-slate-400' : 'text-[#6B5E53]' }} font-medium mb-2.5">
                         {{ \App\Models\StoreSetting::getValue('footer_about_text', 'Our mission is simple: to transform traditional approaches to skincare with science-backed solutions. We want to empower people from all communities to find confidence and joy through better beauty routines.') }}
                     </p>
                     
                     @if(\App\Models\StoreSetting::getValue('footer_contact_email') || \App\Models\StoreSetting::getValue('footer_contact_phone'))
-                    <div class="space-y-2 mt-4 pt-4 border-t {{ $isTheme2 ? 'border-white/10' : 'border-[#EAE2DB]' }}">
+                    <div class="space-y-1.5 mt-2.5 pt-2.5 border-t {{ $isTheme2 ? 'border-white/10' : 'border-[#EAE2DB]' }}">
                         @if(\App\Models\StoreSetting::getValue('footer_contact_email'))
                         <div class="flex items-center gap-2">
                             <svg class="w-4 h-4 {{ $isTheme2 ? 'text-amber-500' : 'text-[#B76E79]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
@@ -49,8 +49,8 @@
 
                 {{-- Quick Links Section --}}
                 <div>
-                    <h3 class="font-serif font-bold text-[13px] tracking-[0.25em] uppercase {{ $isTheme2 ? 'text-white' : 'text-[#3D352E]' }} mb-6">QUICK LINKS</h3>
-                    <ul class="space-y-3">
+                    <h3 class="font-serif font-bold text-[13px] tracking-[0.25em] uppercase {{ $isTheme2 ? 'text-white' : 'text-[#3D352E]' }} mb-2.5">QUICK LINKS</h3>
+                    <ul class="space-y-1.5">
                         <li><a href="{{ route('home') }}" class="text-xs font-semibold {{ $isTheme2 ? 'text-slate-400 hover:text-amber-400' : 'text-[#6B5E53] hover:text-[#B76E79]' }} transition-colors tracking-wider">Home</a></li>
                         <li><a href="{{ route('products.all') }}" class="text-xs font-semibold {{ $isTheme2 ? 'text-slate-400 hover:text-amber-400' : 'text-[#6B5E53] hover:text-[#B76E79]' }} transition-colors tracking-wider">Shop All</a></li>
                         <li><a href="{{ route('categories') }}" class="text-xs font-semibold {{ $isTheme2 ? 'text-slate-400 hover:text-amber-400' : 'text-[#6B5E53] hover:text-[#B76E79]' }} transition-colors tracking-wider">Categories</a></li>
@@ -60,8 +60,8 @@
 
                 {{-- Terms & Policy Section --}}
                 <div>
-                    <h3 class="font-serif font-bold text-[13px] tracking-[0.25em] uppercase {{ $isTheme2 ? 'text-white' : 'text-[#3D352E]' }} mb-6">TERMS & POLICY</h3>
-                    <ul class="space-y-3">
+                    <h3 class="font-serif font-bold text-[13px] tracking-[0.25em] uppercase {{ $isTheme2 ? 'text-white' : 'text-[#3D352E]' }} mb-2.5">TERMS & POLICY</h3>
+                    <ul class="space-y-1.5">
                         <li><a href="#" class="text-xs font-semibold {{ $isTheme2 ? 'text-slate-400 hover:text-amber-400' : 'text-[#6B5E53] hover:text-[#B76E79]' }} transition-colors tracking-wider">Privacy Policy</a></li>
                         <li><a href="#" class="text-xs font-semibold {{ $isTheme2 ? 'text-slate-400 hover:text-amber-400' : 'text-[#6B5E53] hover:text-[#B76E79]' }} transition-colors tracking-wider">Terms of Service</a></li>
                         <li><a href="#" class="text-xs font-semibold {{ $isTheme2 ? 'text-slate-400 hover:text-amber-400' : 'text-[#6B5E53] hover:text-[#B76E79]' }} transition-colors tracking-wider">Refund Policy</a></li>
@@ -70,8 +70,8 @@
 
                 {{-- Subscribe Section --}}
                 <div class="lg:col-span-1">
-                    <h3 class="font-serif font-bold text-[13px] tracking-[0.25em] uppercase {{ $isTheme2 ? 'text-white' : 'text-[#3D352E]' }} mb-6">SUBSCRIBE</h3>
-                    <p class="text-xs leading-relaxed {{ $isTheme2 ? 'text-slate-400' : 'text-[#6B5E53]' }} mb-5 font-medium">
+                    <h3 class="font-serif font-bold text-[13px] tracking-[0.25em] uppercase {{ $isTheme2 ? 'text-white' : 'text-[#3D352E]' }} mb-2.5">SUBSCRIBE</h3>
+                    <p class="text-xs leading-relaxed {{ $isTheme2 ? 'text-slate-400' : 'text-[#6B5E53]' }} mb-2.5 font-medium">
                         Sign up to get the latest skincare news, discounts, and early access to new launches.
                     </p>
                     
@@ -79,12 +79,12 @@
                     <input 
                         type="email" 
                         placeholder="Email (required)" 
-                        class="w-full px-4 py-3 {{ $isTheme2 ? 'bg-slate-900 text-white border-white/5 focus:border-amber-400' : 'bg-white text-[#3D352E] border-[#EAE2DB] focus:border-[#B76E79]' }} text-xs border placeholder-gray-400 focus:outline-none transition"
+                        class="w-full px-4 py-2 {{ $isTheme2 ? 'bg-slate-900 text-white border-white/5 focus:border-amber-400' : 'bg-white text-[#3D352E] border-[#EAE2DB] focus:border-[#B76E79]' }} text-xs border placeholder-gray-400 focus:outline-none transition"
                     >
                     
                     {{-- Phone Input with Country Selector --}}
-                    <div class="flex gap-2.5 mb-4.5 mt-3">
-                        <select class="w-20 px-2 py-3 {{ $isTheme2 ? 'bg-slate-900 text-white border-white/5 focus:border-amber-400' : 'bg-white text-[#3D352E] border-[#EAE2DB] focus:border-[#B76E79]' }} text-xs border focus:outline-none transition select-none">
+                    <div class="flex gap-2 mb-2.5 mt-1.5">
+                        <select class="w-20 px-2 py-2 {{ $isTheme2 ? 'bg-slate-900 text-white border-white/5 focus:border-amber-400' : 'bg-white text-[#3D352E] border-[#EAE2DB] focus:border-[#B76E79]' }} text-xs border focus:outline-none transition select-none">
                             <option class="{{ $isTheme2 ? 'bg-slate-950 text-white' : '' }}">🇵🇰 +92</option>
                             <option class="{{ $isTheme2 ? 'bg-slate-950 text-white' : '' }}">🇺🇸 +1</option>
                             <option class="{{ $isTheme2 ? 'bg-slate-950 text-white' : '' }}">🇬🇧 +44</option>
@@ -95,27 +95,27 @@
                         <input 
                             type="tel" 
                             placeholder="Phone (Optional)" 
-                            class="flex-1 px-4 py-3 {{ $isTheme2 ? 'bg-slate-900 text-white border-white/5 focus:border-amber-400' : 'bg-white text-[#3D352E] border-[#EAE2DB] focus:border-[#B76E79]' }} text-xs border placeholder-gray-400 focus:outline-none transition"
+                            class="flex-1 px-4 py-2 {{ $isTheme2 ? 'bg-slate-900 text-white border-white/5 focus:border-amber-400' : 'bg-white text-[#3D352E] border-[#EAE2DB] focus:border-[#B76E79]' }} text-xs border placeholder-gray-400 focus:outline-none transition"
                         >
                     </div>
                     
                     {{-- Subscribe Button --}}
-                    <button class="w-full px-4 py-3 {{ $isTheme2 ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-bold' : 'bg-[#3D352E] text-white hover:bg-[#B76E79]' }} text-xs tracking-[0.2em] hover:shadow-lg transition duration-300 uppercase">
+                    <button class="w-full px-4 py-2 {{ $isTheme2 ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-bold' : 'bg-[#3D352E] text-white hover:bg-[#B76E79]' }} text-xs tracking-[0.2em] hover:shadow-lg transition duration-300 uppercase">
                         SUBSCRIBE
                     </button>
                     
                     {{-- Privacy Notice --}}
-                    <p class="text-[10px] text-gray-500 leading-relaxed mt-4 font-medium">
+                    <p class="text-[10px] text-gray-500 leading-relaxed mt-2.5 font-medium">
                         By signing up, you agree to receive marketing emails and text messages. View our <a href="{{ route('home') }}" class="{{ $isTheme2 ? 'text-slate-400 hover:text-amber-400' : 'text-[#6B5E53] hover:text-[#B76E79]' }} transition-colors underline">privacy policy</a> and <a href="{{ route('home') }}" class="{{ $isTheme2 ? 'text-slate-400 hover:text-amber-400' : 'text-[#6B5E53] hover:text-[#B76E79]' }} transition-colors underline">terms of service</a> for more info.
                     </p>
                 </div>
             </div>
 
             {{-- Divider --}}
-            <div class="border-t {{ $isTheme2 ? 'border-white/5' : 'border-[#EAE2DB]' }} pt-8 md:pt-10"></div>
+            <div class="border-t {{ $isTheme2 ? 'border-white/5' : 'border-[#EAE2DB]' }} pt-4 sm:pt-6"></div>
 
             {{-- Footer Bottom --}}
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
                 {{-- Logo/Brand --}}
                 <div class="text-center sm:text-left">
                     <a href="{{ route('home') }}" class="text-lg font-serif font-bold tracking-[0.25em] {{ $isTheme2 ? 'text-amber-500' : 'text-[#3D352E]' }} uppercase leading-none">

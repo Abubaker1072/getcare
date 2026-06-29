@@ -2,10 +2,18 @@
 
 @section('content')
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
             <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Orders</h1>
             <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">Track fulfillments, manage payments, and review incoming sales.</p>
+        </div>
+        <div class="flex-shrink-0">
+            <a href="{{ route('admin.orders.deep-manage') }}" class="inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-600 to-indigo-750 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-xl text-sm font-extrabold shadow-md hover:shadow-lg transition-all duration-300 transform active:scale-95">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                </svg>
+                Order Deep Management
+            </a>
         </div>
     </div>
 

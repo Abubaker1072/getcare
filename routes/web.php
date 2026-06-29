@@ -14,7 +14,6 @@ use App\Http\Controllers\Frontend\CategoryController as FrontendCategoryControll
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\Admin\HotDealPromoController;
 use App\Http\Controllers\Admin\MarqueeImageController;
 
 
@@ -32,12 +31,18 @@ Route::get('/', function (
     $bestsellingProducts = $productRepo->getBestsellingProducts();
     $featuredCategories = $categoryRepo->getFeaturedCategories();
     $hotDealProducts = $hotDealRepo->getHotDealProducts();
+    
+    $heroHotDeals = \App\Models\Product::whereHas('homepageHotDeal', fn($q) => $q->where('show_on_hero', true))->where('is_active', true)->get();
+    if ($heroHotDeals->isEmpty() && $hotDealProducts->isNotEmpty()) {
+        $heroHotDeals = $hotDealProducts->take(3);
+    }
+    
     $regularReels = \App\Models\Reel::with('product')->where('is_active', true)->latest()->get();
     $productReels = \App\Models\ProductReviewVideo::with('product')->where('is_active', true)->where('show_on_homepage', true)->latest()->get();
     $reels = $regularReels->concat($productReels)->sortByDesc('created_at')->values();
     $homepageReviews = \App\Models\Review::where('is_approved', true)->where('show_on_homepage', true)->latest()->get();
     $marqueeImages = \App\Models\MarqueeImage::where('is_active', true)->orderBy('sort_order')->get();
-    return view('pages.home', compact('bestsellingProducts', 'featuredCategories', 'hotDealProducts', 'reels', 'homepageReviews', 'marqueeImages'));
+    return view('pages.home', compact('bestsellingProducts', 'featuredCategories', 'hotDealProducts', 'reels', 'homepageReviews', 'marqueeImages', 'heroHotDeals'));
 })->name('home');
 
 Route::get('/shop/all', [FrontendProductController::class, 'index'])->name('products.all');
@@ -54,10 +59,7 @@ Route::get('/hot-deals', function (\App\Repositories\Contracts\HomepageHotDealPr
                             ->orderByRaw("FIELD(id, $orderedIds)")
                             ->paginate(20);
     }
-    
-    $hotDealPromos = \App\Models\HotDealPromo::with('product')->where('is_active', true)->latest()->get();
-    
-    return view('pages.hot-deals', compact('hotDealProducts', 'hotDealPromos'));
+    return view('pages.hot-deals', compact('hotDealProducts'));
 })->name('hot-deals');
 
 
@@ -290,6 +292,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/hot-deal-management', [HomepageHotDealController::class, 'manage'])->name('hot-deal-management');
     Route::post('/hot-deal-management/toggle/{product}', [HomepageHotDealController::class, 'toggle'])
         ->name('hot-deal-management.toggle');
+    Route::post('/hot-deal-management/toggle-hero/{product}', [HomepageHotDealController::class, 'toggleHero'])
+        ->name('hot-deal-management.toggle-hero');
 
     // Admin pages
     Route::get('/store-manage', [StoreManageController::class, 'index'])->name('store-manage');
@@ -298,6 +302,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/payment-gateways', [StoreManageController::class, 'paymentGateways'])->name('payment-gateways');
     Route::get('/payment-gateways/download', [StoreManageController::class, 'downloadTransactions'])->name('payment-gateways.download');
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders');
+    Route::get('/orders/deep-manage', [AdminOrderController::class, 'deepManage'])->name('orders.deep-manage');
+    Route::get('/orders/export', [AdminOrderController::class, 'export'])->name('orders.export');
     Route::post('/orders/{order}/update-status', [AdminOrderController::class, 'updateStatus'])->name('orders.update-status');
     Route::delete('/orders/{order}', [AdminOrderController::class, 'destroy'])->name('orders.destroy');
     Route::get('/customers', function (\Illuminate\Http\Request $request) {
@@ -353,8 +359,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Reels CRUD
     Route::resource('reels', \App\Http\Controllers\Admin\ReelController::class)->except(['show']);
 
-    // Hot Deal Promos CRUD
-    Route::resource('hot-deal-promos', HotDealPromoController::class)->except(['show']);
+
 
     // Marquee Images CRUD
     Route::resource('marquee-images', MarqueeImageController::class)->except(['show']);

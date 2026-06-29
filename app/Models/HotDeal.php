@@ -8,7 +8,11 @@ class HotDeal extends Model
 {
     protected $table = 'hot_deals';
 
-    protected $fillable = ['product_id'];
+    protected $fillable = ['product_id', 'show_on_hero'];
+
+    protected $casts = [
+        'show_on_hero' => 'boolean',
+    ];
 
     public function product()
     {

@@ -39,4 +39,15 @@ class HomepageHotDealController extends Controller
 
         return back()->with('success', $result['message']);
     }
+
+    public function toggleHero(Product $product)
+    {
+        $hotDeal = $product->homepageHotDeal;
+        if ($hotDeal) {
+            $hotDeal->show_on_hero = !$hotDeal->show_on_hero;
+            $hotDeal->save();
+            return back()->with('success', 'Hero section display status updated.');
+        }
+        return back()->with('error', 'Product is not a Hot Deal.');
+    }
 }

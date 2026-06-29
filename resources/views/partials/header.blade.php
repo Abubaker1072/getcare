@@ -3,6 +3,7 @@
     $homepageTheme = \App\Models\StoreSetting::getValue('homepage_theme', 'theme_1');
     $isTheme2 = ($homepageTheme === 'theme_2');
     $popularSearches = \App\Models\PopularSearch::orderBy('sort_order')->orderBy('created_at', 'desc')->take(12)->get();
+    $isHome = request()->is('/');
 @endphp
 
 <style>
@@ -86,48 +87,8 @@
     }
 </style>
 
-<header id="main-header" class="w-full fixed top-0 left-0 z-50 flex flex-col is-scrolled {{ $isTheme2 ? 'theme-2-header' : '' }}">
-    @php
-        $countdownActive = \App\Models\StoreSetting::getValue('countdown_is_active', '0') === '1';
-        $countdownEndTime = \App\Models\StoreSetting::getValue('countdown_end_time');
-        $countdownText = \App\Models\StoreSetting::getValue('countdown_text', 'Up to 20% Off | Code REFRESH20');
-    @endphp
+<header id="main-header" class="w-full fixed top-0 left-0 z-50 flex flex-col {{ !$isHome ? 'is-scrolled' : '' }} {{ $isTheme2 ? 'theme-2-header' : '' }}">
 
-    @if($countdownActive && $countdownEndTime)
-        <div id="store-countdown-timer" data-target-time="{{ $countdownEndTime }}" class="w-full bg-gradient-to-r {{ $isTheme2 ? 'from-amber-600 to-orange-600 text-slate-950 font-bold' : 'from-[#c45a49] to-[#b04b3a] text-white' }} py-2.5 px-4 flex items-center justify-between text-xs tracking-wider uppercase relative z-[60] shadow-md transition-all duration-300">
-            <div class="flex-1 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-center">
-                <span class="font-extrabold flex items-center gap-1.5">
-                    <svg class="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    {{ $countdownText }}
-                </span>
-                <div class="flex items-center gap-3 font-mono font-bold text-[13px] bg-black/10 px-3 py-1 rounded-md">
-                    <div class="flex flex-col items-center">
-                        <span id="countdown-days">00</span>
-                        <span class="text-[8px] opacity-75 font-sans -mt-0.5">DAYS</span>
-                    </div>
-                    <span>:</span>
-                    <div class="flex flex-col items-center">
-                        <span id="countdown-hours">00</span>
-                        <span class="text-[8px] opacity-75 font-sans -mt-0.5">HRS</span>
-                    </div>
-                    <span>:</span>
-                    <div class="flex flex-col items-center">
-                        <span id="countdown-mins">00</span>
-                        <span class="text-[8px] opacity-75 font-sans -mt-0.5">MINS</span>
-                    </div>
-                    <span>:</span>
-                    <div class="flex flex-col items-center">
-                        <span id="countdown-secs">00</span>
-                        <span class="text-[8px] opacity-75 font-sans -mt-0.5">SECS</span>
-                    </div>
-                </div>
-            </div>
-            <button onclick="dismissCountdown()" class="text-current opacity-70 hover:opacity-100 transition p-1 hover:rotate-90 duration-200" title="Dismiss">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-        </div>
-    @endif
-    
     {{-- Promotional Banner (Continuous Text) --}}
     <div class="w-full {{ $isTheme2 ? 'theme-2-promo' : 'bg-[#dce0da]' }} py-2 overflow-hidden flex whitespace-nowrap text-[13px] text-gray-800 font-medium">
         <div class="flex items-center justify-start gap-12 px-4 animate-marquee w-full">
@@ -208,7 +169,7 @@
                                                     <p class="text-sm font-medium">No products found in this category.</p>
                                                 </div>
                                             @else
-                                                <div class="grid grid-cols-4 xl:grid-cols-5 gap-x-3 xl:gap-x-4 gap-y-6">
+                                                <div class="grid grid-cols-3 xl:grid-cols-4 gap-x-8 xl:gap-x-10 gap-y-8">
                                                     @foreach($cat->products as $prod)
                                                         <a href="{{ route('product.detail', $prod->id) }}" class="flex flex-col items-center group/prod text-center relative">
                                                             <!-- Round Image Container (Temu Style) -->
@@ -226,7 +187,7 @@
                                                                 @endif
                                                             </div>
                                                             <!-- Title -->
-                                                            <span class="text-[12px] font-medium {{ $isTheme2 ? 'text-slate-300 group-hover/prod:text-amber-400' : 'text-slate-700 group-hover/prod:text-slate-900' }} transition-colors line-clamp-2 w-full px-1 leading-tight mt-1 text-center">
+                                                            <span class="text-[10px] xl:text-[11px] font-bold uppercase tracking-wider {{ $isTheme2 ? 'text-slate-400 group-hover/prod:text-amber-400' : 'text-slate-500 group-hover/prod:text-slate-800' }} transition-colors line-clamp-2 w-full px-1 leading-snug mt-2 text-center">
                                                                 {{ $prod->name }}
                                                             </span>
                                                         </a>
@@ -338,28 +299,28 @@
 
 
 {{-- Search Modal HTML --}}
-<div id="search-modal" class="fixed inset-0 {{ $isTheme2 ? 'bg-[#0c0c0e]/95 backdrop-blur-md text-[#f3e8ff]' : 'bg-white/95 backdrop-blur-sm' }} z-[80] hidden opacity-0 transition-opacity duration-300 flex-col">
-    <div class="max-w-3xl mx-auto w-full px-4 pt-8 sm:pt-20 relative flex-1">
+<div id="search-modal" class="absolute md:fixed inset-x-0 top-0 min-h-screen md:inset-0 {{ $isTheme2 ? 'bg-[#0c0c0e]/95 backdrop-blur-md text-[#f3e8ff]' : 'bg-white/95 backdrop-blur-sm' }} z-[80] hidden opacity-0 transition-opacity duration-300 flex-col">
+    <div class="max-w-3xl mx-auto w-full px-4 pt-4 sm:pt-20 relative flex-1">
         <!-- Close Button Top Right -->
-        <button id="close-search" class="hidden sm:block absolute top-4 right-4 sm:top-8 sm:right-8 {{ $isTheme2 ? 'text-slate-400 hover:text-amber-400' : 'text-gray-500 hover:text-red-500' }} transition transform hover:rotate-90 duration-300">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <button id="close-search" class="absolute top-3 right-4 sm:top-8 sm:right-8 {{ $isTheme2 ? 'text-slate-400 hover:text-amber-400' : 'text-gray-500 hover:text-red-500' }} transition transform hover:rotate-90 duration-300 hidden sm:block">
+            <svg class="w-6 h-6 sm:w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
         
         <div class="mb-8 transform -translate-y-4 opacity-0 transition-all duration-500" id="search-content">
             <!-- Search bar row -->
-            <div class="flex items-center gap-4 mb-8">
+            <div class="flex items-center gap-2 sm:gap-4 mb-5 sm:mb-8">
                 <!-- Back button (<) -->
                 <button type="button" onclick="window.closeSearch()" class="text-gray-900 {{ $isTheme2 ? 'text-white hover:text-amber-400' : 'text-gray-800 hover:text-gray-600' }} transition flex-shrink-0">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                    <svg class="w-5 h-5 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path>
                     </svg>
                 </button>
                 
                 <!-- Form with round black border and solid circle search button -->
                 <form action="{{ route('products.all') }}" method="GET" class="relative flex-1 m-0">
-                    <input type="text" name="q" placeholder="Search GetCare..." class="w-full text-base pl-6 pr-14 py-3 border-2 {{ $isTheme2 ? 'border-amber-400 bg-slate-900 text-white placeholder:text-slate-500' : 'border-black bg-white text-black placeholder:text-gray-400' }} rounded-full outline-none focus:ring-0" autofocus>
-                    <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 {{ $isTheme2 ? 'bg-amber-500 text-slate-950 hover:bg-amber-400' : 'bg-black text-white hover:bg-gray-800' }} rounded-full flex items-center justify-center transition-colors">
-                        <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                    <input type="text" name="q" placeholder="Search GetCare..." class="w-full text-xs sm:text-base pl-4 pr-10 py-1.5 sm:pl-6 sm:pr-14 sm:py-3 border {{ $isTheme2 ? 'border-amber-400 bg-slate-900 text-white placeholder:text-slate-500' : 'border-gray-300 focus:border-black bg-gray-50/70 text-black placeholder:text-gray-400' }} rounded-full outline-none focus:ring-0" autofocus>
+                    <button type="submit" class="absolute right-1 top-1/2 -translate-y-1/2 w-6 h-6 sm:w-9 sm:h-9 {{ $isTheme2 ? 'bg-amber-500 text-slate-950 hover:bg-amber-400' : 'bg-black text-white hover:bg-gray-800' }} rounded-full flex items-center justify-center transition-colors">
+                        <svg class="w-3 h-3 sm:w-4.5 sm:h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path>
                         </svg>
                     </button>
@@ -367,24 +328,24 @@
             </div>
             
             <!-- Popular right now section -->
-            <div class="mt-8 text-left">
-                <h3 class="text-lg font-bold {{ $isTheme2 ? 'text-white' : 'text-slate-900' }} mb-4 font-sans tracking-tight">Popular right now</h3>
-                <div class="flex flex-wrap gap-2.5">
+            <div class="mt-4 sm:mt-8 text-left">
+                <h3 class="text-sm sm:text-lg font-bold {{ $isTheme2 ? 'text-white' : 'text-slate-900' }} mb-3 sm:mb-4 font-sans tracking-tight">Popular right now</h3>
+                <div class="flex flex-wrap gap-1.5 sm:gap-2.5">
                     @forelse($popularSearches as $search)
-                        <a href="{{ route('products.all') }}?q={{ urlencode($search->name) }}" class="flex items-center gap-2 {{ $isTheme2 ? 'bg-[#1c1c1e] text-slate-200 hover:bg-slate-800 hover:text-white' : 'bg-slate-100 text-slate-800 hover:bg-slate-200 hover:text-black' }} rounded-full p-1 pr-4 transition-all max-w-full">
+                        <a href="{{ route('products.all') }}?q={{ urlencode($search->name) }}" class="flex items-center gap-1.5 sm:gap-2 {{ $isTheme2 ? 'bg-[#1c1c1e] text-slate-200 hover:bg-slate-800 hover:text-white' : 'bg-slate-100 text-slate-800 hover:bg-slate-200 hover:text-black' }} rounded-full p-1 pr-3 sm:p-1.5 sm:pr-4 transition-all max-w-full">
                             <!-- Small round image -->
-                            <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 bg-white">
+                            <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full overflow-hidden flex-shrink-0 bg-white">
                                 @if($search->image)
                                     <img src="{{ asset('storage/' . $search->image) }}" alt="{{ $search->name }}" class="w-full h-full object-cover">
                                 @else
-                                    <div class="w-full h-full bg-amber-100 flex items-center justify-center text-amber-600 text-[10px] font-bold font-sans">
+                                    <div class="w-full h-full bg-amber-100 flex items-center justify-center text-amber-600 text-[10px] sm:text-[11px] font-bold font-sans">
                                         {{ strtoupper(substr($search->name, 0, 1)) }}
                                     </div>
                                 @endif
                             </div>
                             
                             <!-- Fire emoji + Text -->
-                            <span class="text-xs sm:text-[13px] font-medium truncate flex items-center gap-1.5">
+                            <span class="text-[12px] sm:text-[14px] font-medium truncate flex items-center gap-1">
                                 @if($search->is_hot)
                                     <span>🔥</span>
                                 @endif
@@ -403,7 +364,21 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         
-        // --- 0. Removed Scroll Animation Logic (Header is now permanently affixed) ---
+        // --- 0. Re-added Scroll Animation Logic (Header is transparent on homepage top scroll) ---
+        const mainHeader = document.getElementById('main-header');
+        const isHome = {{ $isHome ? 'true' : 'false' }};
+        
+        if (isHome && mainHeader) {
+            function handleScroll() {
+                if (window.scrollY > 30) {
+                    mainHeader.classList.add('is-scrolled');
+                } else {
+                    mainHeader.classList.remove('is-scrolled');
+                }
+            }
+            window.addEventListener('scroll', handleScroll);
+            handleScroll(); // initial state check
+        }
 
         // --- Categories Megamenu Tab Switch Logic ---
         const categoryTabs = document.querySelectorAll('.category-tab');
@@ -519,7 +494,9 @@
                 searchContent.classList.remove('-translate-y-4', 'opacity-0');
                 if(searchInput) searchInput.focus();
             }, 10);
-            document.body.classList.add('overflow-hidden');
+            if (window.innerWidth >= 768) {
+                document.body.classList.add('overflow-hidden');
+            }
         };
 
         window.closeSearch = function() {
@@ -536,69 +513,18 @@
         if (searchIcon) searchIcon.addEventListener('click', window.openSearch);
         if (closeSearchBtn) closeSearchBtn.addEventListener('click', window.closeSearch);
 
-        // --- 5. Countdown Banner Logic ---
-        const countdownEl = document.getElementById('store-countdown-timer');
-        if (countdownEl) {
-            const targetDateStr = countdownEl.getAttribute('data-target-time');
-            const dismissedDate = localStorage.getItem('countdown_dismissed_date');
-            
-            if (dismissedDate === targetDateStr) {
-                countdownEl.style.display = 'none';
-            } else if (targetDateStr) {
-                const targetDate = new Date(targetDateStr).getTime();
-                if (!isNaN(targetDate)) {
-                    const daysVal = document.getElementById('countdown-days');
-                    const hoursVal = document.getElementById('countdown-hours');
-                    const minsVal = document.getElementById('countdown-mins');
-                    const secsVal = document.getElementById('countdown-secs');
-
-                    function updateTimer() {
-                        const now = new Date().getTime();
-                        const difference = targetDate - now;
-
-                        if (difference <= 0) {
-                            countdownEl.style.display = 'none';
-                            return;
-                        }
-
-                        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-                        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-                        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-                        if (daysVal) daysVal.innerText = String(days).padStart(2, '0');
-                        if (hoursVal) hoursVal.innerText = String(hours).padStart(2, '0');
-                        if (minsVal) minsVal.innerText = String(minutes).padStart(2, '0');
-                        if (secsVal) secsVal.innerText = String(seconds).padStart(2, '0');
-                    }
-
-                    updateTimer();
-                    setInterval(updateTimer, 1000);
-                }
-            }
-        }
-
-        window.dismissCountdown = function() {
-            const el = document.getElementById('store-countdown-timer');
-            if (el) {
-                el.style.display = 'none';
-                const targetDateStr = el.getAttribute('data-target-time');
-                if (targetDateStr) {
-                    localStorage.setItem('countdown_dismissed_date', targetDateStr);
-                }
-                if (typeof adjustHeaderOffset === 'function') {
-                    setTimeout(adjustHeaderOffset, 50);
-                }
-            }
-        };
-
         // --- 6. Mobile Layout & Currency Selector Offset Logic ---
         function adjustHeaderOffset() {
             const header = document.getElementById('main-header');
             const mainContent = document.querySelector('main');
+            const isHome = {{ $isHome ? 'true' : 'false' }};
             if (header && mainContent) {
-                const height = header.offsetHeight;
-                mainContent.style.paddingTop = height + 'px';
+                if (isHome) {
+                    mainContent.style.paddingTop = '0px';
+                } else {
+                    const height = header.offsetHeight;
+                    mainContent.style.paddingTop = height + 'px';
+                }
             }
         }
 
